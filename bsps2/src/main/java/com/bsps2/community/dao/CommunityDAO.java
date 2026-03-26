@@ -24,7 +24,7 @@ public class CommunityDAO extends DAO {
 		sql = " select rownum rnum, no , title, writer, writeDate, hit, fileName"
 				+ " from (" + sql + ") ";
 		//3-3 페이지 데이터 추출
-		sql = " select rnum, no , title writer, writeDate, hit , fileName "
+		sql = " select rnum, no , title, writer, writeDate, hit , fileName "
 				+ " from (" + sql + ") where rnum between ? and ? ";
 				
 		//4.실행 객체 및 데이터 세팅
@@ -36,10 +36,11 @@ public class CommunityDAO extends DAO {
 		//6.결과 담기
 		if(rs != null) 
 			while (rs.next()) {
+				
 				CommunityVO vo = new CommunityVO();
 				vo.setNo(rs.getLong("no"));
 				vo.setTitle(rs.getString("title"));
-				vo.setWriter(rs.getString("writer	"));
+				vo.setWriter(rs.getString("writer"));
 				vo.setWriteDate(rs.getString("writeDate"));
 				vo.setHit(rs.getLong("hit"));
 				vo.setFileName(rs.getString("fileName"));

@@ -67,7 +67,7 @@ public class Init extends HttpServlet {
 		serviceMap.put("/community/list.do", new CommunityListService());
 		
 		// == dao 등록
-		daoMap.put("CommunityDAO", new CommunityDAO());
+		daoMap.put("communityDAO", new CommunityDAO());
 		// 조립 (service - dao)
 		serviceMap.get("/community/list.do").setDAO(daoMap.get("communityDAO"));
 		
