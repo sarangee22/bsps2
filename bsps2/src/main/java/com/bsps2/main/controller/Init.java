@@ -3,6 +3,9 @@ package com.bsps2.main.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.bsps2.community.controller.CommunityController;
+import com.bsps2.community.dao.CommunityDAO;
+import com.bsps2.community.service.CommunityListService;
 import com.bsps2.main.dao.DAO;
 import com.bsps2.main.service.Service;
 
@@ -58,12 +61,15 @@ public class Init extends HttpServlet {
 		// == controller는 모듈명으로 저장
 		
 		// *** 일반 게시판 생성 / 저장 / 조립
-		// == controller는 모듈명으로 저장
-		// == service는 URI로 저장
-		// writeForm.do는 service 필요 없음.
-		// updateForm.do 인 경우 먼저 글보기 실행 강제 코딩으로 /board/view.do 로 서비스 꺼내서 실행.
-		// == dao는 클래스 이름으로 저장. 맨 앞자를 소문자로 바꾼다.
-		// 조립 service <- dao : service를 꺼내서 setter를 이용해서 dao를 꺼내서 넣는다.
+		// == controller 등록
+		controllerMap.put("/community", new CommunityController());
+		// == service 등록
+		serviceMap.put("/community/list.do", new CommunityListService());
+		
+		// == dao 등록
+		daoMap.put("CommunityDAO", new CommunityDAO());
+		// 조립 (service - dao)
+		serviceMap.get("/community/list.do").setDAO(daoMap.get("communityDAO"));
 		
 		// *** 회원관리 생성 / 저장 / 조립
 		// -- Controller 저장 - 모듈이름으로 저장
