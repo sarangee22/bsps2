@@ -34,7 +34,7 @@ public class CommunityDAO extends DAO {
 		//5.실행
 		rs = pstmt.executeQuery();
 		//6.결과 담기
-		if(rs != null) {
+		if(rs != null) 
 			while (rs.next()) {
 				CommunityVO vo = new CommunityVO();
 				vo.setNo(rs.getLong("no"));
@@ -45,14 +45,32 @@ public class CommunityDAO extends DAO {
 				vo.setFileName(rs.getString("fileName"));
 				list.add(vo);
 			}
+		//7.닫기
+		DB.close(con, pstmt, rs);
+		return list;
+		
+	}//list()의 끝
+	
+	//1-2 getTotalRow() 
+	public long getTotalRow(PageObject pageObject) throws Exception {
+		Long totalRow = 0L;
+		//1.드라이버 확인 2.연결
+		con = DB.getConnection();
+		//3.SQL작성
+		String sql = "select count(*) from community ";
+		//4.실행 객체 및 데이터 세팅
+		pstmt = con.prepareStatement(sql);
+		//5.실행
+		rs = pstmt.executeQuery();
+		//6.결과 담기
+		if(rs != null && rs.next()) {
+			totalRow = rs.getLong(1);
 		}
 		//7.닫기
 		DB.close(con, pstmt, rs);
+		return totalRow;
 		
-		return list;
-		
-	}
-	//1-2 getTotalRow() 
+	}//getTotalRow()의 끝 
 	
 	
 	
