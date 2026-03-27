@@ -7,6 +7,13 @@ import com.bsps2.community.controller.CommunityController;
 import com.bsps2.community.dao.CommunityDAO;
 import com.bsps2.community.service.CommunityListService;
 import com.bsps2.main.dao.DAO;
+import com.bsps2.main.item.controller.ItemController.ItemController;
+import com.bsps2.main.item.dao.ItemDAO.ItemDAO;
+import com.bsps2.main.item.service.ItemDeleteService.ItemDeleteService;
+import com.bsps2.main.item.service.ItemDeleteService.ItemListService;
+import com.bsps2.main.item.service.ItemDeleteService.ItemUpdateService;
+import com.bsps2.main.item.service.ItemDeleteService.ItemViewService;
+import com.bsps2.main.item.service.ItemDeleteService.ItemWriteService;
 import com.bsps2.main.service.Service;
 
 import jakarta.servlet.ServletConfig;
@@ -84,6 +91,38 @@ public class Init extends HttpServlet {
 		// -- DAO 저장
 		// 조립 service에 dao 넣기 - service를 가져온다. setter를 이용해서 가져온 dao를 넣는다.
 		
+		// 비상물품 체크리스트 
+		// 1. DAO 생성 및 저장
+				// key값은 나중에 꺼내기 쉽도록 "소문자 시작 클래스명"으로 저장합니다.
+				ItemDAO itemDAO = new ItemDAO();
+				daoMap.put("itemDAO", itemDAO);
+				
+				// 2. Controller 생성 및 저장
+				// 모듈 이름인 "/item"을 key로 저장하여 DispatcherServlet이 찾게 합니다.
+				controllerMap.put("/item", new ItemController());
+				
+				// 3. Service 생성 / 저장 / 조립
+				// --- [비상물품 리스트] ---
+				serviceMap.put("/item/list.do", new ItemListService());
+				serviceMap.get("/item/list.do").setDAO(daoMap.get("itemDAO"));
+				
+				// --- [비상물품 보기] ---
+				serviceMap.put("/item/view.do", new ItemViewService());
+				serviceMap.get("/item/view.do").setDAO(daoMap.get("itemDAO"));
+				
+				// --- [비상물품 등록] ---
+				serviceMap.put("/item/write.do", new ItemWriteService());
+				serviceMap.get("/item/write.do").setDAO(daoMap.get("itemDAO"));
+				
+				// --- [비상물품 수정] ---
+				serviceMap.put("/item/update.do", new ItemUpdateService());
+				serviceMap.get("/item/update.do").setDAO(daoMap.get("itemDAO"));
+				
+				// --- [비상물품 삭제] ---
+				serviceMap.put("/item/delete.do", new ItemDeleteService());
+				serviceMap.get("/item/delete.do").setDAO(daoMap.get("itemDAO"));
+				
+				System.out.println("Init.init() --- 비상물품 모듈 조립 완료 ---");
 
 	}
 
