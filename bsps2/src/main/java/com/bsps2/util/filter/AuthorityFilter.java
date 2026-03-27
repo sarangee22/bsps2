@@ -60,6 +60,7 @@ public class AuthorityFilter extends HttpFilter implements Filter {
 		System.out.println("AutorityFilter.doFilter() 실행전 처리 : 권한 처리 ----------------------");
 
 		Integer pageGradeNo = authMap.get(uri);
+		chain.doFilter(request,response);
 		
 	}
 
