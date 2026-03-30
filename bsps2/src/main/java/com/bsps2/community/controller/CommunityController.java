@@ -28,8 +28,17 @@ public class CommunityController implements Controller {
 				request.setAttribute("list", Execute.execute(Init.getService(uri), pageObject));
 				request.setAttribute("pageObject", pageObject);
 				return "community/list";
-
 				
+			//2.글보기
+			case "/community/view.do":
+				Long no = Long.parseLong(request.getParameter("no"));
+				Long inc = Long.parseLong(request.getParameter("inc"));
+				
+				request.setAttribute("vo", Execute.execute(Init.getService(uri), new Long[] {no,inc}));				
+				return "community/view";
+				
+			//3.글등록
+			
 				
 				
 			default:
