@@ -39,11 +39,6 @@ $(function(){
 			<tr>
 				<th>
 				제보이미지 <br><br>
-				<button type="button" class="btn btn-success btn-sm mb-2"
-					data-bs-toggle="modal" data-bs-target="#changeImageModal">
-					이미지 변경
-				</button>
-				
 				<td class="text-center">
     					<c:if test="${!empty vo.fileName}">
         					<img src="${vo.fileName}" alt="제보 이미지" class="community-img">
@@ -93,34 +88,6 @@ $(function(){
 		</form>
 	</div>
 </div>	
-<div class="modal" id="changeImageModal">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
 
-      <div class="modal-header">
-        <h4 class="modal-title">변경할 이미지를 선택하세요.</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <form action="changeImage.do" method="post" enctype="multipart/form-data" id="modalForm">
-        <input name="no" value="${param.no }" type="hidden">
-        <input name="page" value="${param.page }" type="hidden">
-        <input name="perPageNum" value="${param.perPageNum }" type="hidden">
-        <input name="key" value="${param.key }" type="hidden">
-        <input name="word" value="${param.word }" type="hidden">
-        <input name="delFileName" value="${vo.fileName }" type="hidden">
-
-        <div class="modal-body">
-          <input type="file" class="form-control" name="imageFile" required accept="image/*">
-        </div>
-  
-        <div class="modal-footer">
-          <button class="btn btn-primary">이미지 변경</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
 </body>
 </html>
