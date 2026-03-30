@@ -1,5 +1,6 @@
 package com.bsps2.community.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.bsps2.community.vo.CommunityVO;
@@ -11,7 +12,7 @@ public class CommunityDAO extends DAO {
 	
 	//1.리스트
 	public List<CommunityVO> list(PageObject pageObject) throws Exception{
-		List<CommunityVO> list = null;
+		List<CommunityVO> list = new ArrayList<>();
 		
 		
 		//1.드라이버 확인 2.연결
