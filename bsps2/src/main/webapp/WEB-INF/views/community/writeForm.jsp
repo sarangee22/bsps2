@@ -6,13 +6,13 @@
 <meta charset="UTF-8">
 <title>제보하기</title>
 <script type="text/javascript">
-$(function)({
-	$("#writeForm").submit()(function(){
-		if($("#pw").val() != $("#pw2").val()){
-			alert("비밀번호와 비밀번호 확인은 같아야 합니다.");
-			$("#pw, #pw2").val("");
-			$("#pw").focus();
-			return false;
+$(function(){
+	$("#writeForm").submit(function(){
+        if($("#pw").val() != $("#pw2").val()){
+            alert("비밀번호와 비밀번호 확인은 같아야 합니다.");
+            $("#pw, #pw2").val("");
+            $("#pw").focus();
+            return false;
 	}
 	
 });
