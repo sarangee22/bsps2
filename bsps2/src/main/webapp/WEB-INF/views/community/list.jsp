@@ -45,7 +45,7 @@ $(function(){
 						<td  class="no">${vo.no }</td>
 						<td>
 							<c:if test="${!empty vo.fileName }">
-								<img src="/upload/image/${vo.fileName }" class="list-img">
+								<img src="${vo.fileName }" class="list-img">
 							</c:if>
 						</td>
 						<td>${vo.title }</td>
