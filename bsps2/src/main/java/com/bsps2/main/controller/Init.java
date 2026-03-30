@@ -7,6 +7,7 @@ import com.bsps2.community.controller.CommunityController;
 import com.bsps2.community.dao.CommunityDAO;
 import com.bsps2.community.service.CommunityListService;
 import com.bsps2.community.service.CommunityViewService;
+import com.bsps2.community.service.CommunityWriteService;
 import com.bsps2.main.dao.DAO;
 import com.bsps2.main.item.controller.ItemController.ItemController;
 import com.bsps2.main.item.dao.ItemDAO.ItemDAO;
@@ -74,12 +75,14 @@ public class Init extends HttpServlet {
 		// == service 등록
 		serviceMap.put("/community/list.do", new CommunityListService());
 		serviceMap.put("/community/view.do", new CommunityViewService());
+		serviceMap.put("/community/write.do", new CommunityWriteService());
 		
 		// == dao 등록
 		daoMap.put("communityDAO", new CommunityDAO());
 		// 조립 (service - dao)
 		serviceMap.get("/community/list.do").setDAO(daoMap.get("communityDAO"));
 		serviceMap.get("/community/view.do").setDAO(daoMap.get("communityDAO"));
+		serviceMap.get("/community/write.do").setDAO(daoMap.get("communityDAO"));
 		
 		// *** 회원관리 생성 / 저장 / 조립
 		// -- Controller 저장 - 모듈이름으로 저장
