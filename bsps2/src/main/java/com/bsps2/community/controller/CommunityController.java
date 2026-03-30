@@ -29,6 +29,7 @@ public class CommunityController implements Controller {
 		System.out.println("CommunityController.execute(). uri = " + uri);
 		
 		try {
+			Integer result;
 			switch (uri) {
 			
 			//1.리스트
@@ -94,7 +95,48 @@ public class CommunityController implements Controller {
 			    
 			    return "redirect:list.do?perPageNum=" + request.getParameter("perPageNum");
 			
+			//4-1 글수정 폼
+			case "/community/updateForm.do":
+				no = Long.parseLong(request.getParameter("no"));
+				request.setAttribute("vo", Execute.execute(Init.getService("/community/view.do"), new Long[] {no, 0L}));
+				return"community/updateForm";
 				
+			//4-2 글수정 처리
+			case "/community/update.do":
+				vo = new CommunityVO();
+				vo.setNo(Long.parseLong(request.getParameter("no")));
+				vo.setTitle(request.getParameter("title"));
+				vo.setContent(request.getParameter("content"));
+				vo.setWriter(request.getParameter("writer"));
+				vo.setPw(request.getParameter("pw"));
+				vo.setFileName(request.getParameter("fileName"));
+				
+				result = (Integer) Execute.execute(Init.getService(uri), vo);
+				
+				if(result == 1) {
+					session.setAttribute("msg", "제보 게시판 " + vo.getNo() + "번 글 수정이 되었습니다."); // 성공 메시지
+					return "redirect:view.do?no=" + vo.getNo() + "&inc=0" + PageObject.getInstance(request).getNotPageQuery();
+				} else {
+					session.setAttribute("msg", "제보 게시판 " + vo.getNo() + "번 글 수정에 실패하였습니다. 정보를 확인 후 다시 시도해 주세요."); // 실패 메시지
+					return "redirect:updateForm.do?no=" + vo.getNo();
+				}
+				
+			//5. 글삭제 처리
+			case "/community/delete.do":
+				vo = new CommunityVO();
+				vo.setNo(Long.parseLong(request.getParameter("no")));
+				vo.setPw(request.getParameter("pw"));
+				
+				result = (Integer) Execute.execute(Init.getService(uri), vo);
+				
+				if(result == 1) {
+					session.setAttribute("msg", "제보게시판" + vo.getNo()+ "번 글을 삭제하였습니다.");
+				    return "redirect:list.do?perPageNum=" + request.getParameter("perPageNum");
+
+				}else {
+					session.setAttribute("msg", "제보 게시판 " + vo.getNo() + "번 글 삭제를 실패하였습니다. 정보를 확인 후 다시 시도해 주세요.");
+					return "redirect:view.do?no=" + vo.getNo() + "&inc=0";
+				}
 				
 				
 				

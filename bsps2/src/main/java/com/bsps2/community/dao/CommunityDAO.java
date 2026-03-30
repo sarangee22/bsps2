@@ -153,6 +153,31 @@ public class CommunityDAO extends DAO {
 	}//write()의 끝
 	
 	//4.글수정
+	public Integer update(CommunityVO vo) throws Exception{
+		Integer result = 0;
+		
+		//1.드라이버 확인 2.연결
+		con = DB.getConnection();
+		//3.SQL작성
+		String sql = "update community set title = ?, content = ?, writer = ?, fileName = ? "
+				+ " where no = ? and pw = ?";
+		//4.실행 객체 및 데이터 세팅
+		pstmt = con.prepareStatement(sql);
+		pstmt.setString(1, vo.getTitle());
+		pstmt.setString(2, vo.getContent());
+		pstmt.setString(3, vo.getWriter());
+		pstmt.setString(4, vo.getFileName());
+		pstmt.setLong(5, vo.getNo());
+		pstmt.setString(6, vo.getPw());
+		//5.실행,6.결과 담기
+		result = pstmt.executeUpdate();
+		
+		//7.닫기
+		DB.close(con, pstmt);
+		
+		
+		return result;
+	}// update() 끝
 	
 	//5.글삭제
 	public Integer delete(CommunityVO vo) throws Exception{
