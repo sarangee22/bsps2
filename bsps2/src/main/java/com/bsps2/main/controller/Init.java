@@ -7,6 +7,7 @@ import com.bsps2.community.controller.CommunityController;
 import com.bsps2.community.dao.CommunityDAO;
 import com.bsps2.community.service.CommunityDeleteService;
 import com.bsps2.community.service.CommunityListService;
+import com.bsps2.community.service.CommunityUpdateService;
 import com.bsps2.community.service.CommunityViewService;
 import com.bsps2.community.service.CommunityWriteService;
 import com.bsps2.main.dao.DAO;
@@ -77,7 +78,7 @@ public class Init extends HttpServlet {
 		serviceMap.put("/community/list.do", new CommunityListService());
 		serviceMap.put("/community/view.do", new CommunityViewService());
 		serviceMap.put("/community/write.do", new CommunityWriteService());
-		serviceMap.put("/community/update.do", new CommunityWriteService());
+		serviceMap.put("/community/update.do", new CommunityUpdateService());
 		serviceMap.put("/community/delete.do", new CommunityDeleteService());
 		
 		// == dao 등록

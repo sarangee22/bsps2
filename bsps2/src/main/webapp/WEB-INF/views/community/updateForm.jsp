@@ -1,0 +1,76 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>제보 수정</title>
+<script type="text/javascript">
+$(function(){
+	// 취소 버튼: 이전 페이지(상세보기)로 이동
+	$(".cancelBtn").click(function(){
+		history.back();
+	});
+});
+</script>
+</head>
+<body>
+<div class="container">
+	<h3 class="mt-4 mb-4">제보 내용 수정</h3>
+	
+	<form action="update.do" method="post" id="updateForm">
+		<input type="hidden" name="page" value="${param.page }">
+		<input type="hidden" name="perPageNum" value="${param.perPageNum }">
+		<input type="hidden" name="key" value="${param.key }">
+		<input type="hidden" name="word" value="${param.word }">
+		
+		<input type="hidden" name="fileName" value="${vo.fileName }">
+
+		<div class="mb-3 mt-3">
+			<label for="no" class="form-label">번호</label>
+			<input type="text" class="form-control" id="no" name="no" 
+				readonly value="${vo.no }">
+		</div>
+
+		<div class="mb-3 mt-3">
+			<label for="title" class="form-label">제목</label>
+			<input type="text" class="form-control" id="title" name="title" 
+				required value="${vo.title }" placeholder="제목을 입력하세요.">
+		</div>
+
+		<div class="mb-3 mt-3">
+			<label for="content" class="form-label">내용</label>
+			<textarea class="form-control" rows="7" id="content" name="content" 
+				required placeholder="내용을 입력하세요.">${vo.content }</textarea>
+		</div>
+
+		<div class="mb-3 mt-3">
+			<label for="writer" class="form-label">작성자</label>
+			<input type="text" class="form-control" id="writer" name="writer" 
+				required value="${vo.writer }">
+		</div>
+
+		<div class="mb-3 mt-3">
+			<label class="form-label">현재 제보 사진</label>
+			<div>
+				<img src="${vo.fileName }" class="img-thumbnail" 
+					style="max-width: 300px; height: auto;">
+				<p class="text-muted small">* 이미지 변경은 상세보기 페이지의 '이미지 변경' 버튼을 이용해 주세요.</p>
+			</div>
+		</div>
+
+		<div class="mb-3 mt-3">
+			<label for="pw" class="form-label text-danger">비밀번호 확인</label>
+			<input type="password" class="form-control" id="pw" name="pw" 
+				required placeholder="수정을 위해 본인 확인 비밀번호를 입력하세요.">
+		</div>
+
+		<div class="mt-4 mb-5 text-center">
+			<button type="submit" class="btn btn-primary">수정 완료</button>
+			<button type="reset" class="btn btn-warning">새로입력</button>
+			<button type="button" class="btn btn-secondary cancelBtn">취소</button>
+		</div>
+	</form>
+</div>
+</body>
+</html>

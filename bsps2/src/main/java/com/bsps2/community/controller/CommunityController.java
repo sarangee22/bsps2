@@ -115,7 +115,7 @@ public class CommunityController implements Controller {
 				
 				if(result == 1) {
 					session.setAttribute("msg", "제보 게시판 " + vo.getNo() + "번 글 수정이 되었습니다."); // 성공 메시지
-					return "redirect:view.do?no=" + vo.getNo() + "&inc=0" + PageObject.getInstance(request).getNotPageQuery();
+					return "redirect:view.do?no=" + vo.getNo() + "&inc=0&" + PageObject.getInstance(request).getNotPageQuery();
 				} else {
 					session.setAttribute("msg", "제보 게시판 " + vo.getNo() + "번 글 수정에 실패하였습니다. 정보를 확인 후 다시 시도해 주세요."); // 실패 메시지
 					return "redirect:updateForm.do?no=" + vo.getNo();
