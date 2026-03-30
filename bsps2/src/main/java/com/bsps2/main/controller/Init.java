@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.bsps2.community.controller.CommunityController;
 import com.bsps2.community.dao.CommunityDAO;
+import com.bsps2.community.service.CommunityDeleteService;
 import com.bsps2.community.service.CommunityListService;
 import com.bsps2.community.service.CommunityViewService;
 import com.bsps2.community.service.CommunityWriteService;
@@ -76,6 +77,8 @@ public class Init extends HttpServlet {
 		serviceMap.put("/community/list.do", new CommunityListService());
 		serviceMap.put("/community/view.do", new CommunityViewService());
 		serviceMap.put("/community/write.do", new CommunityWriteService());
+		serviceMap.put("/community/update.do", new CommunityWriteService());
+		serviceMap.put("/community/delete.do", new CommunityDeleteService());
 		
 		// == dao 등록
 		daoMap.put("communityDAO", new CommunityDAO());
@@ -83,6 +86,8 @@ public class Init extends HttpServlet {
 		serviceMap.get("/community/list.do").setDAO(daoMap.get("communityDAO"));
 		serviceMap.get("/community/view.do").setDAO(daoMap.get("communityDAO"));
 		serviceMap.get("/community/write.do").setDAO(daoMap.get("communityDAO"));
+		serviceMap.get("/community/update.do").setDAO(daoMap.get("communityDAO"));
+		serviceMap.get("/community/delete.do").setDAO(daoMap.get("communityDAO"));
 		
 		// *** 회원관리 생성 / 저장 / 조립
 		// -- Controller 저장 - 모듈이름으로 저장
