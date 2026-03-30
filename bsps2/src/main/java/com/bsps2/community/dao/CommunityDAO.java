@@ -74,6 +74,56 @@ public class CommunityDAO extends DAO {
 		
 	}//getTotalRow()의 끝 
 	
+	//2.글보기
+	public CommunityVO view(Long no) throws Exception{
+		CommunityVO vo = null;
+		//1.드라이버 확인 2.연결
+		con = DB.getConnection();
+		//3.SQL작성
+		String sql = "select no, title, content,writer, to_char(writeDate, 'yyyy-mm-dd') writeDate, hit, fileName "
+				+ " from community where no = ? ";
+		//4.실행 객체 및 데이터 세팅
+		pstmt = con.prepareStatement(sql);
+		pstmt.setLong(1, no);
+		//5.실행
+		rs = pstmt.executeQuery();
+		//6.결과 담기
+		if (rs != null && rs.next()) {
+			vo = new CommunityVO();
+			vo.setNo(rs.getLong("no"));
+			vo.setTitle(rs.getString("title"));
+			vo.setContent(rs.getString("content"));
+			vo.setWriter(rs.getString("writer"));
+			vo.setWriteDate(rs.getString("writeDate"));
+			vo.setHit(rs.getLong("hit"));
+			vo.setFileName(rs.getString("fileName"));
+		}
+		//7.닫기
+		DB.close(con, pstmt, rs);
+		
+		return vo;
+	}//view()의 끝
+
 	
+	//2-1 조회수 1 증가
+	public Integer increase(Long no) throws Exception {
+		Integer result = 0;
+		
+		//1.드라이버 확인 2.연결
+		con = DB.getConnection();
+		//3.SQL작성
+		String sql = "update community set hit = hit + 1 where no =?";
+		//4.실행 객체 및 데이터 세팅
+		pstmt = con.prepareStatement(sql);
+		pstmt.setLong(1, no);
+		//5.실행,6.결과 담기
+		result = pstmt.executeUpdate();
+		
+		//7.닫기
+		DB.close(con, pstmt);		
+				
+		return result;
+		
+	}
 	
 }
