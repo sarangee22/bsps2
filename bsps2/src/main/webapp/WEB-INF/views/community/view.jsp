@@ -46,7 +46,7 @@ $(function(){
 				
 				<td class="text-center">
     					<c:if test="${!empty vo.fileName}">
-        					<img src="/upload/image/${vo.fileName}" alt="제보 이미지" class="community-img">
+        					<img src="${vo.fileName}" alt="제보 이미지" class="community-img">
     					</c:if>
 				</td>
 				
