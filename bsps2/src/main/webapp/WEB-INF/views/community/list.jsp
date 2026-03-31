@@ -16,8 +16,8 @@
 $(function(){
 	$(".dataRow").click(function(){
 		let no = $(this).find(".no").text();
-		location = "view.do?no=" + no + "&inc=1&${pageObject.pageQuery}"
-	});
+		location = "view.do?no=" + no + "&inc=1&" + "${pageObject.pageQuery}";
+		});
 });
 </script>
 </head>
