@@ -10,7 +10,7 @@ import com.bsps2.main.item.vo.ItemVO.ItemVO;
 import com.bsps2.util.db.DB;
 import com.bsps2.util.page.PageObject;
 
-public class ItemDAO extends DAO {
+public class ItemDAO extends DAO { 
 
 	// [추가] 대시보드 통계용 메서드
 	public Map<String, Long> getMetaData() throws Exception {

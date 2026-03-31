@@ -16,7 +16,7 @@ public class ItemController implements Controller {
     public String execute(HttpServletRequest request) {
         HttpSession session = request.getSession();
         try {
-            String uri = request.getServletPath();
+            String uri = request.getServletPath(); 
             Long no;
             
             switch (uri) {
