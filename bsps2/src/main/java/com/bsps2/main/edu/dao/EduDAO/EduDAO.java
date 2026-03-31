@@ -8,18 +8,24 @@ import com.bsps2.util.page.PageObject;
 
 public class EduDAO extends DAO {
 
-    // [1] 대시보드 통계 데이터 (전체/조회수/카테고리수)
+    // [1] 대시보드 통계 데이터 (전체/발행됨/임시저장/조회수합계)
+    // 관리자 화면 상단 카드에 들어갈 데이터를 한 번에 가져옵니다.
     public Map<String, Long> getMetaData() throws Exception {
         Map<String, Long> map = new HashMap<>();
         try {
             con = DB.getConnection();
-            String sql = "SELECT COUNT(*) total, SUM(hit) views, COUNT(DISTINCT category) cats FROM edu_guide";
+            // 시안에 맞춰 발행됨(pub)과 임시저장(draft) 개수를 각각 카운트합니다.
+            String sql = "SELECT COUNT(*) total, "
+                       + "COUNT(CASE WHEN status='발행됨' THEN 1 END) pub, "
+                       + "COUNT(CASE WHEN status='임시저장' THEN 1 END) draft, "
+                       + "SUM(hit) views FROM edu_guide";
             pstmt = con.prepareStatement(sql);
             rs = pstmt.executeQuery();
             if (rs.next()) {
                 map.put("total", rs.getLong("total"));
+                map.put("pub", rs.getLong("pub"));
+                map.put("draft", rs.getLong("draft"));
                 map.put("views", rs.getLong("views"));
-                map.put("cats", rs.getLong("cats"));
             }
         } finally { DB.close(con, pstmt, rs); }
         return map;
@@ -30,18 +36,14 @@ public class EduDAO extends DAO {
         List<EduVO> list = new ArrayList<>();
         try {
             con = DB.getConnection();
-            
-            // --- 1. 기본 SQL 작성 (검색 조건 포함) ---
             String sql = "SELECT no, title, category, writer, summary, tags, hit, status, TO_CHAR(regDate, 'yyyy. mm. dd.') regDate "
                        + "FROM edu_guide WHERE 1=1 ";
             
-            // 검색어(word) 처리
             String word = pageObject.getWord();
             if (word != null && !word.equals("")) {
                 sql += " AND (title LIKE ? OR summary LIKE ? OR tags LIKE ?) ";
             }
             
-            // 카테고리(key) 처리
             String category = pageObject.getKey();
             if (category != null && !category.equals("") && !category.equals("전체")) {
                 sql += " AND category = ? ";
@@ -49,13 +51,12 @@ public class EduDAO extends DAO {
             
             sql += " ORDER BY no DESC";
             
-            // --- 2. 페이징 처리를 위한 래퍼 쿼리 ---
+            // 페이징 처리 래퍼 쿼리
             sql = "SELECT rownum rnum, no, title, category, writer, summary, tags, hit, status, regDate FROM (" + sql + ")";
             sql = "SELECT * FROM (" + sql + ") WHERE rnum BETWEEN ? AND ?";
             
             pstmt = con.prepareStatement(sql);
             
-            // --- 3. 데이터 바인딩 (idx 사용) ---
             int idx = 1;
             if (word != null && !word.equals("")) {
                 pstmt.setString(idx++, "%" + word + "%");
@@ -91,14 +92,12 @@ public class EduDAO extends DAO {
         EduVO vo = null;
         try {
             con = DB.getConnection();
-            // 조회수 1 증가
             String sqlHit = "UPDATE edu_guide SET hit = hit + 1 WHERE no = ?";
             pstmt = con.prepareStatement(sqlHit);
             pstmt.setLong(1, no);
             pstmt.executeUpdate();
             pstmt.close();
 
-            // 데이터 가져오기
             String sql = "SELECT no, title, category, writer, summary, content, tags, hit, status, "
                        + "TO_CHAR(regDate, 'yyyy. mm. dd.') regDate FROM edu_guide WHERE no = ?";
             pstmt = con.prepareStatement(sql);
@@ -121,14 +120,13 @@ public class EduDAO extends DAO {
         return vo;
     }
 
-    // [4] 전체 데이터 개수 (페이징용 - 검색 조건이 들어가야 페이징 숫자가 정확함)
+    // [4] 전체 데이터 개수 (페이징용)
     public long getTotalRow(PageObject pageObject) throws Exception {
         long totalRow = 0;
         try {
             con = DB.getConnection();
             String sql = "SELECT COUNT(*) FROM edu_guide WHERE 1=1 ";
             
-            // 리스트와 동일한 검색 조건 추가
             String word = pageObject.getWord();
             if (word != null && !word.equals("")) {
                 sql += " AND (title LIKE ? OR summary LIKE ? OR tags LIKE ?) ";
@@ -155,7 +153,7 @@ public class EduDAO extends DAO {
         return totalRow;
     }
 
- // 등록
+    // [5] 등록
     public Integer write(EduVO vo) throws Exception {
         try {
             con = DB.getConnection();
@@ -173,7 +171,25 @@ public class EduDAO extends DAO {
         } finally { DB.close(con, pstmt); }
     }
 
-    // 삭제
+    // [6] 수정 (추가됨)
+    public Integer update(EduVO vo) throws Exception {
+        try {
+            con = DB.getConnection();
+            String sql = "UPDATE edu_guide SET title=?, category=?, writer=?, summary=?, content=?, tags=?, status=? WHERE no=?";
+            pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, vo.getTitle());
+            pstmt.setString(2, vo.getCategory());
+            pstmt.setString(3, vo.getWriter());
+            pstmt.setString(4, vo.getSummary());
+            pstmt.setString(5, vo.getContent());
+            pstmt.setString(6, vo.getTags());
+            pstmt.setString(7, vo.getStatus());
+            pstmt.setLong(8, vo.getNo());
+            return pstmt.executeUpdate();
+        } finally { DB.close(con, pstmt); }
+    }
+
+    // [7] 삭제
     public Integer delete(long no) throws Exception {
         try {
             con = DB.getConnection();

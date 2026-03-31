@@ -14,10 +14,10 @@ public class EduController implements Controller {
     public String execute(HttpServletRequest request) {
         try {
             String uri = request.getServletPath();
-            EduDAO dao = new EduDAO(); // 통계(meta) 및 기본 데이터 처리를 위한 DAO
+            EduDAO dao = new EduDAO(); 
             
             switch (uri) {
-                // 1. 가이드 목록 (사용자/관리자 공용 로직)
+                // 1. 가이드 목록 (사용자/관리자 공용)
                 case "/edu/list.do":
                 case "/admin/edu/list.do":
                     PageObject pageObject = PageObject.getInstance(request);
@@ -27,25 +27,25 @@ public class EduController implements Controller {
                     if(word != null && !word.isEmpty()) pageObject.setWord(word);
                     if(category != null && !category.isEmpty()) pageObject.setKey(category);
                     
-                    // 목록 데이터 가져오기 (사용자/관리자 동일 서비스 사용)
                     request.setAttribute("list", Execute.execute(Init.getService("/edu/list.do"), pageObject));
                     request.setAttribute("pageObject", pageObject);
                     request.setAttribute("meta", dao.getMetaData()); 
                     
-                    // URI에 admin이 포함되어 있으면 관리자 폴더의 jsp로 보냄
+                    // URI에 admin이 포함되어 있으면 관리자 테이블형 리스트로 이동
                     return (uri.indexOf("admin") != -1) ? "admin/edu/list" : "edu/list";
 
-                // 2. 가이드 상세보기
+                // 2. 가이드 상세보기 (통합)
                 case "/edu/view.do":
                     long no = Long.parseLong(request.getParameter("no"));
+                    // 조회수 증가 및 데이터 가져오기
                     request.setAttribute("vo", Execute.execute(Init.getService(uri), no));
                     return "edu/view";
 
                 // 3. 가이드 등록 폼 및 처리
-                case "/admin/edu/writeForm.do":
-                    return "admin/edu/writeForm";
+                case "/edu/writeForm.do": // 경로를 /edu로 통일
+                    return "edu/writeForm";
 
-                case "/admin/edu/write.do":
+                case "/edu/write.do":
                     EduVO writeVO = new EduVO();
                     writeVO.setTitle(request.getParameter("title"));
                     writeVO.setCategory(request.getParameter("category"));
@@ -56,16 +56,17 @@ public class EduController implements Controller {
                     writeVO.setStatus(request.getParameter("status"));
                     
                     Execute.execute(Init.getService(uri), writeVO);
-                    return "redirect:list.do?perPageNum=" + request.getParameter("perPageNum");
+                    // 등록 후 리스트로 리다이렉트
+                    return "redirect:list.do";
 
                 // 4. 가이드 수정 폼 및 처리
-                case "/admin/edu/updateForm.do":
+                case "/edu/updateForm.do":
                     long updateNo = Long.parseLong(request.getParameter("no"));
-                    // 수정 폼을 채우기 위해 상세 정보를 가져옴
+                    // 수정 폼에 기존 데이터를 채우기 위해 view 서비스 재사용
                     request.setAttribute("vo", Execute.execute(Init.getService("/edu/view.do"), updateNo));
-                    return "admin/edu/updateForm";
+                    return "edu/updateForm";
 
-                case "/admin/edu/update.do":
+                case "/edu/update.do":
                     EduVO updateVO = new EduVO();
                     updateVO.setNo(Long.parseLong(request.getParameter("no")));
                     updateVO.setTitle(request.getParameter("title"));
@@ -77,16 +78,17 @@ public class EduController implements Controller {
                     updateVO.setStatus(request.getParameter("status"));
                     
                     Execute.execute(Init.getService(uri), updateVO);
-                    // 수정 후 보던 상세 페이지로 이동
-                    return "redirect:/edu/view.do?no=" + updateVO.getNo() + 
+                    // 수정 완료 후 해당 글의 상세보기로 이동
+                    return "redirect:view.do?no=" + updateVO.getNo() + 
                            "&page=" + request.getParameter("page") + 
                            "&perPageNum=" + request.getParameter("perPageNum");
 
                 // 5. 가이드 삭제
-                case "/admin/edu/delete.do":
+                case "/edu/delete.do":
                     long deleteNo = Long.parseLong(request.getParameter("no"));
                     Execute.execute(Init.getService(uri), deleteNo);
-                    return "redirect:list.do?perPageNum=" + request.getParameter("perPageNum");
+                    // 삭제 후 리스트로 이동
+                    return "redirect:list.do";
 
                 default: 
                     return "error/noPage";
