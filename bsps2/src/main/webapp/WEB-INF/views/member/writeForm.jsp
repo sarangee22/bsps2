@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -7,228 +6,205 @@
 <title>재난/안전 정보 사이트 - 회원가입</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 <style>
-/* 전체 페이지 레이아웃 */
-body {
-    background-color: #f4f4f4;
-    padding: 50px 0;
-}
+    /* 전체 배경 및 중앙 정렬 */
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        background-color: #f4f4f4;
+        padding: 60px 0; /* 위아래 여백 */
+    }
 
-/* 기획안의 "페이지 레이아웃" 박스 */
-.page-container {
-    max-width: 500px;
-    margin: 0 auto;
-    border: 1px solid #ddd;
-    background-color: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
+    /* 회원가입 박스: 로그인보다 넓게 설정 (700px) */
+    .page-container {
+        width: 700px;
+        border: 1px solid #ddd;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
 
-/* GNB 영역 - 네이비 테마 */
-.gnb {
-    background-color: #001f3f;
-    padding: 12px 20px;
-}
-.site-title {
-    color: #fff;
-    font-size: 16px;
-    margin: 0;
-    font-weight: bold;
-}
+    /* 상단바: 네이비 테마 및 제목 중앙 */
+    .gnb {
+        background-color: #001f3f;
+        padding: 20px;
+        text-align: center;
+    }
+    .site-title {
+        color: #fff;
+        font-size: 18px;
+        margin: 0;
+        letter-spacing: 1px;
+    }
 
-/* 메인 컨텐츠 영역 */
-.content {
-    padding: 30px;
-}
-.page-title {
-    text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 30px;
-    border-bottom: 2px solid #001f3f;
-    padding-bottom: 10px;
-}
+    /* 메인 컨텐츠 영역 */
+    .write-content {
+        padding: 50px 60px;
+    }
 
-/* 폼 스타일 */
-.form-group label {
-    font-size: 13px;
-    font-weight: bold;
-    color: #333;
-}
-.form-control {
-    font-size: 14px;
-}
-.form-control:focus {
-    border-color: #001f3f;
-    box-shadow: 0 0 0 0.2rem rgba(0, 31, 63, 0.25);
-}
+    .write-title {
+        text-align: center;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 40px;
+        color: #222;
+    }
 
-/* 중복확인 버튼 */
-.btn-overlap {
-    background-color: #6c757d;
-    color: white;
-    font-size: 12px;
-}
+    /* 입력 폼 라벨 스타일 */
+    .form-group label {
+        font-weight: bold;
+        font-size: 15px;
+        color: #555;
+        margin-bottom: 10px;
+    }
 
-/* 하단 버튼 그룹 - 네이비 강조 */
-.button-group {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 30px;
-}
-.btn-submit {
-    background-color: #001f3f;
-    color: white;
-    flex: 2;
-}
-.btn-cancel, .btn-reset {
-    background-color: #6c757d;
-    color: white;
-    flex: 1;
-}
-.btn-submit:hover { background-color: #003366; color: white; }
+    /* 입력창 높이 및 폰트 크기 통일 */
+    .form-control {
+        height: 50px;
+        font-size: 15px;
+        border-radius: 6px;
+    }
 
-/* 푸터 */
-.footer {
-    background-color: #f1f1f1;
-    padding: 10px;
-    text-align: center;
-    font-size: 11px;
-    color: #999;
-    border-top: 1px solid #ddd;
-}
+    /* 아이디 중복확인 영역: 버튼 높이를 입력창과 동일하게 */
+    .id-check-group {
+        display: flex;
+        gap: 10px;
+    }
+    .btn-id-check {
+        width: 120px;
+        background-color: #666;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+    .btn-id-check:hover { background-color: #444; }
+
+    /* 성별 라디오 버튼 배치 */
+    .gender-wrap {
+        display: flex;
+        gap: 40px;
+        padding: 10px 0;
+    }
+    .gender-wrap input { margin-right: 8px; transform: scale(1.2); }
+
+    /* 하단 버튼 영역: 균일한 배치 (Flex 활용) */
+    .btn-area {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 50px;
+    }
+    .btn-area .btn {
+        flex: 1; /* 버튼들이 동일한 너비를 가짐 */
+        padding: 15px;
+        font-size: 17px;
+        font-weight: bold;
+        border-radius: 6px;
+        border: none;
+        transition: 0.3s;
+    }
+
+    /* 버튼 색상 */
+    .btn-submit { background-color: #001f3f; color: white; } /* 가입하기 */
+    .btn-cancel { background-color: #888; color: white; }    /* 취소 */
+    .btn-reset  { background-color: #eee; color: #333; border: 1px solid #ccc !important; } /* 다시입력 */
+
+    .btn-submit:hover { opacity: 0.9; }
+    .btn-cancel:hover { background-color: #666; }
+    .btn-reset:hover { background-color: #ddd; }
+
+    /* 푸터 */
+    .footer {
+        background-color: #fafafa;
+        padding: 20px;
+        text-align: center;
+        font-size: 12px;
+        color: #aaa;
+        border-top: 1px solid #eee;
+    }
 </style>
 </head>
 <body>
 
 <div class="page-container">
-    <!-- GNB -->
     <header class="gnb">
         <h1 class="site-title">재난/안전 정보 사이트</h1>
     </header>
 
-    <main class="content">
-        <h2 class="page-title">회원가입</h2>
-        
-        <form action="write.do" method="post" id="writeForm">
-            <!-- 아이디 (D1) -->
+    <main class="write-content">
+        <h2 class="write-title">회원가입</h2>
+
+        <form action="/member/write.do" method="post">
+            <!-- 아이디 + 중복확인 -->
             <div class="form-group">
-                <label for="id">아이디</label>
-                <div class="input-group">
-                    <input type="text" id="id" name="id" class="form-control" placeholder="영숫자 3~20자" required>
-                    <div class="input-group-append">
-                        <button class="btn btn-overlap" type="button" id="checkIdBtn">중복확인</button>
-                    </div>
+                <label>아이디</label>
+                <div class="id-check-group">
+                    <input type="text" name="id" class="form-control" placeholder="영숫자 3~20자" required>
+                    <button type="button" class="btn-id-check">중복확인</button>
                 </div>
             </div>
 
+            <!-- 비밀번호 가로 배치 -->
             <div class="row">
-                <!-- 비밀번호 (D2) -->
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="pw">비밀번호</label>
-                        <input type="password" id="pw" name="pw" class="form-control" placeholder="4~20자" required>
-                    </div>
+                <div class="col-md-6 form-group">
+                    <label>비밀번호</label>
+                    <input type="password" name="pw" class="form-control" placeholder="4~20자" required>
                 </div>
-                <!-- 비밀번호 확인 (D3) -->
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="pw2">비밀번호 확인</label>
-                        <input type="password" id="pw2" class="form-control" placeholder="동일하게 입력" required>
+                <div class="col-md-6 form-group">
+                    <label>비밀번호 확인</label>
+                    <input type="password" name="pwConfirm" class="form-control" placeholder="동일하게 입력" required>
+                </div>
+            </div>
+
+            <!-- 이름 + 성별 가로 배치 -->
+            <div class="row align-items-end">
+                <div class="col-md-6 form-group">
+                    <label>이름</label>
+                    <input type="text" name="name" class="form-control" placeholder="한글 2~10자" required>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>성별</label>
+                    <div class="gender-wrap">
+                        <label style="font-weight: normal;"><input type="radio" name="gender" value="남자" checked> 남자</label>
+                        <label style="font-weight: normal;"><input type="radio" name="gender" value="여자"> 여자</label>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <!-- 이름 (D4) -->
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="name">이름</label>
-                        <input type="text" id="name" name="name" class="form-control" placeholder="한글 2~10자" required>
-                    </div>
-                </div>
-                <!-- 성별 (D5) -->
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>성별</label>
-                        <div class="mt-2">
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="male" name="gender" class="custom-control-input" value="남자" checked>
-                                <label class="custom-control-label" for="male">남자</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="female" name="gender" class="custom-control-input" value="여자">
-                                <label class="custom-control-label" for="female">여자</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 생년월일 (D6) -->
             <div class="form-group">
-                <label for="birth">생년월일</label>
-                <input type="date" id="birth" name="birth" class="form-control" required>
+                <label>생년월일</label>
+                <input type="date" name="birth" class="form-control" required>
             </div>
 
-            <!-- 연락처 (D7) -->
             <div class="form-group">
-                <label for="tel">연락처</label>
-                <input type="tel" id="tel" name="tel" class="form-control" placeholder="010-XXXX-XXXX">
+                <label>연락처</label>
+                <input type="tel" name="tel" class="form-control" placeholder="010-XXXX-XXXX" required>
             </div>
 
-            <!-- 이메일 (D8) -->
             <div class="form-group">
-                <label for="email">이메일</label>
-                <input type="email" id="email" name="email" class="form-control" placeholder="아이디@도메인 (필수)" required>
+                <label>이메일</label>
+                <input type="email" name="email" class="form-control" placeholder="아이디@도메인 (필수)" required>
             </div>
 
-            <!-- 하단 버튼 그룹 (L1, L2) -->
-            <div class="button-group">
+            <!-- 하단 버튼: Flex로 너비 균일화 -->
+            <div class="btn-area">
                 <button type="submit" class="btn btn-submit">가입하기</button>
-                <button type="button" class="btn btn-cancel" onclick="history.back();">취소</button>
+                <button type="button" class="btn btn-cancel" onclick="history.back()">취소</button>
                 <button type="reset" class="btn btn-reset">다시 입력</button>
             </div>
         </form>
     </main>
 
     <footer class="footer">
-        © Disaster/Safety Info
+        © Disaster/Safety Info All Rights Reserved.
     </footer>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
-<script>
-$(function() {
-    // 기획안 기반 로직 구현
-    $("#writeForm").submit(function() {
-        // 비밀번호 확인 체크
-        if($("#pw").val() !== $("#pw2").val()) {
-            alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-            $("#pw2").focus();
-            return false;
-        }
-        
-        // 성공 시 팝업 문구 (기획안 내용)
-        if(confirm("축하드립니다. 로그인 페이지로 이동하시겠습니까?")) {
-            return true; // 서블릿으로 전송
-        } else {
-            return false;
-        }
-    });
-
-    // 아이디 중복 확인 버튼 클릭 이벤트
-    $("#checkIdBtn").click(function() {
-        let id = $("#id").val();
-        if(!id) {
-            alert("아이디를 입력하세요.");
-            return;
-        }
-        // 실제 구현 시 window.open이나 Ajax 연동
-        alert("중복 확인을 진행합니다.");
-    });
-});
-</script>
 </body>
 </html>
