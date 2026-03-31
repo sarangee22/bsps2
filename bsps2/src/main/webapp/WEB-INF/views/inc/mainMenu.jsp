@@ -3,27 +3,43 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/">Webjjang Co.</a>
+    <a class="navbar-brand" href="/">재난 정보 사이트</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="mynavbar">
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
-          <a class="nav-link" href="/notice/list.do">공지사항</a>
+          <a class="nav-link" href="/community/list.do">제보게시판</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/shop/list.do">쇼핑몰</a>
+          <a class="nav-link" href="/shop/list.do">퀴즈</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/board/list.do">일반게시판</a>
+          <a class="nav-link" href="/edu/list.do">교육</a>
+        </li>
+         <li class="nav-item">
+          <a class="nav-link" href="/item/list.do">체크리스트</a>
+        </li>
+         <li class="nav-item">
+          <a class="nav-link" href="/disasterCategory/list.do">재난목록</a>
+        </li>
+         <li class="nav-item">
+          <a class="nav-link" href="/disasterList/list.do">재난리스트</a>
+        </li>
+         <li class="nav-item">
+          <a class="nav-link" href="/scrap/list.do">스크랩</a>
+        </li>
+         <li class="nav-item">
+          <a class="nav-link" href="/agency/list.do">재난기관</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/disasterMap/list.do">실시간재난현황</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/qna/list.do">질문답변</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/image/list.do">이미지</a>
-        </li>
+       
         <c:if test="${!empty login && login.gradeNo == 9 }">
         <!-- 관리자 메뉴 -->
 	        <li class="nav-item">
