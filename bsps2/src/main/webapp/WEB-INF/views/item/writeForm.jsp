@@ -20,7 +20,7 @@
             <div class="md:col-span-2 bg-white p-8 rounded-2xl border border-gray-100 shadow-sm space-y-6">
                 <div><label class="text-sm font-semibold">물품명 <span class="text-red-500">*</span></label>
                 <input type="text" name="name" required placeholder="예: 생수, 손전등" class="form-input"></div>
-                
+                 
                 <div><label class="text-sm font-semibold">카테고리</label>
                 <select name="category" class="form-input">
                     <option value="식수 및 식량">식수 및 식량</option><option value="의료용품">의료용품</option>

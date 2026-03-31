@@ -19,7 +19,7 @@
                 <div>
                     <h1 class="text-4xl font-bold text-gray-900">${vo.name}</h1>
                     <p class="text-gray-500 font-medium">${vo.category}</p>
-                </div>
+                </div> 
             </div>
             <div class="flex gap-2">
                 <a href="updateForm.do?no=${vo.no}&page=${param.page}&perPageNum=${param.perPageNum}" class="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg font-bold hover:bg-gray-50">수정</a>

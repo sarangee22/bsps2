@@ -18,4 +18,4 @@ public class ItemWriteService implements Service {
 		// 넘겨받은 ItemVO 객체를 그대로 DAO의 write로 전달
 		return dao.write((ItemVO) obj);
 	}
-}
+} 

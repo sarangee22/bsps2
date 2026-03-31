@@ -7,7 +7,7 @@ import com.bsps2.main.service.Service;
 public class ItemDeleteService implements Service {
 	private ItemDAO dao;
 
-	@Override
+	@Override 
 	public void setDAO(DAO dao) {
 		this.dao = (ItemDAO) dao;
 	}

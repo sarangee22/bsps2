@@ -13,7 +13,7 @@ public class ItemListService implements Service {
     private ItemDAO dao;
 
     // Init에서 이미 생성된 dao를 전달받아 저장한다.
-    @Override
+    @Override 
     public void setDAO(DAO dao) {
         this.dao = (ItemDAO) dao;
     }

@@ -21,7 +21,7 @@
         <div class="mb-10">
             <a href="view.do?no=${vo.no}&page=${param.page}&perPageNum=${param.perPageNum}" class="text-sm text-gray-500 hover:text-gray-900 flex items-center gap-1.5 mb-4">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                상세보기로 돌아가기
+                상세보기로 돌아가기 
             </a>
             <h1 class="text-3xl font-bold text-gray-950">비상물품 수정</h1>
             <p class="text-gray-500 mt-1.5 text-sm">물품의 최신 정보를 업데이트하세요.</p>

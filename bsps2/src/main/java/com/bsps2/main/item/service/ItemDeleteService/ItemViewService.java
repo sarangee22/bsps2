@@ -18,4 +18,4 @@ public class ItemViewService implements Service {
 		// 넘겨받은 no(Long 타입)를 이용해 상세보기 실행
 		return dao.view((Long) obj);
 	}
-}
+} 
