@@ -1,0 +1,91 @@
+package com.bsps2.qna.vo;
+
+public class QnaVO {
+	
+	// 글번호, 제목, 내용, 작성자, 작성일, 조회수, 비밀번호.
+	private long no;
+	private String title;
+	private String content;
+	private String id;
+	private String name;
+	private String writeDate;
+	private long hit;
+	private long refNo;
+	private long ordNo;
+	private long levNo;
+	private long parentNo;
+	public long getNo() {
+		return no;
+	}
+	public void setNo(long no) {
+		this.no = no;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getCotent() {
+		return content;
+	}
+	public void setCotent(String cotent) {
+		this.content = cotent;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public long getHit() {
+		return hit;
+	}
+	public void setHit(long hit) {
+		this.hit = hit;
+	}
+
+	public String getWriteDate() {
+		return writeDate;
+	}
+	public void setWriteDate(String writeDate) {
+		this.writeDate = writeDate;
+	}
+	public long getRefNo() {
+		return refNo;
+	}
+	public void setRefNo(long refNo) {
+		this.refNo = refNo;
+	}
+	public long getOrdNo() {
+		return ordNo;
+	}
+	public void setOrdNo(long ordNo) {
+		this.ordNo = ordNo;
+	}
+	public long getLevNo() {
+		return levNo;
+	}
+	public void setLevNo(long levNo) {
+		this.levNo = levNo;
+	}
+	public long getParentNo() {
+		return parentNo;
+	}
+	public void setParentNo(long parentNo) {
+		this.parentNo = parentNo;
+	}
+	@Override
+	public String toString() {
+		return "QnaVO [no=" + no + ", title=" + title + ", cotent=" + content + ", id=" + id + ", name=" + name
+				+ ", hit=" + hit + ", ref=" + ", writeDate=" + writeDate + ", refNo=" + refNo + ", ordNo=" + ordNo
+				+ ", levNo=" + levNo + ", parentNo=" + parentNo + "]";
+	}
+	
+}

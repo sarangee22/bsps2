@@ -47,6 +47,26 @@ import com.bsps2.main.item.service.ItemDeleteService.ItemUpdateService;
 import com.bsps2.main.item.service.ItemDeleteService.ItemViewService;
 import com.bsps2.main.item.service.ItemDeleteService.ItemWriteService;
 import com.bsps2.main.service.Service;
+import com.bsps2.member.controller.MemberController;
+import com.bsps2.member.dao.MemberDAO;
+import com.bsps2.member.service.LoginService;
+import com.bsps2.member.service.LogoutService;
+import com.bsps2.member.service.MemberChangePwService;
+import com.bsps2.member.service.MemberChangeStatueService;
+import com.bsps2.member.service.MemberCheckIdService;
+import com.bsps2.member.service.MemberDeleteService;
+import com.bsps2.member.service.MemberEditService;
+import com.bsps2.member.service.MemberListService;
+import com.bsps2.member.service.MemberViewService;
+import com.bsps2.member.service.MemberWriteService;
+import com.bsps2.qna.controller.QnaController;
+import com.bsps2.qna.dao.QnaDAO;
+import com.bsps2.qna.service.QnaAnswerService;
+import com.bsps2.qna.service.QnaDeleteService;
+import com.bsps2.qna.service.QnaListService;
+import com.bsps2.qna.service.QnaQuestionService;
+import com.bsps2.qna.service.QnaUpdateService;
+import com.bsps2.qna.service.QnaViewService;
 import com.bsps2.scrap.controller.ScrapController;
 import com.bsps2.scrap.dao.ScrapDAO;
 import com.bsps2.scrap.service.ScrapService;
@@ -123,19 +143,58 @@ public class Init extends HttpServlet {
 		serviceMap.get("/community/changeImage.do").setDAO(daoMap.get("communityDAO"));
 		serviceMap.get("/community/delete.do").setDAO(daoMap.get("communityDAO"));
 		
-		// *** 회원관리 생성 / 저장 / 조립
-		// -- Controller 저장 - 모듈이름으로 저장
-		// -- Service 저장 - uri로 저장
-		// 최근 접속일 변경 - 외부 URI 없음. 내부 URI - /member/changeCon.do
-		// -- DAO 저장 - 변수 이름
-		// 조립 service에 dao 넣기 - service를 가져온다. setter를 이용해서 가져온 dao를 넣는다.
-		
-		// *** 질문 답변 생성 / 저장 / 조립
-		// -- Controller 저장
-		// -- Service 저장
-		// -- DAO 저장
-		// 조립 service에 dao 넣기 - service를 가져온다. setter를 이용해서 가져온 dao를 넣는다.
-		
+		// --- 회원 관리 모듈 조립 (예시) ---
+				// 1. DAO 생성
+				MemberDAO memberDAO = new MemberDAO();
+				
+				// -- Controller 저장 - 모듈이름으로 저장
+				controllerMap.put("/member", new MemberController());
+				// -- Service 저장 - uri로 저장
+				serviceMap.put("/member/login.do", new LoginService());
+				// 최근 접속일 변경 - 외부 URI 없음. 내부 URI - /member/changeCon.do
+				serviceMap.put("/member/write.do", new MemberWriteService());
+				serviceMap.put("/member/view.do", new MemberViewService());
+				serviceMap.put("/member/edit.do", new MemberEditService());
+				serviceMap.put("/member/changePw.do", new MemberChangePwService());
+				serviceMap.put("/member/delete.do", new MemberDeleteService());
+				serviceMap.put("/member/changeStatus.do", new MemberChangeStatueService());
+				serviceMap.put("/member/checkId.do", new MemberCheckIdService());
+				serviceMap.put("/member/logout.do", new LogoutService());
+				serviceMap.put("/member/list.do", new MemberListService());
+				// -- DAO 저장 - 변수 이름
+				daoMap.put("memberDAO", new MemberDAO());
+				// 조립 service에 dao 넣기 - service를 가져온다. setter를 이용해서 가져온 dao를 넣는다.
+				serviceMap.get("/member/login.do").setDAO(daoMap.get("memberDAO"));
+				serviceMap.get("/member/write.do").setDAO(daoMap.get("memberDAO"));
+				serviceMap.get("/member/view.do").setDAO(daoMap.get("memberDAO"));
+				serviceMap.get("/member/edit.do").setDAO(daoMap.get("memberDAO"));
+				serviceMap.get("/member/changePw.do").setDAO(daoMap.get("memberDAO"));
+				serviceMap.get("/member/delete.do").setDAO(daoMap.get("memberDAO"));
+				serviceMap.get("/member/changeStatus.do").setDAO(daoMap.get("memberDAO"));
+				serviceMap.get("/member/checkId.do").setDAO(daoMap.get("memberDAO"));
+				serviceMap.get("/member/logout.do").setDAO(daoMap.get("memberDAO"));
+				serviceMap.get("/member/list.do").setDAO(daoMap.get("memberDAO"));
+				
+				// *** 질문 답변 생성 / 저장 / 조립
+				// -- Controller 저장
+				controllerMap.put("/qna", new QnaController());
+				// -- Service 저장
+				serviceMap.put("/qna/list.do", new QnaListService());
+				serviceMap.put("/qna/view.do", new QnaViewService());
+				serviceMap.put("/qna/question.do", new QnaQuestionService());
+				serviceMap.put("/qna/answer.do", new QnaAnswerService());
+				serviceMap.put("/qna/update.do", new QnaUpdateService());
+				serviceMap.put("/qna/delete.do", new QnaDeleteService());
+				// -- DAO 저장
+				daoMap.put("qnaDAO", new QnaDAO());
+				// 조립 service에 dao 넣기 - service를 가져온다. setter를 이용해서 가져온 dao를 넣는다.
+				serviceMap.get("/qna/list.do").setDAO(daoMap.get("qnaDAO"));
+				serviceMap.get("/qna/view.do").setDAO(daoMap.get("qnaDAO"));
+				serviceMap.get("/qna/question.do").setDAO(daoMap.get("qnaDAO"));
+				serviceMap.get("/qna/answer.do").setDAO(daoMap.get("qnaDAO"));
+				serviceMap.get("/qna/update.do").setDAO(daoMap.get("qnaDAO"));
+				serviceMap.get("/qna/delete.do").setDAO(daoMap.get("qnaDAO"));
+				
 		// --- [비상물품 체크리스트 모듈 조립 시작] ---
 
 		// 1. DAO 생성 및 저장
