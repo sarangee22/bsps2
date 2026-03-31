@@ -11,6 +11,21 @@ import com.bsps2.community.service.CommunityListService;
 import com.bsps2.community.service.CommunityUpdateService;
 import com.bsps2.community.service.CommunityViewService;
 import com.bsps2.community.service.CommunityWriteService;
+import com.bsps2.disasterMap.controller.DisasterMapController;
+import com.bsps2.disasterMap.dao.DisasterMapDAO;
+import com.bsps2.disasterMap.service.DisasterMapDeleteService;
+import com.bsps2.disasterMap.service.DisasterMapListService;
+import com.bsps2.disasterMap.service.DisasterMapUpdateService;
+import com.bsps2.disasterMap.service.DisasterMapViewService;
+import com.bsps2.disasterMap.service.DisasterMapWriteService;
+import com.bsps2.disasterSafe.controller.AgencyController;
+import com.bsps2.disasterSafe.dao.AgencyDAO;
+import com.bsps2.disasterSafe.service.AgencyDeleteService;
+import com.bsps2.disasterSafe.service.AgencyListService;
+import com.bsps2.disasterSafe.service.AgencyUpdateService;
+import com.bsps2.disasterSafe.service.AgencyViewService;
+import com.bsps2.disasterSafe.service.AgencyWriteService;
+import com.bsps2.disasterSafe.service.AgencyListService;
 import com.bsps2.main.dao.DAO;
 import com.bsps2.main.edu.controller.EduController.EduController;
 import com.bsps2.main.edu.dao.EduDAO.EduDAO;
@@ -185,6 +200,60 @@ public class Init extends HttpServlet {
 		serviceMap.put("/admin/edu/delete.do", eduDeleteService);
 
 		System.out.println("Init.init() --- 교육 모듈 MVC 조립 완료 ---");
+		
+		//map controller
+		controllerMap.put("/disasterMap", new DisasterMapController());
+
+		// 2. DAO 등록 (이것도 맞음)
+		daoMap.put("disasterMapDAO", new DisasterMapDAO());
+
+		// 3. Service 등록 (이 부분을 수정해야 함)
+		// Controller가 아니라 각각의 Service 클래스를 생성해서 넣어야 합니다.
+		serviceMap.put("/disasterMap/list.do", new DisasterMapListService());
+		serviceMap.put("/disasterMap/view.do", new DisasterMapViewService());
+		serviceMap.put("/disasterMap/write.do", new DisasterMapWriteService());
+		serviceMap.put("/disasterMap/update.do", new DisasterMapUpdateService());
+		serviceMap.put("/disasterMap/delete.do", new DisasterMapDeleteService());
+
+		// 4. 조립 (Service에 DAO 주입)
+		serviceMap.get("/disasterMap/list.do").setDAO(daoMap.get("disasterMapDAO"));
+		serviceMap.get("/disasterMap/view.do").setDAO(daoMap.get("disasterMapDAO"));
+		serviceMap.get("/disasterMap/write.do").setDAO(daoMap.get("disasterMapDAO"));
+		serviceMap.get("/disasterMap/update.do").setDAO(daoMap.get("disasterMapDAO"));
+		serviceMap.get("/disasterMap/delete.do").setDAO(daoMap.get("disasterMapDAO"));
+		
+		daoMap.put("agencyDAO", new AgencyDAO());
+		
+		// 2. Controller 생성 및 저장
+		controllerMap.put("/agency", new AgencyController());
+		
+		// 3. Service 생성 및 DAO 주입 (Setter 호출)
+		// 리스트
+		Service agencyListService = new AgencyListService();
+		agencyListService.setDAO(daoMap.get("agencyDAO"));
+		serviceMap.put("/agency/list.do", agencyListService);
+		
+		// 상세보기
+		Service agencyViewService = new AgencyViewService();
+		agencyViewService.setDAO(daoMap.get("agencyDAO"));
+		serviceMap.put("/agency/view.do", agencyViewService);
+		
+		// 등록
+		Service agencyWriteService = new AgencyWriteService();
+		agencyWriteService.setDAO(daoMap.get("agencyDAO"));
+		serviceMap.put("/agency/write.do", agencyWriteService);
+		
+		// 수정
+		Service agencyUpdateService = new AgencyUpdateService();
+		agencyUpdateService.setDAO(daoMap.get("agencyDAO"));
+		serviceMap.put("/agency/update.do", agencyUpdateService);
+		
+		// 삭제
+		Service agencyDeleteService = new AgencyDeleteService();
+		agencyDeleteService.setDAO(daoMap.get("agencyDAO"));
+		serviceMap.put("/agency/delete.do", agencyDeleteService);
+		
+		System.out.println("Init.init() : 재난 안전 기관(Agency) 모듈 조립 완료 ----------------");
 
 	}
 }
