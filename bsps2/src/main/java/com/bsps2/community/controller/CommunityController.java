@@ -122,7 +122,7 @@ public class CommunityController implements Controller {
 					return "redirect:updateForm.do?no=" + vo.getNo();
 				}
 				
-			//5.이미지 파일 변경 처리
+			//5.이미지 파일 변경 처리..
 			case "/community/changeImage.do":			
 				// 1. 파일 업로드 설정 및 폴더 생성
 			    path = "/upload/image";
