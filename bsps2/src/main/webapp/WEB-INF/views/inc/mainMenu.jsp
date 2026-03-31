@@ -80,7 +80,7 @@
 	        <li class="nav-item">
 	          <a class="nav-link" href="/member/searchPwForm.do">회원 탈퇴</a>
 	        </li>
-	      	<!-- 로그인을 한 경우의 메뉴 끝 -->
+	      	<!-- 로그인을 한 경우의 메뉴 끝.. -->
       	</c:if>
       </ul>
     </div>
