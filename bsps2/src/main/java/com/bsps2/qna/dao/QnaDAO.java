@@ -82,7 +82,7 @@ public class QnaDAO extends DAO{
 			// 1. 드라이버 확인 & 2. 연결 객체
 			con = DB.getConnection();
 			// 3. SQL
-			String sql = "select q.no, q.title, q.content, q.id, m.name,"
+			String sql = "select q.no, q.title, q.content, q.id, m.name, "
 					+ " to_char(q.writeDate, 'yyyy-mm-dd') writeDate, "
 					+ "      q.hit, q.refNo, q.ordNo, q.levNo "
 					+ " from qna q, member m "
