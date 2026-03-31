@@ -79,7 +79,7 @@ public class Init extends HttpServlet {
 		// == controller는 모듈명으로 저장
 		
 		// *** 일반 게시판 생성 / 저장 / 조립
-		// == controller 등록
+		// == controller 등록..
 		controllerMap.put("/community", new CommunityController());
 		// == service 등록
 		serviceMap.put("/community/list.do", new CommunityListService());
