@@ -152,54 +152,35 @@ public class CommunityDAO extends DAO {
 		
 	}//write()의 끝
 	
-	//4.글수정
-	public Integer update(CommunityVO vo) throws Exception{
-		Integer result = 0;
-		
-		//1.드라이버 확인 2.연결
-		con = DB.getConnection();
-		//3.SQL작성
-		String sql = "update community set title = ?, content = ?, writer = ?, fileName = ? "
-				+ " where no = ? and pw = ?";
-		//4.실행 객체 및 데이터 세팅
-		pstmt = con.prepareStatement(sql);
-		pstmt.setString(1, vo.getTitle());
-		pstmt.setString(2, vo.getContent());
-		pstmt.setString(3, vo.getWriter());
-		pstmt.setString(4, vo.getFileName());
-		pstmt.setLong(5, vo.getNo());
-		pstmt.setString(6, vo.getPw());
-		//5.실행,6.결과 담기
-		result = pstmt.executeUpdate();
-		
-		//7.닫기
-		DB.close(con, pstmt);
-		
-		
-		return result;
-	}// update() 끝
+	// 4. 글수정
+	public Integer update(CommunityVO vo) throws Exception {
+	    Integer result = 0;
+
+	    // 1. 드라이버 확인 & 2. 연결
+	    con = DB.getConnection();
+
+	    // 3. SQL 작성 - fileName = ? 가 반드시 들어가야 합니다!
+	    String sql = "update community set title = ?, content = ?, writer = ?, fileName = ? "
+	               + " where no = ? and pw = ?";
+
+	    // 4. 실행 객체 및 데이터 세팅 (물음표 순서를 꼭 지키세요!)
+	    pstmt = con.prepareStatement(sql);
+	    pstmt.setString(1, vo.getTitle());    // 1번 ?
+	    pstmt.setString(2, vo.getContent());  // 2번 ?
+	    pstmt.setString(3, vo.getWriter());   // 3번 ?
+	    pstmt.setString(4, vo.getFileName()); // 4번 ? (새로 추가됨)
+	    pstmt.setLong(5, vo.getNo());         // 5번 ? (where 절)
+	    pstmt.setString(6, vo.getPw());       // 6번 ? (where 절)
+
+	    // 5. 실행, 6. 결과 담기
+	    result = pstmt.executeUpdate();
+
+	    // 7. 닫기
+	    DB.close(con, pstmt);
+
+	    return result;
+	} // update() 끝
 	
-	
-	//5.이미지 파일 교체.
-	public Integer changeImage(CommunityVO vo) throws Exception{
-		Integer result = 0;
-		
-		//1.드라이버 확인 2.연결
-		con = DB.getConnection();
-		//3.SQL작성
-		String sql = "update community set fileName = ? where no = ?";
-		//4.실행 객체 및 데이터 세팅
-		pstmt = con.prepareStatement(sql);
-		pstmt.setString(1, vo.getFileName());
-		pstmt.setLong(2, vo.getNo());
-		//5.실행,6.결과 담기
-		result = pstmt.executeUpdate();
-		
-		//7.닫기
-		DB.close(con, pstmt);
-		
-		return result;
-	}//changeImage()의 끝
 	
 	//6.글삭제
 	public Integer delete(CommunityVO vo) throws Exception{
