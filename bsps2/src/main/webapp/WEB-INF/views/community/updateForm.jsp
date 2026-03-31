@@ -100,7 +100,7 @@ $(function(){
 				</div>
 				
 				<div class="modal-footer">
-					<button class="btn btn-primary">이미지 변경 하기</button>
+					<button class="btn btn-primary">이미지 변경 하기1</button>
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
 					
 				</div>
