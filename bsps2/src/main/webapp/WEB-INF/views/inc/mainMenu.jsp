@@ -13,7 +13,7 @@
           <a class="nav-link" href="/community/list.do">제보게시판</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/shop/list.do">퀴즈</a>
+          <a class="nav-link" href="/qna/list.do">퀴즈</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/edu/list.do">교육</a>
