@@ -4,41 +4,89 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>기관 상세 정보</title>
+<title>${vo.agencyName} - 상세 정보</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-<style>
-    .card { border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-    .card-header { font-weight: bold; }
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 
-    .map-box { border-radius: 10px; width:100%; height:450px; border: 1px solid #ddd; overflow: hidden; }
+<style>
+    body { background-color: #f8f9fa; font-family: 'Noto Sans KR', sans-serif; color: #333; }
+    
+    .container { max-width: 900px; margin-top: 50px; margin-bottom: 80px; }
+
+    /* 상단 타이틀 영역 */
+    .view-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px; padding: 0 10px; }
+    .view-header h2 { font-weight: 700; margin-bottom: 0; color: #2c3e50; }
+    .view-header .badge-type { padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 14px; background-color: #4361ee; color: white; }
+
+    /* 정보 카드 박스 */
+    .info-card { background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); border: none; }
+
+    /* 주요 정보 그리드 */
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+    .info-item { background: #fcfcfc; padding: 20px; border-radius: 15px; border: 1px solid #f1f3f5; }
+    .info-item label { display: block; color: #888; font-size: 13px; margin-bottom: 5px; font-weight: 500; }
+    .info-item span { font-size: 17px; font-weight: 600; color: #333; }
+    .info-item.full { grid-column: span 2; }
+
+    /* 지도 영역 */
+    .map-section { margin-top: 30px; }
+    .map-section h5 { font-weight: 700; font-size: 18px; margin-bottom: 15px; color: #2c3e50; }
+    .map-box { border-radius: 15px; width: 100%; height: 400px; border: 1px solid #e9ecef; overflow: hidden; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05); }
+
+    /* 하단 버튼 영역 */
+    .action-bar { display: flex; justify-content: space-between; margin-top: 30px; padding: 0 10px; }
+    .btn-custom { padding: 12px 25px; border-radius: 12px; font-weight: 600; transition: 0.3s; font-size: 15px; }
+    
+    .btn-list { background-color: #333; color: white; }
+    .btn-list:hover { background-color: #000; color: white; }
+    
+    .btn-edit { background-color: #eef2ff; color: #4361ee; border: 1px solid #dbe4ff; }
+    .btn-edit:hover { background-color: #4361ee; color: white; }
+    
+    .btn-delete { background-color: #fff0f0; color: #ff4d4d; border: 1px solid #ffe5e5; }
+    .btn-delete:hover { background-color: #ff4d4d; color: white; }
+
+    /* 상태 표시 점 */
+    .status-dot { display: inline-block; width: 10px; height: 10px; background-color: #2ecc71; border-radius: 50%; margin-right: 5px; }
 </style>
 </head>
 <body>
-<div class="container mt-5 mb-5">
-    <div class="card">
-        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-            <h3 class="mb-0">🏢 ${vo.agencyName} 상세 정보</h3>
-            <span class="badge badge-warning p-2" style="font-size: 0.9rem;">${vo.agencyType}</span>
-        </div>
-        <div class="card-body">
-            <table class="table table-bordered">
-                <tr>
-                    <th class="bg-light" style="width: 20%;">연락처</th>
-                    <td style="width: 30%;">${vo.phone}</td>
-                    <th class="bg-light" style="width: 20%;">운영 상태</th>
-                    <td><span class="text-success">● 정상 운영 중</span></td>
-                </tr>
-                <tr>
-                    <th class="bg-light">주소</th>
-                    <td colspan="3">${vo.address}</td>
-                </tr>
-                <tr>
-                    <th class="bg-light">운영 시간</th>
-                    <td colspan="3">${vo.operatingHours}</td>
-                </tr>
-            </table>
 
-            <h5 class="mt-4">📍 위치 지도 (Google Maps)</h5>
+<div class="container">
+    <div class="view-header">
+        <div>
+            <p class="text-muted mb-1" style="font-size: 14px;">기관 상세 정보</p>
+            <h2>🏢 ${vo.agencyName}</h2>
+        </div>
+        <span class="badge-type">${vo.agencyType}</span>
+    </div>
+
+    <div class="info-card">
+        <div class="info-grid">
+            <div class="info-item">
+                <label>📞 비상 연락처</label>
+                <span class="text-primary">${vo.phone}</span>
+            </div>
+            <div class="info-item">
+                <label>🟢 운영 상태</label>
+                <span><span class="status-dot"></span>정상 운영 중</span>
+            </div>
+            <div class="info-item">
+                <label>⏰ 운영 시간</label>
+                <span>${empty vo.operatingHours ? '정보 없음' : vo.operatingHours}</span>
+            </div>
+            <div class="info-item">
+                <label>🔢 기관 고유 번호</label>
+                <span>No. ${vo.agencyId}</span>
+            </div>
+            <div class="info-item full">
+                <label>📍 위치 주소</label>
+                <span>${vo.address}</span>
+            </div>
+        </div>
+
+        <div class="map-section">
+            <h5>📍 찾아오시는 길</h5>
             <div class="map-box">
                 <iframe
                   width="100%"
@@ -50,22 +98,24 @@
                 </iframe>
             </div>
         </div>
-        
-        <div class="card-footer bg-light text-right">
-            <a href="updateForm.do?agencyId=${vo.agencyId}" class="btn btn-outline-primary mr-1">수정하기</a>
-            <button type="button" class="btn btn-outline-danger mr-1" onclick="deleteAgency()">삭제하기</button>
-            <a href="list.do" class="btn btn-dark">목록으로</a>
+    </div>
+
+    <div class="action-bar">
+        <a href="list.do" class="btn-custom btn-list">← 목록으로 돌아가기</a>
+        <div>
+            <a href="updateForm.do?agencyId=${vo.agencyId}" class="btn-custom btn-edit mr-2">정보 수정</a>
+            <button type="button" class="btn-custom btn-delete" onclick="deleteAgency()">기관 삭제</button>
         </div>
     </div>
 </div>
 
 <script>
-// 삭제 확인 함수
 function deleteAgency() {
-    if(confirm("정말 이 기관 정보를 삭제하시겠습니까?")) {
+    if(confirm("정말 이 기관 정보를 삭제하시겠습니까?\n삭제된 데이터는 복구할 수 없습니다.")) {
         location.href = "delete.do?agencyId=${vo.agencyId}";
     }
 }
 </script>
+
 </body>
 </html>
