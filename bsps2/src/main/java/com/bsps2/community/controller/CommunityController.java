@@ -102,55 +102,67 @@ public class CommunityController implements Controller {
 				request.setAttribute("vo", Execute.execute(Init.getService("/community/view.do"), new Long[] {no, 0L}));
 				return"community/updateForm";
 				
-				// 4-2 글수정 처리 (특수문자 제거 버전)
+			//4-2 글수정 처리
 			case "/community/update.do":
+				vo = new CommunityVO();
+				vo.setNo(Long.parseLong(request.getParameter("no")));
+				vo.setTitle(request.getParameter("title"));
+				vo.setContent(request.getParameter("content"));
+				vo.setWriter(request.getParameter("writer"));
+				vo.setPw(request.getParameter("pw"));
+				vo.setFileName(request.getParameter("fileName"));
+				
+				result = (Integer) Execute.execute(Init.getService(uri), vo);
+				
+				if(result == 1) {
+					session.setAttribute("msg", "제보 게시판 " + vo.getNo() + "번 글 수정이 되었습니다."); // 성공 메시지
+					return "redirect:view.do?no=" + vo.getNo() + "&inc=0&" + PageObject.getInstance(request).getNotPageQuery();
+				} else {
+					session.setAttribute("msg", "제보 게시판 " + vo.getNo() + "번 글 수정에 실패하였습니다. 정보를 확인 후 다시 시도해 주세요."); // 실패 메시지
+					return "redirect:updateForm.do?no=" + vo.getNo();
+				}
+				
+			//5.이미지 파일 변경 처리
+			case "/community/changeImage.do":			
+				// 1. 파일 업로드 설정 및 폴더 생성
+			    path = "/upload/image";
+			    savePath = request.getServletContext().getRealPath(path);
+			    savedDir = new File(savePath);
+			    if(!savedDir.exists()) savedDir.mkdirs();
+
+			    // 2. 새로운 파일 수집 (Part 이용)
+			    filePart = request.getPart("imageFile");
+			    fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+			    uuid = UUID.randomUUID().toString();
+			    savedFileName = uuid + "_" + fileName;
+			    
+			    // 서버에 실제 파일 저장
+			    filePart.write(savePath + File.separator + savedFileName);
+
+			    // 3. VO에 데이터 담기
 			    vo = new CommunityVO();
 			    vo.setNo(Long.parseLong(request.getParameter("no")));
-			    vo.setTitle(request.getParameter("title"));
-			    vo.setContent(request.getParameter("content"));
-			    vo.setWriter(request.getParameter("writer"));
-			    vo.setPw(request.getParameter("pw"));
-			    
-			    // 기존 파일명 유지용 (hidden)
-			    String currentFile = request.getParameter("fileName");
-			    vo.setFileName(currentFile);
+			    vo.setFileName(path + "/" + savedFileName);
 
-			    // 새로운 파일 수집
-			    Part part = request.getPart("imageFile");
-			    
-			    // 파일이 실제로 선택되었는지 확인
-			    if (part != null && part.getSize() > 0) {
-			        String uploadPath = "/upload/image";
-			        String realPath = request.getServletContext().getRealPath(uploadPath);
-			        
-			        // 폴더 생성
-			        File dir = new File(realPath);
-			        if(!dir.exists()) dir.mkdirs();
-			        
-			        String orgName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
-			        String newName = UUID.randomUUID().toString() + "_" + orgName;
-			        
-			        // 파일 저장
-			        part.write(realPath + File.separator + newName);
-			        vo.setFileName(uploadPath + "/" + newName);
-			        
-			        // 기존 파일 삭제
-			        if(currentFile != null && !currentFile.equals("")) {
-			            File oldFile = new File(request.getServletContext().getRealPath(currentFile));
-			            if(oldFile.exists()) oldFile.delete();
-			        }
-			    }
+			    // 4. 서비스 실행 (DB 업데이트)
+			    Execute.execute(Init.getService(uri), vo);
 
-			    result = (Integer) Execute.execute(Init.getService(uri), vo);
+			    // 5. 기존 파일 삭제 (선택 사항이지만 추천!)
+			    String delFileName = request.getParameter("delFileName");
+                if(delFileName != null && !delFileName.equals("")) {
+                    File delFile = new File(request.getServletContext().getRealPath(delFileName));
+                    if(delFile.exists()) delFile.delete();
+                }
+
+			    session.setAttribute("msg", "이미지가 성공적으로 변경되었습니다.");
 			    
-			    if(result == 1) {
-			        session.setAttribute("msg", "수정이 완료되었습니다.");
-			        return "redirect:view.do?no=" + vo.getNo() + "&inc=0&" + PageObject.getInstance(request).getNotPageQuery();
-			    } else {
-			        session.setAttribute("msg", "수정 실패: 비밀번호를 확인하세요.");
-			        return "redirect:updateForm.do?no=" + vo.getNo();
-			    }
-			
+			    // 6. 상세보기로 돌아가기 (검색/페이지 정보 유지)
+			    return "redirect:view.do?no=" + vo.getNo() + "&inc=0" 
+			           + "&page=" + request.getParameter("page")
+			           + "&perPageNum=" + request.getParameter("perPageNum")
+			           + "&key=" + request.getParameter("key")
+			           + "&word=" + request.getParameter("word");
+				
 			//6. 글삭제 처리
 			case "/community/delete.do":
 				vo = new CommunityVO();

@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +18,7 @@ $(function(){
 <div class="container">
 	<h3 class="mt-4 mb-4">제보 내용 수정</h3>
 	
-	<form action="update.do" method="post" id="updateForm" enctype="multipart/form-data">
+	<form action="update.do" method="post" id="updateForm">
 		<input type="hidden" name="page" value="${param.page }">
 		<input type="hidden" name="perPageNum" value="${param.perPageNum }">
 		<input type="hidden" name="key" value="${param.key }">
@@ -52,14 +51,16 @@ $(function(){
 		</div>
 
 		<div class="mb-3 mt-3">
-			<label class="form-label">제보 사진 수정</label>
-			<div class="mb-2">
-				<p class="small text-muted">현재 등록된 사진:</p>
+			<label class="form-label">현재 제보 사진</label>
+			<div>
 				<img src="${vo.fileName }" class="img-thumbnail" 
-					style="max-width: 200px; height: auto;">
+					style="max-width: 300px; height: auto;">
+				<button type="button" class="btn btn-success btn-sm ms-2"
+					data-bs-toggle="modal" data-bs-target="#changeImageModal">
+					이미지 변경하기
+				</button>
+				
 			</div>
-			<input type="file" name="imageFile" id="imageFile" class="form-control" accept="image/*">
-			<p class="small text-primary mt-1">* 사진을 변경하고 싶을 때만 파일을 선택하세요. 선택하지 않으면 기존 사진이 유지됩니다.</p>
 		</div>
 
 		<div class="mb-3 mt-3">
@@ -75,6 +76,40 @@ $(function(){
 		</div>
 	</form>
 </div>
+
+
+<div class="modal fade" id="changeImageModal">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			
+			<div class="modal-header">
+				<h4 class="modal-title">변경할 이미지를 선택하세요.</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			
+			<form action="changeImage.do" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="no" value="${vo.no }">
+				<input type="hidden" name="page" value="${param.page }">
+				<input type="hidden" name="perPageNum" value="${param.perPageNum }">
+				<input type="hidden" name="key" value="${param.key }">
+				<input type="hidden" name="word" value="${param.word }">
+				<input type="hidden" name="delFileName" value="${vo.fileName }">
+								
+				<div class="modal-body">
+					<input type="file" class="form-control" name="imageFile" required accept="image/*">
+				</div>
+				
+				<div class="modal-footer">
+					<button class="btn btn-primary">이미지 변경 하기</button>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+					
+				</div>
+				
+			</form>
+		</div>
+	</div>
+</div>
+
 
 </body>
 </html>
