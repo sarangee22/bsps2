@@ -14,8 +14,8 @@ public class ItemWriteService implements Service {
 	}
 
 	@Override
-	public Object service(Object obj) throws Exception {
-		// obj는 등록할 데이터가 담긴 ItemVO
+	public Integer service(Object obj) throws Exception {
+		// 넘겨받은 ItemVO 객체를 그대로 DAO의 write로 전달
 		return dao.write((ItemVO) obj);
 	}
-}
+} 

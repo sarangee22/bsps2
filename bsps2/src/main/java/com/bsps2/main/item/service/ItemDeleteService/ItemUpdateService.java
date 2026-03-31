@@ -12,10 +12,10 @@ public class ItemUpdateService implements Service {
 	public void setDAO(DAO dao) {
 		this.dao = (ItemDAO) dao;
 	}
-
+ 
 	@Override
-	public Object service(Object obj) throws Exception {
-		// obj는 수정할 데이터가 담긴 ItemVO
+	public Integer service(Object obj) throws Exception {
+		// 수정된 데이터가 담긴 ItemVO 객체 전달
 		return dao.update((ItemVO) obj);
 	}
 }

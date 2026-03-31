@@ -4,85 +4,89 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
-<style>
-    body { font-family: 'Nanum Gothic', sans-serif; background-color: #f4f7f6; }
-    .container { max-width: 1000px; margin: 50px auto; }
-    .item-card { transition: 0.3s; cursor: pointer; border-radius: 8px; overflow: hidden; }
-    .item-card:hover { transform: translateY(-5px); box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); }
-    .status-ready { color: #2ecc71; font-weight: bold; }
-    .status-need { color: #e74c3c; font-weight: bold; }
-    .category-tag { padding: 2px 8px; border-radius: 4px; font-size: 0.8em; }
-</style>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script>
-    $(function(){
-        <c:if test="${!empty msg}">
-            alert("${msg}");
-            <% session.removeAttribute("msg"); %>
-        </c:if>
-    });
-</script>
+    <title>비상물품 체크리스트</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; }
+        .priority-high { background-color: #FEE2E2; color: #991B1B; } 
+        .priority-mid { background-color: #FEF3C7; color: #92400E; }  
+        .priority-low { background-color: #E0F2FE; color: #075985; }  
+    </style>
 </head>
-<body>
+<body class="p-6 md:p-10">
 
-<div class="w3-container container">
-    <div class="w3-panel w3-leftbar w3-border-red w3-pale-red w3-padding-16 w3-margin-bottom">
-        <h2 class="w3-opacity"><b>🚨 나의 비상물품 체크리스트</b></h2>
-        <p>재난 발생 시 생존을 돕는 필수 물품들을 관리하세요.</p>
-    </div>
-
-    <div class="w3-card-4 w3-white w3-round-large">
-        <header class="w3-container w3-light-grey w3-padding">
-            <div class="w3-right">
-                <a href="writeForm.do?perPageNum=${pageObject.perPageNum}" class="w3-button w3-red w3-round-large w3-small">+ 새 물품 추가</a>
+    <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center gap-3">
+            <div class="p-3 bg-blue-600 rounded-xl text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+            </div> 
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">비상물품 체크리스트</h1>
+                <p class="text-gray-500 text-sm">등록된 모든 비상물품을 관리하고 확인하세요.</p>
             </div>
-            <h4 style="margin:5px 0">현재 등록된 물품</h4>
-        </header>
-
-        <div class="w3-container w3-padding-16">
-            <table class="w3-table w3-bordered w3-hoverable">
-                <thead>
-                    <tr class="w3-text-grey">
-                        <th width="10%">번호</th>
-                        <th width="15%">유형</th>
-                        <th width="45%">물품명</th>
-                        <th width="30%">준비 상태</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:if test="${empty list}">
-                        <tr><td colspan="4" class="w3-center w3-padding-64">등록된 물품이 없습니다. 첫 물품을 등록해 보세요!</td></tr>
-                    </c:if>
-                    <c:forEach var="vo" items="${list}">
-                        <tr onclick="location='view.do?no=${vo.no}&page=${pageObject.page}&perPageNum=${pageObject.perPageNum}'" style="cursor:pointer">
-                            <td>${vo.no}</td>
-                            <td>
-                                <span class="w3-tag w3-round w3-blue-grey category-tag">${vo.category}</span>
-                            </td>
-                            <td><b>${vo.name}</b></td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${vo.isReady == 'Y'}">
-                                        <span class="status-ready">● 준비완료</span>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span class="status-need">○ 준비필요</span>
-                                    </c:otherwise>
-                                </c:choose>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
         </div>
-
-        <footer class="w3-container w3-white w3-padding-24 w3-center">
-            <pageNav:pageNav listURI="list.do" pageObject="${pageObject}" />
-        </footer>
+        <a href="writeForm.do?perPageNum=${pageObject.perPageNum}" class="px-5 py-2 bg-blue-600 text-white rounded-lg font-semibold flex items-center gap-2 hover:bg-blue-700">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            새 물품 추가
+        </a>
     </div>
-</div>
 
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+            <div><p class="text-xs font-medium text-gray-400 uppercase">전체 물품</p><p class="text-4xl font-black text-gray-900 mt-1">${meta.total}</p></div>
+            <div class="p-3 bg-blue-50 text-blue-500 rounded-xl"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 11m8 4L4 11m16 4v10l-8 4m0-10v10"></path></svg></div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+            <div><p class="text-xs font-medium text-gray-400 uppercase">확인 완료</p><p class="text-4xl font-black text-green-600 mt-1">${meta.ready}</p></div>
+            <div class="p-3 bg-green-50 text-green-500 rounded-xl"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+            <div><p class="text-xs font-medium text-gray-400 uppercase">미확인</p><p class="text-4xl font-black text-orange-600 mt-1">${meta.notReady}</p></div>
+            <div class="p-3 bg-orange-50 text-orange-500 rounded-xl"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <table class="w-full text-sm text-left">
+            <thead class="bg-gray-50 text-gray-500 font-medium border-b border-gray-100">
+                <tr>
+                    <th class="px-6 py-4 w-16 text-center">상태</th>
+                    <th class="px-6 py-4">물품명</th>
+                    <th class="px-6 py-4">카테고리</th>
+                    <th class="px-6 py-4">수량</th>
+                    <th class="px-6 py-4 text-center">우선순위</th>
+                    <th class="px-6 py-4">유효기한</th>
+                    <th class="px-6 py-4 text-center">작업</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+                <c:forEach var="vo" items="${list}">
+                    <tr class="hover:bg-gray-50 cursor-pointer" onclick="location='view.do?no=${vo.no}&page=${pageObject.page}&perPageNum=${pageObject.perPageNum}'">
+                        <td class="px-6 py-4 text-center" onclick="event.stopPropagation();">
+                            <input type="checkbox" ${vo.isReady == 'Y' ? 'checked' : ''} class="w-5 h-5 accent-gray-900 rounded border-gray-300 pointer-events-none">
+                        </td>
+                        <td class="px-6 py-4 font-bold text-gray-900">${vo.name}</td>
+                        <td class="px-6 py-4 text-gray-500">${vo.category}</td>
+                        <td class="px-6 py-4 font-medium">${vo.quantity} ${vo.unit}</td>
+                        <td class="px-6 py-4 text-center">
+                            <c:set var="pClass" value="${vo.priority == '높음' ? 'priority-high' : (vo.priority == '낮음' ? 'priority-low' : 'priority-mid')}" />
+                            <span class="px-3 py-1 text-xs font-bold rounded-full ${pClass}">${vo.priority}</span>
+                        </td>
+                        <td class="px-6 py-4 text-gray-400">${vo.expiryDate}</td>
+                        <td class="px-6 py-4 text-center" onclick="event.stopPropagation();">
+                            <div class="flex items-center justify-center gap-3">
+                                <a href="updateForm.do?no=${vo.no}" class="text-gray-400 hover:text-blue-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg></a>
+                                <a href="delete.do?no=${vo.no}" class="text-gray-400 hover:text-red-600" onclick="return confirm('삭제하시겠습니까?')"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></a>
+                            </div>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table>
+        <div class="py-10 text-center border-t border-gray-50">
+            <pageNav:pageNav listURI="list.do" pageObject="${pageObject}" />
+        </div>
+    </div>
 </body>
 </html>

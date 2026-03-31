@@ -12,6 +12,12 @@ import com.bsps2.community.service.CommunityUpdateService;
 import com.bsps2.community.service.CommunityViewService;
 import com.bsps2.community.service.CommunityWriteService;
 import com.bsps2.main.dao.DAO;
+import com.bsps2.main.edu.controller.EduController.EduController;
+import com.bsps2.main.edu.dao.EduDAO.EduDAO;
+import com.bsps2.main.edu.service.EduService.EduDeleteService;
+import com.bsps2.main.edu.service.EduService.EduListService;
+import com.bsps2.main.edu.service.EduService.EduViewService;
+import com.bsps2.main.edu.service.EduService.EduWriteService;
 import com.bsps2.main.item.controller.ItemController.ItemController;
 import com.bsps2.main.item.dao.ItemDAO.ItemDAO;
 import com.bsps2.main.item.service.ItemDeleteService.ItemDeleteService;
@@ -106,39 +112,79 @@ public class Init extends HttpServlet {
 		// -- DAO 저장
 		// 조립 service에 dao 넣기 - service를 가져온다. setter를 이용해서 가져온 dao를 넣는다.
 		
-		// 비상물품 체크리스트 
+		// --- [비상물품 체크리스트 모듈 조립 시작] ---
+
 		// 1. DAO 생성 및 저장
-				// key값은 나중에 꺼내기 쉽도록 "소문자 시작 클래스명"으로 저장합니다.
-				ItemDAO itemDAO = new ItemDAO();
-				daoMap.put("itemDAO", itemDAO);
-				
-				// 2. Controller 생성 및 저장
-				// 모듈 이름인 "/item"을 key로 저장하여 DispatcherServlet이 찾게 합니다.
-				controllerMap.put("/item", new ItemController());
-				
-				// 3. Service 생성 / 저장 / 조립
-				// --- [비상물품 리스트] ---
-				serviceMap.put("/item/list.do", new ItemListService());
-				serviceMap.get("/item/list.do").setDAO(daoMap.get("itemDAO"));
-				
-				// --- [비상물품 보기] ---
-				serviceMap.put("/item/view.do", new ItemViewService());
-				serviceMap.get("/item/view.do").setDAO(daoMap.get("itemDAO"));
-				
-				// --- [비상물품 등록] ---
-				serviceMap.put("/item/write.do", new ItemWriteService());
-				serviceMap.get("/item/write.do").setDAO(daoMap.get("itemDAO"));
-				
-				// --- [비상물품 수정] ---
-				serviceMap.put("/item/update.do", new ItemUpdateService());
-				serviceMap.get("/item/update.do").setDAO(daoMap.get("itemDAO"));
-				
-				// --- [비상물품 삭제] ---
-				serviceMap.put("/item/delete.do", new ItemDeleteService());
-				serviceMap.get("/item/delete.do").setDAO(daoMap.get("itemDAO"));
-				
-				System.out.println("Init.init() --- 비상물품 모듈 조립 완료 ---");
+		// 클래스명이 ItemDAO이므로 키값은 "itemDAO"로 통일합니다.
+		ItemDAO itemDAO = new ItemDAO();
+		daoMap.put("itemDAO", itemDAO);
+
+		// 2. Controller 생성 및 저장
+		// DispatcherServlet이 "/item"으로 시작하는 모든 요청을 이 컨트롤러로 보냅니다.
+		controllerMap.put("/item", new ItemController());
+
+		// 3. Service 생성 / 저장 / 조립
+		// 각 서비스 객체를 생성하고, 위에서 만든 itemDAO를 주입(Injection)합니다.
+
+		// --- [리스트 서비스] ---
+		ItemListService itemListService = new ItemListService();
+		itemListService.setDAO(itemDAO); // 직접 변수를 넣어주는게 더 안전합니다.
+		serviceMap.put("/item/list.do", itemListService);
+
+		// --- [글보기 서비스] ---
+		ItemViewService itemViewService = new ItemViewService();
+		itemViewService.setDAO(itemDAO);
+		serviceMap.put("/item/view.do", itemViewService);
+
+		// --- [글등록 서비스] ---
+		ItemWriteService itemWriteService = new ItemWriteService();
+		itemWriteService.setDAO(itemDAO);
+		serviceMap.put("/item/write.do", itemWriteService);
+
+		// --- [글수정 서비스] ---
+		ItemUpdateService itemUpdateService = new ItemUpdateService();
+		itemUpdateService.setDAO(itemDAO);
+		serviceMap.put("/item/update.do", itemUpdateService);
+
+		// --- [글삭제 서비스] ---
+		ItemDeleteService itemDeleteService = new ItemDeleteService();
+		itemDeleteService.setDAO(itemDAO);
+		serviceMap.put("/item/delete.do", itemDeleteService);
+
+		System.out.println("Init.init() --- 비상물품 모듈(MVC) 조립 완료 ---");
+		
+		// edu
+		// Init.java의 init() 메서드 안에 추가하세요.
+
+		// --- [교육 가이드 모듈 조립 시작] ---
+		EduDAO eduDAO = new EduDAO();
+		EduController eduCtrl = new EduController();
+
+		// 1. 컨트롤러 등록
+		controllerMap.put("/edu", eduCtrl);
+		controllerMap.put("/admin/edu", eduCtrl);
+
+		// 2. 서비스 생성 (변수에 담아서 재사용하는 것이 안전합니다)
+		EduListService eduListService = new EduListService();
+		EduViewService eduViewService = new EduViewService();
+		EduWriteService eduWriteService = new EduWriteService();
+		EduDeleteService eduDeleteService = new EduDeleteService();
+
+		// 3. 서비스에 DAO 주입 (실행 전 반드시 필요)
+		eduListService.setDAO(eduDAO);
+		eduViewService.setDAO(eduDAO);
+		eduWriteService.setDAO(eduDAO);
+		eduDeleteService.setDAO(eduDAO);   
+
+		// 4. 서비스 맵(serviceMap)에 등록
+		serviceMap.put("/edu/list.do", eduListService);
+		serviceMap.put("/admin/edu/list.do", eduListService); // 관리자 리스트용 추가!
+		serviceMap.put("/edu/view.do", eduViewService);
+		serviceMap.put("/admin/edu/view.do", eduViewService); // 관리자용 상세보기도 필요할 수 있음
+		serviceMap.put("/admin/edu/write.do", eduWriteService);
+		serviceMap.put("/admin/edu/delete.do", eduDeleteService);
+
+		System.out.println("Init.init() --- 교육 모듈 MVC 조립 완료 ---");
 
 	}
-
 }
