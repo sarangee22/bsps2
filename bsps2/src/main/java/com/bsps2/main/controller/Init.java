@@ -7,6 +7,12 @@ import com.bsps2.community.controller.CommunityController;
 import com.bsps2.community.dao.CommunityDAO;
 import com.bsps2.community.service.CommunityListService;
 import com.bsps2.main.dao.DAO;
+import com.bsps2.main.edu.controller.EduController.EduController;
+import com.bsps2.main.edu.dao.EduDAO.EduDAO;
+import com.bsps2.main.edu.service.EduService.EduDeleteService;
+import com.bsps2.main.edu.service.EduService.EduListService;
+import com.bsps2.main.edu.service.EduService.EduViewService;
+import com.bsps2.main.edu.service.EduService.EduWriteService;
 import com.bsps2.main.item.controller.ItemController.ItemController;
 import com.bsps2.main.item.dao.ItemDAO.ItemDAO;
 import com.bsps2.main.item.service.ItemDeleteService.ItemDeleteService;
@@ -131,6 +137,39 @@ public class Init extends HttpServlet {
 		serviceMap.put("/item/delete.do", itemDeleteService);
 
 		System.out.println("Init.init() --- 비상물품 모듈(MVC) 조립 완료 ---");
-	}
+		
+		// edu
+		// Init.java의 init() 메서드 안에 추가하세요.
 
+		// --- [교육 가이드 모듈 조립 시작] ---
+		EduDAO eduDAO = new EduDAO();
+		EduController eduCtrl = new EduController();
+
+		// 1. 컨트롤러 등록
+		controllerMap.put("/edu", eduCtrl);
+		controllerMap.put("/admin/edu", eduCtrl);
+
+		// 2. 서비스 생성 (변수에 담아서 재사용하는 것이 안전합니다)
+		EduListService eduListService = new EduListService();
+		EduViewService eduViewService = new EduViewService();
+		EduWriteService eduWriteService = new EduWriteService();
+		EduDeleteService eduDeleteService = new EduDeleteService();
+
+		// 3. 서비스에 DAO 주입 (실행 전 반드시 필요)
+		eduListService.setDAO(eduDAO);
+		eduViewService.setDAO(eduDAO);
+		eduWriteService.setDAO(eduDAO);
+		eduDeleteService.setDAO(eduDAO);   
+
+		// 4. 서비스 맵(serviceMap)에 등록
+		serviceMap.put("/edu/list.do", eduListService);
+		serviceMap.put("/admin/edu/list.do", eduListService); // 관리자 리스트용 추가!
+		serviceMap.put("/edu/view.do", eduViewService);
+		serviceMap.put("/admin/edu/view.do", eduViewService); // 관리자용 상세보기도 필요할 수 있음
+		serviceMap.put("/admin/edu/write.do", eduWriteService);
+		serviceMap.put("/admin/edu/delete.do", eduDeleteService);
+
+		System.out.println("Init.init() --- 교육 모듈 MVC 조립 완료 ---");
+
+	}
 }
