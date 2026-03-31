@@ -21,6 +21,6 @@ public class CommunityChangeImageService implements Service{
 		return dao.changeImage((CommunityVO) obj);
 	}
 	
-	
+	//.
 
 }
