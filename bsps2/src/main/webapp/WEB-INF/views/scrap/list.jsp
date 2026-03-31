@@ -1,0 +1,103 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>스크랩한 재난 정보</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+
+<style>
+    body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; }
+    .scrap-item { transition: 0.3s; cursor: pointer; border-radius: 12px; margin-bottom: 15px; border: 1px solid #f0f0f0; }
+    .scrap-item:hover { background-color: #fff; transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); border-color: #007bff; }
+    .info-label { font-size: 0.88rem; color: #777; margin-right: 20px; display: flex; align-items: center; }
+    .info-label i { margin-right: 6px; color: #adb5bd; }
+    
+    /* 위험 등급별 색상 가이드 */
+    .risk-1 { color: #28a745; font-weight: 600; } /* 낮음 */
+    .risk-2 { color: #ffa500; font-weight: 600; } /* 보통 */
+    .risk-3 { color: #ff4d4d; font-weight: 600; } /* 높음 */
+    
+    .delete-btn { color: #dee2e6; transition: 0.3s; padding: 10px; border-radius: 50%; }
+    .delete-btn:hover { color: #ff4d4d; background-color: #fff1f1; }
+    
+    .search-bar { border-radius: 30px; border: 1px solid #e0e0e0; transition: 0.3s; }
+    .search-bar:focus-within { border-color: #007bff; box-shadow: 0 0 0 0.2rem rgba(0,123,255,.1) !important; }
+</style>
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="font-weight-bold text-dark"><i class="fas fa-bookmark text-primary mr-2"></i>스크랩한 재난 정보</h3>
+        <span class="text-muted">전체 <strong>${list.size()}</strong>건</span>
+    </div>
+
+    <div class="input-group mb-5 shadow-sm bg-white p-2 search-bar">
+        <input type="text" class="form-control border-0 bg-transparent ml-3" placeholder="스크랩 내 키워드 검색 (기능 구현 예정)">
+        <div class="input-group-append">
+            <button class="btn btn-primary px-4 shadow-sm" style="border-radius: 25px;">검색하기</button>
+        </div>
+    </div>
+
+    <c:if test="${empty list}">
+        <div class="text-center py-5 bg-white shadow-sm rounded-lg">
+            <i class="fas fa-folder-open fa-3x text-light mb-3"></i>
+            <p class="text-muted">스크랩한 내역이 아직 없습니다.</p>
+            <a href="/disasterList/list.do" class="btn btn-outline-primary btn-sm mt-2">재난 목록 보러가기</a>
+        </div>
+    </c:if>
+
+    <c:forEach items="${list}" var="vo">
+        <div class="scrap-item bg-white p-4 shadow-sm d-flex align-items-center justify-content-between" 
+             onclick="location='/disasterList/view.do?no=${vo.no}&inc=0'">
+            
+            <div class="flex-grow-1">
+                <div class="mb-2">
+                    <span class="badge badge-pill badge-light text-primary px-3 py-2 mb-2">${vo.region}</span>
+                </div>
+                <h5 class="font-weight-bold mb-3 text-dark">${vo.summary}</h5>
+                
+                <div class="d-flex align-items-center flex-wrap">
+                    <span class="info-label" title="스크랩 일시">
+                        <i class="far fa-calendar-alt"></i> ${vo.scrapDate}
+                    </span>
+                    
+                    <span class="info-label">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <c:choose>
+                            <c:when test="${vo.riskGrade == 1}"><span class="risk-1">낮음</span></c:when>
+                            <c:when test="${vo.riskGrade == 3}"><span class="risk-3">매우 높음</span></c:when>
+                            <c:otherwise><span class="risk-2">보통</span></c:otherwise>
+                        </c:choose>
+                    </span>
+                </div>
+            </div>
+
+            <div class="ml-3" onclick="event.stopPropagation();">
+                <a href="delete.do?scrapNo=${vo.scrapNo}" class="delete-btn" 
+                   onclick="return confirm('이 스크랩을 삭제하시겠습니까?');" title="스크랩 취소">
+                    <i class="far fa-trash-alt fa-lg"></i>
+                </a>
+            </div>
+        </div>
+    </c:forEach>
+
+    <c:if test="${not empty list}">
+        <nav class="mt-5">
+            <ul class="pagination justify-content-center">
+                <li class="page-item disabled"><a class="page-link border-0 mx-1 rounded" href="#">&laquo;</a></li>
+                <li class="page-item active"><a class="page-link border-0 mx-1 rounded" href="#">1</a></li>
+                <li class="page-item"><a class="page-link border-0 mx-1 rounded" href="#">2</a></li>
+                <li class="page-item"><a class="page-link border-0 mx-1 rounded" href="#">3</a></li>
+                <li class="page-item"><a class="page-link border-0 mx-1 rounded" href="#">&raquo;</a></li>
+            </ul>
+        </nav>
+    </c:if>
+</div>
+
+</body>
+</html>

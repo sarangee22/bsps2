@@ -11,6 +11,12 @@ import com.bsps2.community.service.CommunityListService;
 import com.bsps2.community.service.CommunityUpdateService;
 import com.bsps2.community.service.CommunityViewService;
 import com.bsps2.community.service.CommunityWriteService;
+import com.bsps2.disasterCategory.controller.DisasterCategoryController;
+import com.bsps2.disasterCategory.dao.DisasterCategoryDAO;
+import com.bsps2.disasterCategory.service.DisasterCategoryService;
+import com.bsps2.disasterList.controller.DisasterListController;
+import com.bsps2.disasterList.dao.DisasterListDAO;
+import com.bsps2.disasterList.service.DisasterListService;
 import com.bsps2.disasterMap.controller.DisasterMapController;
 import com.bsps2.disasterMap.dao.DisasterMapDAO;
 import com.bsps2.disasterMap.service.DisasterMapDeleteService;
@@ -41,6 +47,9 @@ import com.bsps2.main.item.service.ItemDeleteService.ItemUpdateService;
 import com.bsps2.main.item.service.ItemDeleteService.ItemViewService;
 import com.bsps2.main.item.service.ItemDeleteService.ItemWriteService;
 import com.bsps2.main.service.Service;
+import com.bsps2.scrap.controller.ScrapController;
+import com.bsps2.scrap.dao.ScrapDAO;
+import com.bsps2.scrap.service.ScrapService;
 
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -254,6 +263,71 @@ public class Init extends HttpServlet {
 		serviceMap.put("/agency/delete.do", agencyDeleteService);
 		
 		System.out.println("Init.init() : 재난 안전 기관(Agency) 모듈 조립 완료 ----------------");
+
+		// *** 재난안전 정보 카테고리 생성 / 저장 / 조립
+		// 1. DAO 생성 및 저장
+		// disasterCetegory.dao.DisasterCetegoryDAO
+		DisasterCategoryDAO disasterCategoryDAO = new DisasterCategoryDAO();
+		daoMap.put("disasterCategoryDAO", disasterCategoryDAO);
+
+		// 2. Service 생성 및 저장
+		// disasterCetegory.service.DisasterCetegoryService
+		DisasterCategoryService disasterCategoryService = new DisasterCategoryService();
+		serviceMap.put("/disasterCategory/list.do", disasterCategoryService);
+
+		// 3. 조립: service에 dao 넣기
+		// -- service를 가져온다. setter를 이용해서 생성한 dao를 넣는다.
+		disasterCategoryService.setDAO(disasterCategoryDAO);
+
+		// 4. Controller 저장
+		// disasterCetegory.controller.DisasterCetegoryController
+		controllerMap.put("/disasterCategory", new DisasterCategoryController());
+		
+		
+		// *** 재난안전 리스트 & 상세보기 조립 ***
+
+		// 1. DAO 생성 및 저장 (딱 하나만 만듭니다)
+		DisasterListDAO disasterListDAO = new DisasterListDAO();
+		daoMap.put("disasterListDAO", disasterListDAO);
+
+		// 2. Service 생성 및 저장 (하나의 서비스 객체로 리스트/상세보기 둘 다 처리)
+		DisasterListService disasterListService = new DisasterListService();
+
+		// 실행 시 사용될 URI와 서비스를 매핑합니다.
+		serviceMap.put("/disasterList/list.do", disasterListService);
+		serviceMap.put("/disasterList/view.do", disasterListService);
+
+		// 3. 조립: Service에 DAO 넣기 
+		// (중요: 위에서 생성한 disasterListService에 직접 넣어주면 
+		// serviceMap에 들어있는 객체에도 자동으로 적용됩니다.)
+		disasterListService.setDAO(disasterListDAO);
+
+		// 4. Controller 저장
+		controllerMap.put("/disasterList", new DisasterListController());
+		
+		
+		// ------ [스크랩 모듈 조립 시작] ------
+		// 1. DAO 생성 및 저장
+		// 패키지: com.bsps2.scrap.dao.ScrapDAO
+		ScrapDAO scrapDAO = new ScrapDAO();
+		daoMap.put("scrapDAO", scrapDAO);
+
+		// 2. Service 생성 및 저장
+		// 패키지: com.bsps2.scrap.service.ScrapService
+		ScrapService scrapService = new ScrapService();
+		// 리스트, 저장, 삭제 모두 하나의 서비스에서 처리하도록 매핑합니다.
+		serviceMap.put("/scrap/list.do", scrapService);
+		serviceMap.put("/scrap/scrap.do", scrapService);
+		serviceMap.put("/scrap/delete.do", scrapService);
+
+		// 3. 조립: Service에 DAO 넣기
+		// ScrapService의 setDAO(DAO dao) 메서드를 호출합니다.
+		scrapService.setDAO(scrapDAO);
+
+		// 4. Controller 저장
+		// 패키지: com.bsps2.scrap.controller.ScrapController
+		// URI가 "/scrap"으로 시작하면 이 컨트롤러가 실행됩니다.
+		controllerMap.put("/scrap", new ScrapController());
 
 	}
 }
