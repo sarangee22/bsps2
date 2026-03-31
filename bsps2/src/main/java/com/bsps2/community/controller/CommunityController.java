@@ -102,9 +102,8 @@ public class CommunityController implements Controller {
 				request.setAttribute("vo", Execute.execute(Init.getService("/community/view.do"), new Long[] {no, 0L}));
 				return"community/updateForm";
 				
-			//4-2 글수정 처리
+				// 4-2 글수정 처리 (특수문자 제거 버전)
 			case "/community/update.do":
-			    // 1. 일반 데이터 수집
 			    vo = new CommunityVO();
 			    vo.setNo(Long.parseLong(request.getParameter("no")));
 			    vo.setTitle(request.getParameter("title"));
@@ -112,46 +111,45 @@ public class CommunityController implements Controller {
 			    vo.setWriter(request.getParameter("writer"));
 			    vo.setPw(request.getParameter("pw"));
 			    
-			    // 2. 파일 처리 준비
-			    String currentFile = request.getParameter("fileName"); // 기존 파일명(hidden)
-			    vo.setFileName(currentFile); // 일단 기존 파일로 세팅
+			    // 기존 파일명 유지용 (hidden)
+			    String currentFile = request.getParameter("fileName");
+			    vo.setFileName(currentFile);
 
-			    // 새로운 파일이 넘어왔는지 확인
-			    filePart = request.getPart("imageFile");
+			    // 새로운 파일 수집
+			    Part part = request.getPart("imageFile");
 			    
-			    // 사용자가 파일을 새로 선택했다면 (사이즈가 0보다 크다면)
-			    if (filePart != null && filePart.getSize() > 0) {
-			        path = "/upload/image";
-			        savePath = request.getServletContext().getRealPath(path);
+			    // 파일이 실제로 선택되었는지 확인
+			    if (part != null && part.getSize() > 0) {
+			        String uploadPath = "/upload/image";
+			        String realPath = request.getServletContext().getRealPath(uploadPath);
 			        
-			        fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-			        uuid = UUID.randomUUID().toString();
-			        savedFileName = uuid + "_" + fileName;
+			        // 폴더 생성
+			        File dir = new File(realPath);
+			        if(!dir.exists()) dir.mkdirs();
 			        
-			        // 서버에 새 파일 저장
-			        filePart.write(savePath + File.separator + savedFileName);
+			        String orgName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+			        String newName = UUID.randomUUID().toString() + "_" + orgName;
 			        
-			        // VO에 새로운 경로 세팅
-			        vo.setFileName(path + "/" + savedFileName);
+			        // 파일 저장
+			        part.write(realPath + File.separator + newName);
+			        vo.setFileName(uploadPath + "/" + newName);
 			        
-			        // (선택) 새 사진이 들어왔으니 기존 사진 파일은 서버에서 삭제 (매너!)
+			        // 기존 파일 삭제
 			        if(currentFile != null && !currentFile.equals("")) {
-			            File delFile = new File(request.getServletContext().getRealPath(currentFile));
-			            if(delFile.exists()) delFile.delete();
+			            File oldFile = new File(request.getServletContext().getRealPath(currentFile));
+			            if(oldFile.exists()) oldFile.delete();
 			        }
 			    }
 
-			    // 3. DB 업데이트 실행 (DAO.update 호출)
 			    result = (Integer) Execute.execute(Init.getService(uri), vo);
 			    
 			    if(result == 1) {
-			        session.setAttribute("msg", "제보 내용과 사진이 수정되었습니다.");
+			        session.setAttribute("msg", "수정이 완료되었습니다.");
 			        return "redirect:view.do?no=" + vo.getNo() + "&inc=0&" + PageObject.getInstance(request).getNotPageQuery();
 			    } else {
-			        session.setAttribute("msg", "수정 실패: 비밀번호가 틀렸습니다.");
+			        session.setAttribute("msg", "수정 실패: 비밀번호를 확인하세요.");
 			        return "redirect:updateForm.do?no=" + vo.getNo();
 			    }
-				
 			
 			//6. 글삭제 처리
 			case "/community/delete.do":
