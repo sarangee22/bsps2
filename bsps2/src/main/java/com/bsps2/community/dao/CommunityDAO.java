@@ -179,7 +179,29 @@ public class CommunityDAO extends DAO {
 		return result;
 	}// update() 끝
 	
-	//5.글삭제
+	
+	//5.이미지 파일 교체
+	public Integer changeImage(CommunityVO vo) throws Exception{
+		Integer result = 0;
+		
+		//1.드라이버 확인 2.연결
+		con = DB.getConnection();
+		//3.SQL작성
+		String sql = "update community set fileName = ? where no = ?";
+		//4.실행 객체 및 데이터 세팅
+		pstmt = con.prepareStatement(sql);
+		pstmt.setString(1, vo.getFileName());
+		pstmt.setLong(2, vo.getNo());
+		//5.실행,6.결과 담기
+		result = pstmt.executeUpdate();
+		
+		//7.닫기
+		DB.close(con, pstmt);
+		
+		return result;
+	}//changeImage()의 끝
+	
+	//6.글삭제
 	public Integer delete(CommunityVO vo) throws Exception{
 		Integer result = 0;
 	

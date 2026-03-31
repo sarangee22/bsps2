@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
+
 public class CommunityController implements Controller {
 
 	@SuppressWarnings("unchecked")
@@ -60,7 +61,7 @@ public class CommunityController implements Controller {
 				vo.setPw(request.getParameter("pw"));
 				
 				// 2. 파일 업로드 설정
-			    String path = "/upload/community"; // 저장할 가상 폴더
+			    String path = "/upload/image"; // 저장할 가상 폴더
 			    String savePath = request.getServletContext().getRealPath(path); // 실제 서버 경로
 			    
 			    // 저장 폴더가 없으면 생성
@@ -121,7 +122,48 @@ public class CommunityController implements Controller {
 					return "redirect:updateForm.do?no=" + vo.getNo();
 				}
 				
-			//5. 글삭제 처리
+			//5.이미지 파일 변경 처리
+			case "/community/changeImage.do":			
+				// 1. 파일 업로드 설정 및 폴더 생성
+			    path = "/upload/image";
+			    savePath = request.getServletContext().getRealPath(path);
+			    savedDir = new File(savePath);
+			    if(!savedDir.exists()) savedDir.mkdirs();
+
+			    // 2. 새로운 파일 수집 (Part 이용)
+			    filePart = request.getPart("imageFile");
+			    fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+			    uuid = UUID.randomUUID().toString();
+			    savedFileName = uuid + "_" + fileName;
+			    
+			    // 서버에 실제 파일 저장
+			    filePart.write(savePath + File.separator + savedFileName);
+
+			    // 3. VO에 데이터 담기
+			    vo = new CommunityVO();
+			    vo.setNo(Long.parseLong(request.getParameter("no")));
+			    vo.setFileName(path + "/" + savedFileName);
+
+			    // 4. 서비스 실행 (DB 업데이트)
+			    Execute.execute(Init.getService(uri), vo);
+
+			    // 5. 기존 파일 삭제 (선택 사항이지만 추천!)
+			    String delFileName = request.getParameter("delFileName");
+                if(delFileName != null && !delFileName.equals("")) {
+                    File delFile = new File(request.getServletContext().getRealPath(delFileName));
+                    if(delFile.exists()) delFile.delete();
+                }
+
+			    session.setAttribute("msg", "이미지가 성공적으로 변경되었습니다.");
+			    
+			    // 6. 상세보기로 돌아가기 (검색/페이지 정보 유지)
+			    return "redirect:view.do?no=" + vo.getNo() + "&inc=0" 
+			           + "&page=" + request.getParameter("page")
+			           + "&perPageNum=" + request.getParameter("perPageNum")
+			           + "&key=" + request.getParameter("key")
+			           + "&word=" + request.getParameter("word");
+				
+			//6. 글삭제 처리
 			case "/community/delete.do":
 				vo = new CommunityVO();
 				vo.setNo(Long.parseLong(request.getParameter("no")));
