@@ -180,7 +180,7 @@ public class CommunityDAO extends DAO {
 	}// update() 끝
 	
 	
-	//5.이미지 파일 교체
+	//5.이미지 파일 교체.
 	public Integer changeImage(CommunityVO vo) throws Exception{
 		Integer result = 0;
 		
