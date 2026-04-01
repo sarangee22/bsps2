@@ -2,7 +2,7 @@ package com.bsps2.disaster.vo;
 
 public class DisasterVO {
 	// 1. DB 관리용 변수 (Sequence 자동 생성)
-    private int no;        // PK: DB에서 자동으로 매길 번호 (Sequence/AI)
+    private long no;        // PK: DB에서 자동으로 매길 번호 (Sequence/AI)
 
     // 2. 공공 API에서 직접 읽어올 변수 (원문 데이터)
     private String apiId;           // API가 제공하는 고유 번호 (중복 체크용)
@@ -15,10 +15,49 @@ public class DisasterVO {
     private String category;        // 재난 종류 (fire, earthquake, flood 등)
     private String categoryName;    // 화면 표시용 한글 이름 (화재, 지진 등)
     private int dangerLevel;        // 위험 등급 (1: 정보, 2: 주의, 3: 경보 등)
-	public int getNo() {
+    
+    private String detailContent; // DISASTER_DETAIL 테이블의 content
+    private String actionGuide;   // DISASTER_DETAIL 테이블의 action_guide
+    
+    private String detailInfo;    // DETAIL_INFO 컬럼용
+    private String situationDesc; // SITUATION_DESC 컬럼용
+    private String mapLocation;   // MAP_LOCATION 컬럼용
+    
+    
+	public String getDetailInfo() {
+		return detailInfo;
+	}
+	public void setDetailInfo(String detailInfo) {
+		this.detailInfo = detailInfo;
+	}
+	public String getSituationDesc() {
+		return situationDesc;
+	}
+	public void setSituationDesc(String situationDesc) {
+		this.situationDesc = situationDesc;
+	}
+	public String getMapLocation() {
+		return mapLocation;
+	}
+	public void setMapLocation(String mapLocation) {
+		this.mapLocation = mapLocation;
+	}
+	public String getDetailContent() {
+		return detailContent;
+	}
+	public void setDetailContent(String detailContent) {
+		this.detailContent = detailContent;
+	}
+	public String getActionGuide() {
+		return actionGuide;
+	}
+	public void setActionGuide(String actionGuide) {
+		this.actionGuide = actionGuide;
+	}
+	public long getNo() {
 		return no;
 	}
-	public void setNo(int no) {
+	public void setNo(long no) {
 		this.no = no;
 	}
 	public String getApiId() {
@@ -73,8 +112,12 @@ public class DisasterVO {
 	public String toString() {
 		return "DisasterVO [no=" + no + ", apiId=" + apiId + ", content=" + content + ", locationName=" + locationName
 				+ ", createDate=" + createDate + ", catID=" + catID + ", category=" + category + ", categoryName="
-				+ categoryName + ", dangerLevel=" + dangerLevel + "]";
+				+ categoryName + ", dangerLevel=" + dangerLevel + ", detailContent=" + detailContent + ", actionGuide="
+				+ actionGuide + ", detailInfo=" + detailInfo + ", situationDesc=" + situationDesc + ", mapLocation="
+				+ mapLocation + "]";
 	}
+	
+	
     
     
 }

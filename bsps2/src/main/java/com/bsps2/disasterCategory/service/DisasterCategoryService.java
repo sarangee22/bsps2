@@ -1,121 +1,80 @@
 package com.bsps2.disasterCategory.service;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import java.sql.Connection;
+import java.util.List;
 import com.bsps2.disaster.vo.DisasterVO;
 import com.bsps2.disasterCategory.dao.DisasterCategoryDAO;
 import com.bsps2.main.dao.DAO;
 import com.bsps2.main.service.Service;
+import com.bsps2.util.db.DB;
 
 public class DisasterCategoryService implements Service {
 
-	@Override
-	public void setDAO(DAO dao) {
-		this.dao = (DisasterCategoryDAO) dao;
+    private DisasterCategoryDAO dao;
 
-	}// setDAO()의 끝
+    @Override
+    public void setDAO(DAO dao) {
+        this.dao = (DisasterCategoryDAO) dao;
+    }
 
-	@Override
-	public Object service(Object obj) throws Exception {
-		// [A] 페이지 요청 시마다 최신 API 데이터를 DB에 업데이트 (선택 사항)
-		updateDisasterData();
+    @Override
+    public Object service(Object obj) throws Exception {
+        // [1] 데이터 전처리 실행
+        updateDisasterData();
 
-		// [B] 업데이트가 끝난 후, 화면에 뿌려줄 카테고리 목록(8개)을 가져옴
-		return dao.list();
-	}// service의 끝
+        // [2] 카테고리 목록 반환
+        return dao.list();
+    }
 
-	private DisasterCategoryDAO dao;
+    public void updateDisasterData() throws Exception {
+        Connection con = null;
+        try {
+            // 💡 핵심: 커넥션을 여기서 딱 한 번만 연결합니다.
+            con = DB.getConnection();
+            System.out.println(">>> [임시] 로컬 DB 전처리를 시작합니다 (커넥션 공유 모드)");
 
-	// 조립을 위한 Setter 메소드
-	public void setDao(DisasterCategoryDAO dao) {
-		this.dao = dao;
-	}
+            // 1. 원본 데이터 읽기 (con 전달)
+            List<DisasterVO> rawList = dao.getRawDisasterData(con);
+            System.out.println(">>> 전처리 대상 원본 데이터: " + rawList.size() + "건");
 
-	public void updateDisasterData() throws Exception {
-	    // 1. API 호출 (행안부 재난문자 서비스 예시)
-	    String serviceKey = "H81M3194303G9W7H";
-	    String urlStr = "http://apis.data.go.kr/1741000/DisasterMsg3/getDisasterMsg1"
-	                  + "?serviceKey=" + serviceKey + "&type=json&pageNo=1&numOfRows=50";
+            for (DisasterVO vo : rawList) {
+                int catID = getCategoryByKeyword(vo.getContent());
+                
+                int level = 1;
+                if (vo.getContent().contains("심각") || vo.getContent().contains("대피") || vo.getContent().contains("경보")) {
+                    level = 3;
+                } else if (vo.getContent().contains("주의") || vo.getContent().contains("자제")) {
+                    level = 2;
+                }
+                vo.setDangerLevel(level);
 
-	    URL url = new URL(urlStr);
-	    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-	    
-	    // 데이터가 없을 경우 대비
-	    try (BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"))){
-	        StringBuilder sb = new StringBuilder();
-	        String line;
-	        while ((line = rd.readLine()) != null) sb.append(line);
-	        
-	        String result = sb.toString();
-	        
-	        // JSON 응답이 정상적으로 왔을 때만 처리
-	        if (result != null && result.trim().startsWith("{")) {
-	            JSONObject obj = new JSONObject(result);
-	            // 공공데이터 구조에 따른 접근
-	            if(obj.has("DisasterMsg")) {
-	                JSONArray rows = obj.getJSONArray("DisasterMsg").getJSONObject(1).getJSONArray("row");
+                if (catID != 0) {
+                    // 💡 핵심: 중복 체크와 저장에 동일한 con을 사용합니다.
+                    if (dao.checkDuplicate(con, vo.getApiId()) == 0) {
+                        dao.insertAll(con, vo, catID); 
+                    }
+                }
+            }
+            System.out.println(">>> [완료] 로컬 데이터 전처리가 끝났습니다.");
 
-	                for (int i = 0; i < rows.length(); i++) {
-	                    JSONObject item = rows.getJSONObject(i);
-	                    DisasterVO vo = new DisasterVO();
-	                    
-	                    vo.setApiId(item.getString("md101_sn"));
-	                    // 분석을 위해 변수에 담아둡니다.
-	                    String msg = item.getString("msg");
-	                    vo.setContent(msg);
-	                    
-	                    // --- [추가 로직] 키워드분석을 통한 위험 등급(risk_grade) 설정 ---
-	                    int level = 1; // 기본값: 정보/알림
-	                    if (msg.contains("긴급") || msg.contains("대피") || msg.contains("심각") || msg.contains("경보")) {
-	                        level = 3; // 심각
-	                    } else if (msg.contains("주의") || msg.contains("자제") || msg.contains("제한")) {
-	                        level = 2; // 주의
-	                    }
-	                    vo.setDangerLevel(level); // VO의 dangerLevel 필드에 저장
-	                    // ---------------------------------------------------------
+        } catch (Exception e) {
+            System.out.println(">>> 전처리 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            // 💡 여기서 마지막에 한 번만 닫아줍니다. (ORA-12519 방지)
+            if (con != null) con.close();
+        }
+    }
 
-	                    vo.setCreateDate(item.getString("create_date"));
-	                    vo.setLocationName(item.getString("location_name"));
-
-	                    int catID = getCategoryByKeyword(vo.getContent());
-
-	                    if (catID != 0) {
-	                        if (dao.checkDuplicate(vo.getApiId()) == 0) {
-	                            // 이제 vo 안에 dangerLevel(risk_grade)이 담긴 채로 넘어갑니다.
-	                            dao.insert(vo, catID);
-	                        }
-	                    }
-	                }
-	            }
-	        }
-	        
-	    } catch (Exception e) {
-	        System.out.println("API 업데이트 중 오류 발생 (무시하고 목록 조회 진행): " + e.getMessage());
-	    } // catch의 끝
-	}
-	// 키워드 분류 전용 메소드
-	private int getCategoryByKeyword(String content) {
-		if (content.contains("화재") || content.contains("산불"))
-			return 1;
-		if (content.contains("지진") || content.contains("해일"))
-			return 2;
-		if (content.contains("태풍") || content.contains("호우") || content.contains("폭풍"))
-			return 3;
-		if (content.contains("폭염") || content.contains("한파"))
-			return 4;
-		if (content.contains("산사태") || content.contains("붕괴"))
-			return 5;
-		if (content.contains("교통") || content.contains("사고"))
-			return 6;
-		if (content.contains("감염병") || content.contains("미세먼지"))
-			return 7;
-		if (content.contains("대피") || content.contains("응급"))
-			return 8;
-		return 0; // 미분류
-	}// getCategoryByKeyword()의 끝
-
-}// class()의 끝
+    private int getCategoryByKeyword(String content) {
+        if (content == null) return 0;
+        if (content.contains("화재") || content.contains("산불") || content.contains("폭발") || content.contains("연기")) return 1;
+        if (content.contains("지진") || content.contains("해일") || content.contains("진동")) return 2;
+        if (content.contains("태풍") || content.contains("호우") || content.contains("강풍") || content.contains("풍랑") || content.contains("침수") || content.contains("비 ")) return 3;
+        if (content.contains("폭염") || content.contains("한파") || content.contains("대설") || content.contains("눈 ") || content.contains("더위")) return 4;
+        if (content.contains("산사태") || content.contains("붕괴") || content.contains("낙석")) return 5;
+        if (content.contains("교통") || content.contains("사고") || content.contains("통제") || content.contains("우회")) return 6;
+        if (content.contains("감염병") || content.contains("미세먼지") || content.contains("황사") || content.contains("코로나")) return 7;
+        return 8; 
+    }
+}
