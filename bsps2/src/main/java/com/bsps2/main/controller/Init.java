@@ -67,6 +67,9 @@ import com.bsps2.qna.service.QnaListService;
 import com.bsps2.qna.service.QnaQuestionService;
 import com.bsps2.qna.service.QnaUpdateService;
 import com.bsps2.qna.service.QnaViewService;
+import com.bsps2.quiz.controller.QuizController;
+import com.bsps2.quiz.dao.QuizDAO;
+import com.bsps2.quiz.service.QuizListService;
 import com.bsps2.scrap.controller.ScrapController;
 import com.bsps2.scrap.dao.ScrapDAO;
 import com.bsps2.scrap.service.ScrapService;
@@ -122,7 +125,7 @@ public class Init extends HttpServlet {
 		// *** 메인 등록
 		// == controller는 모듈명으로 저장
 		
-		// *** 일반 게시판 생성 / 저장 / 조립
+		// *** 제보 게시판 생성 / 저장 / 조립
 		// == controller 등록..
 		controllerMap.put("/community", new CommunityController());
 		// == service 등록
@@ -142,6 +145,17 @@ public class Init extends HttpServlet {
 		serviceMap.get("/community/update.do").setDAO(daoMap.get("communityDAO"));
 		serviceMap.get("/community/changeImage.do").setDAO(daoMap.get("communityDAO"));
 		serviceMap.get("/community/delete.do").setDAO(daoMap.get("communityDAO"));
+		
+		// *** 퀴즈 게시판 생성 / 저장 / 조립
+		// == controller 등록..
+		controllerMap.put("/quiz", new QuizController());
+		// == service 등록
+		serviceMap.put("/quiz/list.do", new QuizListService());
+		// == dao 등록
+		daoMap.put("quizDAO", new QuizDAO());
+		// 조립 (service - dao)
+		serviceMap.get("/quiz/list.do").setDAO(daoMap.get("quizDAO"));
+		
 		
 		// --- 회원 관리 모듈 조립 (예시) ---
 				// 1. DAO 생성
