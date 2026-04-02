@@ -12,12 +12,18 @@ import jakarta.servlet.http.HttpSession;
 public class MemberController implements Controller {
 
     public String execute(HttpServletRequest request) {
+    	     Object result = null; 
+         Integer intResult = 0;
+         
         try {
             String uri = request.getServletPath();
             HttpSession session = request.getSession();
+            
             LoginVO loginVO = (LoginVO) session.getAttribute("login");
+            
             String loginId = null;
-            if (loginVO != null) loginId = loginVO.getId();
+            if (loginVO != null) 
+            	loginId = loginVO.getId();
 
             switch (uri) {
                 // 1. 회원 리스트 (관리자 전용) - 추가된 부분!
@@ -43,7 +49,7 @@ public class MemberController implements Controller {
                         throw new Exception("회원 정보를 확인하시고 다시 실행해 보세요.");
                     session.setAttribute("login", loginVO);
                     session.setAttribute("msg", "로그인이 되었습니다.");
-                    return "redirect:/qna/list.do";
+                    return "redirect:/main/main.do";
 
                 // 4. 로그아웃
                 case "/member/logout.do":
@@ -82,13 +88,16 @@ public class MemberController implements Controller {
 
                 // 7. 내 정보보기
                 case "/member/view.do":
-                    request.setAttribute("vo", Execute.execute(Init.getService(uri), "admin"));
-                    return "member/view";
+                	
+                result = Execute.execute(Init.getService(uri), loginId);
+                System.out.println("가져온 데이터: " + result);
+                request.setAttribute("vo", result);
+                return "member/view";
 
                 // 8. 회원정보 수정 폼
                 case "/member/editForm.do":
                     request.setAttribute("vo", Execute.execute(Init.getService("/member/view.do"), loginId));
-                    return "member/editForm";
+                    return "member/updateForm";
 
                 // 9. 회원정보 수정 처리
                 case "/member/edit.do":
@@ -109,13 +118,18 @@ public class MemberController implements Controller {
                     vo.setId(loginId);
                     vo.setPw(request.getParameter("pw"));
                     vo.setNewPw(request.getParameter("newPw"));
-                    Integer result = (Integer) Execute.execute(Init.getService(uri), vo);
-                    if (result == 1) {
+                    
+                    System.out.println("변경 시도 아이디: " + loginId);
+                    System.out.println("입력한 기존 비번: " + vo.getPw());
+                    
+                    intResult = (Integer) Execute.execute(Init.getService(uri), vo);
+                    if (intResult == 1) {
+                    	
                         session.removeAttribute("login");
-                        session.setAttribute("msg", "비밀번호가 수정되었습니다. 다시 로그인해 주세요.");
                         return "redirect:/member/loginForm.do";
+                 
                     } else {
-                        throw new Exception("비밀번호 변경에 실패하였습니다.");
+                        throw new Exception("비밀번호 변경에 실패하였습니다. 기존 비밀번호를 확인해주세요.");
                     }
 
                 // 11. 회원 탈퇴
@@ -123,8 +137,8 @@ public class MemberController implements Controller {
                     vo = new MemberVO();
                     vo.setId(loginId);
                     vo.setPw(request.getParameter("pw"));
-                    result = (Integer) Execute.execute(Init.getService(uri), vo);
-                    if (result == 1) {
+                    intResult = (Integer) Execute.execute(Init.getService(uri), vo);
+                    if (intResult == 1) {
                         session.removeAttribute("login");
                         session.setAttribute("msg", "회원 탈퇴가 되었습니다.");
                         return "redirect:/";
@@ -147,8 +161,8 @@ public class MemberController implements Controller {
                         return "redirect:list.do";
                     }
                     vo.setStatus(request.getParameter("status"));
-                    result = (Integer) Execute.execute(Init.getService(uri), vo);
-                    if (result == 1) {
+                    intResult = (Integer) Execute.execute(Init.getService(uri), vo);
+                    if (intResult == 1) {
                         session.setAttribute("msg", vo.getId() + "의 상태가 " + vo.getStatus() + "으로 변경되었습니다.");
                     } else {
                         session.setAttribute("msg", "상태 변경에 실패하였습니다.");

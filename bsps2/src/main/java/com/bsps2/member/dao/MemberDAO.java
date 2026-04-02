@@ -48,7 +48,7 @@ public class MemberDAO extends DAO {
         try {
             con = DB.getConnection();
             String sql = "insert into member(id, pw, name, gender, birth, tel, email) "
-                       + " values(?,?,?,?,?,?,?)";
+                       + " values(?,?,?,? , TO_DATE(?, 'YYYY-MM-DD') ,?,?)";
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, vo.getId());
             pstmt.setString(2, vo.getPw());
@@ -190,7 +190,7 @@ public class MemberDAO extends DAO {
         Integer result = 0;
         try {
             con = DB.getConnection();
-            String sql = "update member set name=?, gender=?, birth=?, tel=?, email=? where id=?";
+            String sql = "update member set name=?, gender=?, birth=TO_DATE(?, 'YYYY-MM-DD'), tel=?, email=? where id=?";
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, vo.getName());
             pstmt.setString(2, vo.getGender());

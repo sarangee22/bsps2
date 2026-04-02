@@ -57,9 +57,15 @@
             <h2>마이페이지</h2>
             <ul class="menu-list">
                 <li class="menu-item active"><a href="view.do">내 정보</a></li>
-                <li class="menu-item"><a href="${pageContext.request.contextPath}/member/edit.do">회원정보 수정</a></li>
-                <li class="menu-item"><a href="${pageContext.request.contextPath}/member/changePw.do">비밀번호 변경</a></li>
-                <li class="menu-item danger"><a href="${pageContext.request.contextPath}/member/delete.do">회원 탈퇴</a></li>
+                <li class="menu-item">
+                    <a href="${pageContext.request.contextPath}/member/editForm.do">회원정보 수정</a>
+                </li>
+                <li class="menu-item">
+                     <a href="${pageContext.request.contextPath}/member/changePw.do">비밀번호 변경</a>
+                <li class="menu-item danger">
+                     <a href="${pageContext.request.contextPath}/member/delete.do" 
+                         onclick="return confirm('정말로 탈퇴하시겠습니까? 모든 정보가 사라집니다.');">회원 탈퇴</a>
+                 </li>
             </ul>
         </aside>
 
@@ -95,6 +101,7 @@
                     <th>가입일</th>
                     <td>${vo.regDate}</td>
                 </tr>
+         
             </table>
 
             <div class="btn-group"></div>
