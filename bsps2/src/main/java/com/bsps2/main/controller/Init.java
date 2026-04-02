@@ -406,5 +406,6 @@ public class Init extends HttpServlet {
 		// URI가 "/scrap"으로 시작하면 이 컨트롤러가 실행됩니다.
 		controllerMap.put("/scrap", new ScrapController());
 
+		controllerMap.put("/main", new MainController());
 	}
 }
