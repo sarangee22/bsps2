@@ -70,6 +70,7 @@ import com.bsps2.qna.service.QnaViewService;
 import com.bsps2.quiz.controller.QuizController;
 import com.bsps2.quiz.dao.QuizDAO;
 import com.bsps2.quiz.service.QuizListService;
+import com.bsps2.quiz.service.QuizViewService;
 import com.bsps2.scrap.controller.ScrapController;
 import com.bsps2.scrap.dao.ScrapDAO;
 import com.bsps2.scrap.service.ScrapService;
@@ -147,14 +148,16 @@ public class Init extends HttpServlet {
 		serviceMap.get("/community/delete.do").setDAO(daoMap.get("communityDAO"));
 		
 		// *** 퀴즈 게시판 생성 / 저장 / 조립
-		// == controller 등록..
+		// == controller 등록
 		controllerMap.put("/quiz", new QuizController());
 		// == service 등록
 		serviceMap.put("/quiz/list.do", new QuizListService());
+		serviceMap.put("/quiz/view.do", new QuizViewService());
 		// == dao 등록
 		daoMap.put("quizDAO", new QuizDAO());
 		// 조립 (service - dao)
 		serviceMap.get("/quiz/list.do").setDAO(daoMap.get("quizDAO"));
+		serviceMap.get("/quiz/view.do").setDAO(daoMap.get("quizDAO"));
 		
 		
 		// --- 회원 관리 모듈 조립 (예시) ---
@@ -407,5 +410,6 @@ public class Init extends HttpServlet {
 		// URI가 "/scrap"으로 시작하면 이 컨트롤러가 실행됩니다.
 		controllerMap.put("/scrap", new ScrapController());
 
+		controllerMap.put("/main", new MainController());
 	}
 }

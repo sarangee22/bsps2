@@ -27,6 +27,19 @@ public class QuizController implements Controller {
 			case "/quiz/list.do":
                 request.setAttribute("list", Execute.execute(Init.getService(uri), null));
                 return "quiz/list";
+                
+			case "/quiz/view.do":
+			    String strNo = request.getParameter("no");
+			    String strInc = request.getParameter("inc");
+
+			    // 파라미터가 null일 경우를 대비한 안전한 변환..
+			    no = Long.parseLong(strNo);
+			    // inc가 없으면(null) 기본값 0으로 처리하여 NumberFormatException 방지
+			    long inc = (strInc == null || strInc.equals("")) ? 0L : Long.parseLong(strInc); 
+
+			    // 서비스에 배열로 전달 (기존 QuizViewService 구조 유지)
+			    request.setAttribute("vo", Execute.execute(Init.getService(uri), new Long[] {no, inc}));
+			    return "quiz/view";
 				
 				
 				

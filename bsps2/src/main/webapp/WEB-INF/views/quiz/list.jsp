@@ -20,11 +20,21 @@
 
 <script type="text/javascript">
 $(function(){
-	// 한 줄을 클릭하면 상세보기(view.do)로 이동하는 이벤트
-	$(".dataRow").click(function(){
-		let no = $(this).find(".no").text();
-		location = "view.do?no=" + no;
-	});
+    console.log("JQuery Loaded"); // 브라우저 콘솔(F12)에서 확인용
+
+    // 1. 행 클릭 이벤트
+    $(".dataRow").on("click", function(){
+        // 2. 글번호 추출
+        let no = $(this).find(".no").text().trim();
+        console.log("클릭한 번호: " + no);
+        
+        if(no) {
+            // 3. inc=1을 붙여서 이동 (조회수 증가 포함)
+            location = "view.do?no=" + no + "&inc=1"; 
+        } else {
+            alert("번호를 가져올 수 없습니다.");
+        }
+    });
 });
 </script>
 
@@ -65,10 +75,8 @@ $(function(){
 </div>
 
 <c:if test="${not empty msg}">
-	<script type="text/javascript">
-		alert("${msg}");
-	</script>
-	<% session.removeAttribute("msg"); %>
+    <script>alert("${msg}");</script>
+    <c:remove var="msg" scope="session" />
 </c:if>
 
 </body>
