@@ -41,7 +41,20 @@ public class QuizController implements Controller {
 			    request.setAttribute("vo", Execute.execute(Init.getService(uri), new Long[] {no, inc}));
 			    return "quiz/view";
 				
+			case "/quiz/writeForm.do":
+				return "quiz/writeForm";
+			    
+			case "/quiz/write.do":
+				QuizVO writeVO = new QuizVO();
+				writeVO.setTitle(request.getParameter("title"));
+				writeVO.setContent(request.getParameter("content"));
+				writeVO.setAns(request.getParameter("ans"));
+				writeVO.setWriter(request.getParameter("writer"));
 				
+				Execute.execute(Init.getService(uri), writeVO);
+				
+				session.setAttribute("msg", "새로운 퀴즈가 등록되었습니다.");
+				return "redirect:list.do";
 				
 				
 				
