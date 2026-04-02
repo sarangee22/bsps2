@@ -73,7 +73,14 @@ public class QuizController implements Controller {
 				
 				session.setAttribute("msg", "퀴즈 수정이 완료되었습니다.");
 				return "redirect:view.do?no=" + updateVO.getNo() + "&inc=0";
+			
+			case "/quiz/delete.do":
+				no = Long.parseLong(request.getParameter("no"));
 				
+				Execute.execute(Init.getService(uri), no);
+				
+				session.setAttribute("msg", "퀴즈가 정상적으로 삭제 되었습니다.");
+				return "redirect:list.do";
 				
 				
 				

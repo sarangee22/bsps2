@@ -156,5 +156,24 @@ public class QuizDAO extends DAO{
 		return result;
 		
 	}
+	
+	//5.퀴즈 삭제
+	public int delete(Long no) throws Exception{
+		int result = 0;
+		
+		//1.드라이버 확인 2.연결 객체
+		con = DB.getConnection();
+		//3.Sql 작성 
+		String sql = "delete from quiz where no = ?";				
+		//4. 실행 객체 & 데이터 세팅
+		pstmt = con.prepareStatement(sql);
+		pstmt.setLong(1, no);
+		//5.실행//6.
+		rs = pstmt.executeQuery();
+		//7.닫기
+		DB.close(con, pstmt);
+		
+		return result;
+	}
 
 }

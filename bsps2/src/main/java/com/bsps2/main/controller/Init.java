@@ -70,6 +70,7 @@ import com.bsps2.qna.service.QnaUpdateService;
 import com.bsps2.qna.service.QnaViewService;
 import com.bsps2.quiz.controller.QuizController;
 import com.bsps2.quiz.dao.QuizDAO;
+import com.bsps2.quiz.service.QuizDeleteService;
 import com.bsps2.quiz.service.QuizListService;
 import com.bsps2.quiz.service.QuizUpdateService;
 import com.bsps2.quiz.service.QuizViewService;
@@ -158,12 +159,14 @@ public class Init extends HttpServlet {
 		serviceMap.put("/quiz/view.do", new QuizViewService());
 		serviceMap.put("/quiz/write.do", new QuizWriteService());
 		serviceMap.put("/quiz/update.do", new QuizUpdateService());
+		serviceMap.put("/quiz/delete.do", new QuizDeleteService());
 		// == dao 등록
 		daoMap.put("quizDAO", new QuizDAO());
 		// 조립 (service - dao)
 		serviceMap.get("/quiz/list.do").setDAO(daoMap.get("quizDAO"));
 		serviceMap.get("/quiz/view.do").setDAO(daoMap.get("quizDAO"));
 		serviceMap.get("/quiz/update.do").setDAO(daoMap.get("quizDAO"));
+		serviceMap.get("/quiz/delete.do").setDAO(daoMap.get("quizDAO"));
 		
 		
 		// --- 회원 관리 모듈 조립 (예시) ---
