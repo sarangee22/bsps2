@@ -109,7 +109,7 @@ public class QuizDAO extends DAO{
 		return result;
 	}
 	
-	//3.퀴즈 및 해설 등록
+
 	// 3. 퀴즈 및 해설 등록 (한 번에 두 개의 데이터를 넣음)
 	public int write(QuizVO vo) throws Exception {
 	    int result = 0;
@@ -132,13 +132,14 @@ public class QuizDAO extends DAO{
 
 	    // --- [2단계] 상세 해설 등록 (상세보기에만 쓰이는 글) ---
 	    // no: 시퀀스 / refNo: 문제와 동일 / levNo: 1 (해설) / parentNo: 문제번호(currval)
-	    String sql2 = "insert into quiz(no, title, content, writer, refNo, ordNo, levNo, parentNo) "
-	                + " values(quiz_seq.nextval, ?, ?, ?, quiz_seq.currval, 2, 1, quiz_seq.currval)";
+	    String sql2 = "insert into quiz(no, title, content, ans, writer, refNo, ordNo, levNo, parentNo) "
+                + " values(quiz_seq.nextval, ?, ?, ?, ?, quiz_seq.currval, 2, 1, quiz_seq.currval)";
 	    
 	    pstmt = con.prepareStatement(sql2);
 	    pstmt.setString(1, "[해설] " + vo.getTitle()); // 제목 자동 생성
-	    pstmt.setString(2, vo.getExplain());          // ✨ 핵심: 사용자가 입력한 해설!
-	    pstmt.setString(3, vo.getWriter());
+	    pstmt.setString(2, vo.getExplain());          // 핵심: 사용자가 입력한 해설!
+	    pstmt.setString(3, " ");
+	    pstmt.setString(4, vo.getWriter());
 	    result += pstmt.executeUpdate();    // 두 번째 실행 (해설 등록)
 
 	    // 최종 닫기

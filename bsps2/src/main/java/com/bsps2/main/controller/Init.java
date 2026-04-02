@@ -165,6 +165,7 @@ public class Init extends HttpServlet {
 		// 조립 (service - dao)
 		serviceMap.get("/quiz/list.do").setDAO(daoMap.get("quizDAO"));
 		serviceMap.get("/quiz/view.do").setDAO(daoMap.get("quizDAO"));
+		serviceMap.get("/quiz/write.do").setDAO(daoMap.get("quizDAO"));
 		serviceMap.get("/quiz/update.do").setDAO(daoMap.get("quizDAO"));
 		serviceMap.get("/quiz/delete.do").setDAO(daoMap.get("quizDAO"));
 		
