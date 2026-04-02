@@ -5,117 +5,59 @@
 <meta charset="UTF-8">
 <title>질문답변 삭제</title>
 <style>
-    /* 기본 레이아웃 및 배경 설정 */
-    body { font-family: 'Malgun Gothic', sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
-    .container { width: 900px; margin: 50px auto; border: 1px solid #ccc; background-color: #fff; position: relative; }
-    
+    /* 기존 로그인/회원가입 화면과 통일감을 주는 네이비 테마 */
     :root { --navy-color: #001f3f; }
-
-    header { background-color: var(--navy-color); color: white; padding: 15px 20px; font-weight: bold; }
-
-    /* 메인 영역 (팝업 배경 느낌 재현) */
-    main { min-height: 500px; display: flex; justify-content: center; align-items: center; background-color: #f9f9f9; }
-
-    /* 삭제 확인 팝업 (모달) 스타일 */
-    .delete-modal {
-        width: 400px;
-        border: 1px solid #999;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        background-color: #fff;
-    }
-    .modal-header {
-        background-color: #ddd;
-        padding: 12px;
-        text-align: center;
-        font-weight: bold;
-        font-size: 16px;
-        border-bottom: 1px solid #ccc;
-    }
-    .modal-body {
-        padding: 30px 25px;
-    }
-
+    body { font-family: 'Malgun Gothic', sans-serif; background-color: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+    
+    .delete-container { width: 400px; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+    .header { background: var(--navy-color); color: #fff; padding: 15px; text-align: center; font-weight: bold; }
+    .content { padding: 30px; }
+    
     .info-text { font-size: 14px; margin-bottom: 20px; color: #333; }
-    .info-text b { color: var(--navy-color); }
-
     .input-group { margin-bottom: 20px; }
     .input-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 8px; }
-    .input-group input { 
-        width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; 
-        font-size: 14px; background-color: #fdfdfd;
-    }
-
-    /* 버튼 영역 */
-    .modal-footer {
-        padding: 0 25px 25px 25px;
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-    }
-    .btn { padding: 10px 30px; border-radius: 4px; font-weight: bold; cursor: pointer; border: 1px solid #ccc; font-size: 14px; width: 100px; }
-    .btn-delete { background-color: #ffefef; color: #d32f2f; border-color: #ffcdd2; } /* 삭제 L1 */
-    .btn-delete:hover { background-color: #ffe0e0; }
-    .btn-cancel { background-color: #eee; color: #333; } /* 취소 L2 */
-
-    footer { background-color: #ddd; text-align: center; padding: 15px; font-size: 12px; color: #777; }
+    .input-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+    
+    .btn-group { display: flex; gap: 10px; justify-content: center; }
+    .btn { padding: 10px 30px; border-radius: 4px; font-weight: bold; cursor: pointer; border: none; }
+    .btn-del { background: #d32f2f; color: #fff; } /* 삭제 버튼 강조 */
+    .btn-cancel { background: #eee; color: #333; }
 </style>
 </head>
 <body>
 
-<div class="container">
-    <header>재난/안전 정보 사이트</header>
-
-    <main>
-        <!-- 삭제 확인 팝업 영역 -->
-        <div class="delete-modal">
-            <div class="modal-header">삭제 확인</div>
+<div class="delete-container">
+    <div class="header">삭제 확인</div>
+    <div class="content">
+        <form action="qnaDelete.do" method="post" id="deleteForm">
+            <input type="hidden" name="no" value="${param.no}">
             
-            <form action="qnaDelete.do" method="post" id="deleteForm">
-                <div class="modal-body">
-                    <!-- D1 (no): 글번호 hidden 자동세팅 -->
-                    <input type="hidden" name="no" value="3"> 
-                    
-                    <div class="info-text">
-                        글번호: <b>3</b> 번 게시글을 삭제합니다.
-                    </div>
+            <div class="info-text">
+                글번호: <strong>${param.no}</strong>번 게시글을 삭제하시겠습니까?
+            </div>
 
-                    <!-- D2 (pw): 비밀번호 입력 -->
-                    <div class="input-group">
-                        <label>비밀번호</label>
-                        <input type="password" name="pw" placeholder="4~20자 (대체문자 * 표시)" required>
-                    </div>
-                </div>
+            <div class="input-group">
+                <label>비밀번호</label>
+                <input type="password" name="pw" placeholder="비밀번호 4~20자 입력" required maxlength="20">
+            </div>
 
-                <div class="modal-footer">
-                    <!-- L1: 삭제 실행 -->
-                    <button type="submit" class="btn btn-delete">삭제</button>
-                    <!-- L2: 취소 (팝업 닫기/이전 화면) -->
-                    <button type="button" class="btn btn-cancel" onclick="history.back();">취소</button>
-                </div>
-            </form>
-        </div>
-    </main>
-
-    <footer>푸터</footer>
+            <div class="btn-group">
+                <button type="submit" class="btn btn-del">삭제</button>
+                <button type="button" class="btn btn-cancel" onclick="window.close();">취소</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script>
-    document.getElementById('deleteForm').onsubmit = function(e) {
+    // 유효성 검사 및 삭제 확인 팝업
+    document.getElementById('deleteForm').onsubmit = function() {
         const pw = this.pw.value;
-        
-        // D2 유효성 검사
         if(pw.length < 4 || pw.length > 20) {
-            alert("비밀번호는 4~20자 사이여야 합니다.");
+            alert("비밀번호는 4~20자 이내여야 합니다.");
             return false;
         }
-
-        if(!confirm("정말로 이 글을 삭제하시겠습니까?\n삭제된 글은 복구할 수 없습니다.")) {
-            return false;
-        }
-        return true;
+        return confirm("삭제 후 복구할 수 없습니다. 정말 삭제하시겠습니까?");
     };
 </script>
 
