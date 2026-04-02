@@ -20,11 +20,12 @@
 
 <script type="text/javascript">
 $(function(){
-	// 한 줄을 클릭하면 상세보기(view.do)로 이동하는 이벤트
-	$(".dataRow").click(function(){
-		let no = $(this).find(".no").text();
-		location = "view.do?no=" + no;
-	});
+    $(".dataRow").click(function(){
+        // 1. 공백 제거를 위해 trim() 추가
+        let no = $(this).find(".no").text().trim();
+        // 2. inc 파라미터 추가 (조회수 1 증가를 위해 보통 1을 보냅니다)
+        location = "view.do?no=" + no + "&inc=1";
+    });
 });
 </script>
 
@@ -65,10 +66,8 @@ $(function(){
 </div>
 
 <c:if test="${not empty msg}">
-	<script type="text/javascript">
-		alert("${msg}");
-	</script>
-	<% session.removeAttribute("msg"); %>
+    <script>alert("${msg}");</script>
+    <c:remove var="msg" scope="session" />
 </c:if>
 
 </body>

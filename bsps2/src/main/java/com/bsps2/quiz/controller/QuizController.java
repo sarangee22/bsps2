@@ -27,6 +27,13 @@ public class QuizController implements Controller {
 			case "/quiz/list.do":
                 request.setAttribute("list", Execute.execute(Init.getService(uri), null));
                 return "quiz/list";
+                
+			case "/quiz/view.do":
+				no = Long.parseLong(request.getParameter("no"));
+				Long inc = Long.parseLong(request.getParameter("uri"));
+				
+				request.setAttribute("vo", Execute.execute(Init.getService(uri), new Long[] {no,inc}));
+				return "quiz/view";
 				
 				
 				
