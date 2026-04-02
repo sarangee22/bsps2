@@ -22,7 +22,7 @@ public class QuizViewService implements Service{
 
 	@Override
 	public Object service(Object obj) throws Exception {
-		// 1. 넘겨받은 데이터 [no, inc] 배열로 캐스팅
+		// 1. 넘겨받은 데이터 [no, inc] 배열로 캐스팅..
 	    Long[] objs = (Long[]) obj; 
 	    Long no = objs[0];
 	    Long inc = objs[1];

@@ -32,7 +32,7 @@ public class QuizController implements Controller {
 			    String strNo = request.getParameter("no");
 			    String strInc = request.getParameter("inc");
 
-			    // 파라미터가 null일 경우를 대비한 안전한 변환
+			    // 파라미터가 null일 경우를 대비한 안전한 변환..
 			    no = Long.parseLong(strNo);
 			    // inc가 없으면(null) 기본값 0으로 처리하여 NumberFormatException 방지
 			    long inc = (strInc == null || strInc.equals("")) ? 0L : Long.parseLong(strInc); 
