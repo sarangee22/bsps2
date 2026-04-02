@@ -60,6 +60,13 @@ import com.bsps2.member.service.MemberEditService;
 import com.bsps2.member.service.MemberListService;
 import com.bsps2.member.service.MemberViewService;
 import com.bsps2.member.service.MemberWriteService;
+import com.bsps2.notice.controller.NoticeController;
+import com.bsps2.notice.dao.NoticeDAO;
+import com.bsps2.notice.service.NoticeDeleteService;
+import com.bsps2.notice.service.NoticeListService;
+import com.bsps2.notice.service.NoticeUpdateService;
+import com.bsps2.notice.service.NoticeViewService;
+import com.bsps2.notice.service.NoticeWriteService;
 import com.bsps2.qna.controller.QnaController;
 import com.bsps2.qna.dao.QnaDAO;
 import com.bsps2.qna.service.QnaAnswerService;
@@ -433,5 +440,25 @@ public class Init extends HttpServlet {
 		controllerMap.put("/scrap", new ScrapController());
 
 		controllerMap.put("/main", new MainController());
+		
+		// *** 공지사항 생성 / 저장 / 조립
+		// -- Controller 저장
+		controllerMap.put("/notice", new NoticeController());
+		// -- Service 저장
+		serviceMap.put("/notice/list.do", new NoticeListService());
+		serviceMap.put("/notice/view.do", new NoticeViewService());
+		serviceMap.put("/notice/write.do", new NoticeWriteService());
+		serviceMap.put("/notice/update.do", new NoticeUpdateService());
+		serviceMap.put("/notice/delete.do", new NoticeDeleteService());
+		// -- DAO 저장
+		daoMap.put("noticeDAO", new NoticeDAO());
+		// -- service에 dao를 조립한다.
+		serviceMap.get("/notice/list.do").setDAO(daoMap.get("noticeDAO"));
+		serviceMap.get("/notice/view.do").setDAO(daoMap.get("noticeDAO"));
+		serviceMap.get("/notice/write.do").setDAO(daoMap.get("noticeDAO"));
+		serviceMap.get("/notice/update.do").setDAO(daoMap.get("noticeDAO"));
+		serviceMap.get("/notice/delete.do").setDAO(daoMap.get("noticeDAO"));
+		System.out.println("Init.init() --- 공지사항 모듈 조립 완료 ---");
+
 	}
 }
