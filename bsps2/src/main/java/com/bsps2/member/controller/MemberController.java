@@ -43,7 +43,7 @@ public class MemberController implements Controller {
                         throw new Exception("회원 정보를 확인하시고 다시 실행해 보세요.");
                     session.setAttribute("login", loginVO);
                     session.setAttribute("msg", "로그인이 되었습니다.");
-                    return "redirect:/";
+                    return "redirect:/qna/list.do";
 
                 // 4. 로그아웃
                 case "/member/logout.do":

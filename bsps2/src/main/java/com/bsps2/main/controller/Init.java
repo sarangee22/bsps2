@@ -200,6 +200,8 @@ public class Init extends HttpServlet {
 				serviceMap.put("/qna/answer.do", new QnaAnswerService());
 				serviceMap.put("/qna/update.do", new QnaUpdateService());
 				serviceMap.put("/qna/delete.do", new QnaDeleteService());
+				serviceMap.put("/qna/writeForm.do", new QnaDeleteService());
+			
 				// -- DAO 저장
 				daoMap.put("qnaDAO", new QnaDAO());
 				// 조립 service에 dao 넣기 - service를 가져온다. setter를 이용해서 가져온 dao를 넣는다.
@@ -209,6 +211,8 @@ public class Init extends HttpServlet {
 				serviceMap.get("/qna/answer.do").setDAO(daoMap.get("qnaDAO"));
 				serviceMap.get("/qna/update.do").setDAO(daoMap.get("qnaDAO"));
 				serviceMap.get("/qna/delete.do").setDAO(daoMap.get("qnaDAO"));
+				serviceMap.get("/qna/writeForm.do").setDAO(daoMap.get("qnaDAO"));
+				
 				
 		// --- [비상물품 체크리스트 모듈 조립 시작] ---
 
