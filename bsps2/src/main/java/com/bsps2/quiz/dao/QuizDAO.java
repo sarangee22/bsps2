@@ -17,7 +17,7 @@ public class QuizDAO extends DAO{
 		con = DB.getConnection();
 		//3-1 .Sql 작성 
 		String sql = "select no, title, writer, to_char(writeDate, 'yyyy-mm-dd') writeDate, hit "
-                + " from quiz order by no desc";
+	               + " from quiz where levNo = 0 order by no desc";
 	
 		//4. 실행 객체 & 데이터 세팅
 		pstmt = con.prepareStatement(sql);
@@ -44,6 +44,20 @@ public class QuizDAO extends DAO{
 		return list;
 		
 	}
+	// 2. 상세보기용 해설 가져오기: 부모번호(parentNo)가 현재 글번호인 해설 내용을 가져옴
+	public String getReply(Long no) throws Exception {
+	    String explain = "";
+	    con = DB.getConnection();
+	    // 부모글 번호가 내 번호(no)이고, levNo가 1인 데이터의 content를 가져옴
+	    String sql = "select content from quiz where parentNo = ? and levNo = 1";
+	    pstmt = con.prepareStatement(sql);
+	    pstmt.setLong(1, no);
+	    rs = pstmt.executeQuery();
+	    if(rs.next()) explain = rs.getString("content");
+	    DB.close(con, pstmt, rs);
+	    return explain;
+	}
+	
 	//2-1.퀴즈보기
 	public QuizVO view(Long no )throws Exception{
 		QuizVO vo = null;
@@ -62,7 +76,7 @@ public class QuizDAO extends DAO{
 		//6.
 		if(rs != null && rs.next()) {
 			vo = new QuizVO();
-			vo.setNo(rs.getLong("title"));
+			vo.setNo(rs.getLong("no"));
 			vo.setTitle(rs.getString("title"));
 			vo.setContent(rs.getString("content"));
 			vo.setAns(rs.getString("ans"));
