@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>내 정보 보기</title>
+<title>내 정보 보기..</title>
 <style>
     /* 기본 레이아웃 - 가로 확장 (1100px) */
     body { font-family: 'Malgun Gothic', sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
