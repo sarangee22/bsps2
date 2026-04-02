@@ -14,6 +14,8 @@ public class QuizVO {
 	private long ordNo;
 	private long levNo;
 	private long parentNo;
+	private String explain;
+
 	public long getNo() {
 		return no;
 	}
@@ -80,11 +82,19 @@ public class QuizVO {
 	public void setParentNo(long parentNo) {
 		this.parentNo = parentNo;
 	}
+
+	// ✨ 추가: explain Getter/Setter
+	public String getExplain() {
+		return explain;
+	}
+	public void setExplain(String explain) {
+		this.explain = explain;
+	}
+
 	@Override
 	public String toString() {
 		return "QuizVO [no=" + no + ", title=" + title + ", content=" + content + ", ans=" + ans + ", writer=" + writer
 				+ ", writeDate=" + writeDate + ", hit=" + hit + ", refNo=" + refNo + ", ordNo=" + ordNo + ", levNo="
-				+ levNo + ", parentNo=" + parentNo + "]";
+				+ levNo + ", parentNo=" + parentNo + ", explain=" + explain + "]";
 	}
-
 }

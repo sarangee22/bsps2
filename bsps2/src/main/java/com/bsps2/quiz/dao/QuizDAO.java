@@ -110,27 +110,41 @@ public class QuizDAO extends DAO{
 	}
 	
 	//3.퀴즈 등록
-	public int write(QuizVO vo) throws Exception{
-		int result = 0;
-		
-		//1.드라이버 확인 2.연결 객체
-		con = DB.getConnection();
-		//3.Sql 작성 
-		String sql = "insert into quiz(no, title, content, ans, writer, refNo, ordNo, levNo, parentNo) "
-				+ " values(quiz_seq.nextval, ?,?,?,?, quiz_seq.currval, 1,0, null)";			
-		//4. 실행 객체 & 데이터 세팅
-		pstmt = con.prepareStatement(sql);
-		pstmt.setString(1, vo.getTitle());
-		pstmt.setString(2, vo.getContent());
-		pstmt.setString(3, vo.getAns());
-		pstmt.setString(4, vo.getWriter());
-		//5.실행//6.
-		result = pstmt.executeUpdate();
-		//7.닫기
-		DB.close(con, pstmt);
-		
-		return result;
-		
+	// 3. 퀴즈 및 해설 등록 (한 번에 두 개의 데이터를 넣음)
+	public int write(QuizVO vo) throws Exception {
+	    int result = 0;
+	    con = DB.getConnection();
+
+	    // --- [1단계] 문제 등록 (리스트에 보이는 글) ---
+	    // no: 시퀀스 / refNo: 시퀀스 현재값 / levNo: 0 (문제)
+	    String sql1 = "insert into quiz(no, title, content, ans, writer, refNo, ordNo, levNo, parentNo) "
+	                + " values(quiz_seq.nextval, ?, ?, ?, ?, quiz_seq.currval, 1, 0, null)";
+	    
+	    pstmt = con.prepareStatement(sql1);
+	    pstmt.setString(1, vo.getTitle());   // 제목
+	    pstmt.setString(2, vo.getContent()); // 문제 지문
+	    pstmt.setString(3, vo.getAns());     // 정답
+	    pstmt.setString(4, vo.getWriter());  // 작성자
+	    result += pstmt.executeUpdate();    // 첫 번째 실행 (문제 등록)
+
+	    // pstmt를 재사용하기 위해 닫아줌
+	    pstmt.close(); 
+
+	    // --- [2단계] 상세 해설 등록 (상세보기에만 쓰이는 글) ---
+	    // no: 시퀀스 / refNo: 문제와 동일 / levNo: 1 (해설) / parentNo: 문제번호(currval)
+	    String sql2 = "insert into quiz(no, title, content, writer, refNo, ordNo, levNo, parentNo) "
+	                + " values(quiz_seq.nextval, ?, ?, ?, quiz_seq.currval, 2, 1, quiz_seq.currval)";
+	    
+	    pstmt = con.prepareStatement(sql2);
+	    pstmt.setString(1, "[해설] " + vo.getTitle()); // 제목 자동 생성
+	    pstmt.setString(2, vo.getExplain());          // ✨ 핵심: 사용자가 입력한 해설!
+	    pstmt.setString(3, vo.getWriter());
+	    result += pstmt.executeUpdate();    // 두 번째 실행 (해설 등록)
+
+	    // 최종 닫기
+	    DB.close(con, pstmt);
+	    
+	    return result; // 총 2건이 등록되면 2가 반환됨
 	}
 	
 	//4.퀴즈 수정

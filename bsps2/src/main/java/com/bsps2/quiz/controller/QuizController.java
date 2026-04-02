@@ -50,6 +50,7 @@ public class QuizController implements Controller {
 				writeVO.setContent(request.getParameter("content"));
 				writeVO.setAns(request.getParameter("ans"));
 				writeVO.setWriter(request.getParameter("writer"));
+				writeVO.setExplain(request.getParameter("explain"));
 				
 				Execute.execute(Init.getService(uri), writeVO);
 				
