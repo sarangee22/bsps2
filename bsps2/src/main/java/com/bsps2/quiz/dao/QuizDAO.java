@@ -109,7 +109,7 @@ public class QuizDAO extends DAO{
 		return result;
 	}
 	
-	//3.퀴즈 등록
+	//3.퀴즈 및 해설 등록
 	// 3. 퀴즈 및 해설 등록 (한 번에 두 개의 데이터를 넣음)
 	public int write(QuizVO vo) throws Exception {
 	    int result = 0;
@@ -147,28 +147,33 @@ public class QuizDAO extends DAO{
 	    return result; // 총 2건이 등록되면 2가 반환됨
 	}
 	
-	//4.퀴즈 수정
-	public int update(QuizVO vo) throws Exception{
-		int result = 0;
-		
-		//1.드라이버 확인 2.연결 객체
-		con = DB.getConnection();
-		//3.Sql 작성 
-		String sql = "update quiz set title = ?, content = ?, ans = ? "
-				+ " where no = ?";		
-		//4. 실행 객체 & 데이터 세팅
-		pstmt = con.prepareStatement(sql);
-		pstmt.setString(1, vo.getTitle());
-		pstmt.setString(2, vo.getContent());
-		pstmt.setString(3, vo.getAns());
-		pstmt.setLong(4, vo.getNo());
-		//5.실행//6.
-		result = pstmt.executeUpdate();
-		//7.닫기
-		DB.close(con, pstmt);
-		
-		return result;
-		
+	// 4. 퀴즈 및 해설 수정
+	public int update(QuizVO vo) throws Exception {
+	    int result = 0;
+	    con = DB.getConnection();
+	    
+	    // --- [1단계] 문제 수정 (levNo=0인 본체) ---
+	    String sql1 = "update quiz set title = ?, content = ?, ans = ? where no = ?";
+	    pstmt = con.prepareStatement(sql1);
+	    pstmt.setString(1, vo.getTitle());
+	    pstmt.setString(2, vo.getContent());
+	    pstmt.setString(3, vo.getAns());
+	    pstmt.setLong(4, vo.getNo());
+	    result += pstmt.executeUpdate();
+	    
+	    pstmt.close(); // 재사용을 위해 닫기
+
+	    // --- [2단계] 상세 해설 수정 (levNo=1이고 부모가 현재 글번호인 것) ---
+	    // 해설의 제목도 같이 수정해주면 좋습니다.
+	    String sql2 = "update quiz set title = ?, content = ? where parentNo = ? and levNo = 1";
+	    pstmt = con.prepareStatement(sql2);
+	    pstmt.setString(1, "[해설] " + vo.getTitle());
+	    pstmt.setString(2, vo.getExplain()); //  수정된 상세 해설 내용
+	    pstmt.setLong(3, vo.getNo());        // 부모 번호가 현재 글번호인 해설 찾기
+	    result += pstmt.executeUpdate();
+
+	    DB.close(con, pstmt);
+	    return result;
 	}
 	
 	//5.퀴즈 삭제

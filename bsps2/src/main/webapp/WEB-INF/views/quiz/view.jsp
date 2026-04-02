@@ -30,7 +30,11 @@ $(function(){
 
         if(userAns.toUpperCase() == dbAns.toUpperCase()) {
             alert("정답입니다! 🎉\n확인을 누르시면 상세 해설이 나타납니다."); 
-            $("#explainContent").text("${vo.explain}"); 
+            
+            // 🔥 [수정 포인트] 따옴표("") 대신 백틱(``)을 사용하여 DB의 줄바꿈 에러를 방지합니다.
+            let explainData = `${vo.explain}`;
+            
+            $("#explainContent").text(explainData); 
             $("#explainArea").fadeIn(); 
             $("#btnSubmit, #userAns, #btnReset").attr("disabled", true);
         } else {
@@ -72,6 +76,7 @@ $(function(){
             <h5 class="text-info"><strong>문제 내용</strong></h5>
             <div class="quiz-content mb-4">${vo.vo.content}</div>
 
+            <%-- 정답 입력 영역 --%>
             <div id="answerArea" class="p-4 border rounded bg-light">
                 <div class="form-group">
                     <label for="userAns"><strong>정답을 입력하세요:</strong></label>
@@ -81,6 +86,7 @@ $(function(){
                 <button type="button" id="btnReset" class="btn btn-outline-secondary btn-lg">다시 입력</button>
             </div>
 
+            <%-- 상세 해설 영역 --%>
             <div id="explainArea" class="mt-4">
                 <div class="alert alert-warning border-warning">
                     <h5 class="alert-heading"><strong>💡 상세 해설</strong></h5>

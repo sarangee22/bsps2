@@ -69,6 +69,7 @@ public class QuizController implements Controller {
 				updateVO.setTitle(request.getParameter("title"));
 				updateVO.setContent(request.getParameter("content"));
 				updateVO.setAns(request.getParameter("ans"));
+				updateVO.setExplain(request.getParameter("explain"));
 				
 				Execute.execute(Init.getService(uri), updateVO);
 				
