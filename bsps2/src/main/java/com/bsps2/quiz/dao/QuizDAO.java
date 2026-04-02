@@ -132,5 +132,29 @@ public class QuizDAO extends DAO{
 		return result;
 		
 	}
+	
+	//4.퀴즈 수정
+	public int update(QuizVO vo) throws Exception{
+		int result = 0;
+		
+		//1.드라이버 확인 2.연결 객체
+		con = DB.getConnection();
+		//3.Sql 작성 
+		String sql = "update quiz set title = ?, content = ?, ans = ? "
+				+ " where no = ?";		
+		//4. 실행 객체 & 데이터 세팅
+		pstmt = con.prepareStatement(sql);
+		pstmt.setString(1, vo.getTitle());
+		pstmt.setString(2, vo.getContent());
+		pstmt.setString(3, vo.getAns());
+		pstmt.setLong(4, vo.getNo());
+		//5.실행//6.
+		result = pstmt.executeUpdate();
+		//7.닫기
+		DB.close(con, pstmt);
+		
+		return result;
+		
+	}
 
 }

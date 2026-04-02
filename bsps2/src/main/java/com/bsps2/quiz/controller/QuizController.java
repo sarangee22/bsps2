@@ -56,6 +56,25 @@ public class QuizController implements Controller {
 				session.setAttribute("msg", "새로운 퀴즈가 등록되었습니다.");
 				return "redirect:list.do";
 				
+			case "/quiz/updateForm.do":
+				no = Long.parseLong(request.getParameter("no"));
+				
+				request.setAttribute("vo", Execute.execute(Init.getService("/quiz/view.do"), new Long[] {no, 0L}));
+				return "quiz/updateForm";
+				
+			case "/quiz/update.do":
+				QuizVO updateVO = new QuizVO();
+				updateVO.setNo(Long.parseLong(request.getParameter("no")));
+				updateVO.setTitle(request.getParameter("title"));
+				updateVO.setContent(request.getParameter("content"));
+				updateVO.setAns(request.getParameter("ans"));
+				
+				Execute.execute(Init.getService(uri), updateVO);
+				
+				session.setAttribute("msg", "퀴즈 수정이 완료되었습니다.");
+				return "redirect:view.do?no=" + updateVO.getNo() + "&inc=0";
+				
+				
 				
 				
 			
