@@ -39,8 +39,6 @@
          <c:if test="${empty login }">
            <li class="nav-item"><a class="nav-link" href="/member/loginForm.do">로그인</a></li>
            <li class="nav-item"><a class="nav-link" href="/member/writeForm.do">회원가입</a></li>
-           <li class="nav-item"><a class="nav-link" href="/member/searchIdForm.do">아이디찾기</a></li>
-           <li class="nav-item"><a class="nav-link" href="/member/searchPwForm.do">비밀번호찾기</a></li>
          </c:if>
          <c:if test="${!empty login }">
            <li class="nav-item"><a class="nav-link" href="/member/view.do">${login.name }(${login.gradeName })</a></li>
