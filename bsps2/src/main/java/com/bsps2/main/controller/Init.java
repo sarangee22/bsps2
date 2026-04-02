@@ -194,6 +194,7 @@ public class Init extends HttpServlet {
 				controllerMap.put("/qna", new QnaController());
 				// -- Service 저장
 				serviceMap.put("/qna/list.do", new QnaListService());
+				serviceMap.put("qnaListService", new QnaListService());
 				serviceMap.put("/qna/view.do", new QnaViewService());
 				serviceMap.put("/qna/question.do", new QnaQuestionService());
 				serviceMap.put("/qna/answer.do", new QnaAnswerService());

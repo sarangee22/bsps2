@@ -51,7 +51,7 @@ public class MemberController implements Controller {
                     session.setAttribute("msg", "로그아웃이 되었습니다.");
                     return "redirect:loginForm.do";
 
-                // 5. 회원가입 폼
+                // 5. 회원가입 폼dma 
                 case "/member/writeForm.do":
                     return "member/writeForm";
 

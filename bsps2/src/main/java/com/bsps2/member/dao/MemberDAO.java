@@ -17,9 +17,11 @@ public class MemberDAO extends DAO {
         try {
             con = DB.getConnection();
             // SQL 수정: m.id, m.pw로 테이블 별칭을 명확히 지정하여 모호성 제거
-            String sql = "select m.id, m.name, m.gradeNo, g.gradeName "
-                       + " from member m, grade g "
-                       + " where (m.id = ? and m.pw = ?) and (m.gradeNo = g.gradeNo)";
+         // MemberDAO.java 파일 안의 로그인 쿼리 부분
+         // 21~22 라인 수정
+            String sql = "SELECT m.id, m.name, m.pw, m.gradeNo, g.gradeName "
+                       + "FROM member m, grade g "
+                       + "WHERE m.id = ? AND m.pw = ? AND m.gradeNo = g.gradeNo";
             
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, userVO.getId());
