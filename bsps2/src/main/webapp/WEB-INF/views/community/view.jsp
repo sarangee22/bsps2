@@ -14,6 +14,7 @@ th { width: 150px; background-color: #f8f9fa; vertical-align: middle !important;
 
 <script type="text/javascript">
 $(function(){
+	// 삭제 버튼 및 취소 버튼 클릭 시 동작
 	$("#deleteBtn, #cancelBtn").click(function(){
 		$("#pw").val("");
 		$("#deleteDiv").toggle();
@@ -66,27 +67,35 @@ $(function(){
 	</table>
 	
 	<div class="mb-4">
-		<a href="updateForm.do?no=${vo.no }&page=${param.page }&perPageNum=${param.perPageNum}&key=${param.key}&word=${param.word}"
-		class="btn btn-primary">수정</a>
-		<button type="button" class="btn btn-danger" id="deleteBtn">삭제</button>
+        <%-- ✨ 권한 체크: 로그인 중이고 (작성자 본인이거나 관리자인 경우) --%>
+        <c:if test="${!empty login && (login.id == vo.writer || login.gradeNo == 9)}">
+		    <a href="updateForm.do?no=${vo.no }&page=${param.page }&perPageNum=${param.perPageNum}&key=${param.key}&word=${param.word}"
+		    class="btn btn-primary">수정</a>
+		    <button type="button" class="btn btn-danger" id="deleteBtn">삭제</button>
+        </c:if>
+        
 		<a href="list.do?page=${param.page }&perPageNum=${param.perPageNum}&key=${param.key}&word=${param.word}" 
 		   class="btn btn-info text-white">리스트</a>
 	</div>
 	
-	<div class="card border-danger mb-5" id="deleteDiv">
-		<div class="card-header bg-danger text-white">삭제</div>
-		<form action="delete.do"method="post">
-			<input type="hidden" name="no" value="${vo.no}">
-			<input type="hidden" name="perPageNum" value="${param.perPageNum }">
-			<div class="card-body">
-				<input name="pw" type="password" id="pw" class="form-control" placeholder="삭제를 위해 비밀번호를 입력하세요" required>
-			</div>
-			<div class="card-footer text-end">
-				<button type="submit"class="btn btn-danger">삭제 확정</button>
-				<button type="button"class="btn btn-secondary">취소</button>
-			</div>
-		</form>
-	</div>
+    <%-- ✨ 삭제 영역도 권한이 있을 때만 렌더링되도록 감싸줍니다 --%>
+    <c:if test="${!empty login && (login.id == vo.writer || login.gradeNo == 9)}">
+        <div class="card border-danger mb-5" id="deleteDiv">
+            <div class="card-header bg-danger text-white">삭제</div>
+            <form action="delete.do"method="post">
+                <input type="hidden" name="no" value="${vo.no}">
+                <input type="hidden" name="perPageNum" value="${param.perPageNum }">
+                <div class="card-body">
+                    <input name="pw" type="password" id="pw" class="form-control" placeholder="삭제를 위해 비밀번호를 입력하세요" required>
+                </div>
+                <div class="card-footer text-end">
+                    <button type="submit"class="btn btn-danger">삭제 확정</button>
+                    <%-- 취소 버튼에 id="cancelBtn"이 빠져있어서 추가했습니다 --%>
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">취소</button>
+                </div>
+            </form>
+        </div>
+    </c:if>
 </div>	
 
 </body>
