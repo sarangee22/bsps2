@@ -133,7 +133,7 @@ public class QuizDAO extends DAO{
 	    // --- [2단계] 상세 해설 등록 (상세보기에만 쓰이는 글) ---
 	    // no: 시퀀스 / refNo: 문제와 동일 / levNo: 1 (해설) / parentNo: 문제번호(currval)
 	    String sql2 = "insert into quiz(no, title, content, ans, writer, refNo, ordNo, levNo, parentNo) "
-                + " values(quiz_seq.nextval, ?, ?, ?, ?, quiz_seq.currval, 2, 1, quiz_seq.currval)";
+	            + " values(quiz_seq.nextval, ?, ?, ?, ?, (SELECT max(no) FROM quiz WHERE levNo = 0), 2, 1, (SELECT max(no) FROM quiz WHERE levNo = 0))";
 	    
 	    pstmt = con.prepareStatement(sql2);
 	    pstmt.setString(1, "[해설] " + vo.getTitle()); // 제목 자동 생성
