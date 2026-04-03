@@ -29,6 +29,23 @@ public class DisasterListController implements Controller{
 				// 만약 catID가 없다면 기본값으로 1(화재 등)을 세팅합니다.
 				int catID = (catIDStr != null) ? Integer.parseInt(catIDStr) : 1;
 				
+				// 리스트의 페이지 제목
+				String headTitle = "";
+			    switch(catID) {
+			        case 1: headTitle = "화재/폭발(산불 포함)"; break;
+			        case 2: headTitle = "지진/해일"; break;
+			        case 3: headTitle = "태풍/호우(폭풍, 홍수 포함)"; break;
+			        case 4: headTitle = "폭염/한파(기온 관련)"; break;
+			        case 5: headTitle = "산사태/붕괴"; break;
+			        case 6: headTitle = "교통/산업사고"; break;
+			        case 7: headTitle = "감염병/환경"; break;
+			        case 8: headTitle = "응급처치/대피소"; break;
+			        default: headTitle = "재난 정보";
+			    }			    
+			
+			    // JSP에서 쓸 수 있게 저장
+			    request.setAttribute("headTitle", headTitle);
+			    
 				// 2. 페이지 처리를 위한 객체 생성 및 설정
 				// - request에서 page, perPageNum, key, word 정보를 자동으로 담습니다.
 				PageObject pageObject = PageObject.getInstance(request);
@@ -44,6 +61,8 @@ public class DisasterListController implements Controller{
 				// 5. 처리된 후의 pageObject(totalRow가 세팅된 상태)를 request에 담기
 				System.out.println("DisasterListController.execute().pageObject - " + pageObject);
 				request.setAttribute("pageObject", pageObject);
+				
+				
 				
 				// 6. JSP 위치 리턴
 				return "disasterList/list";
