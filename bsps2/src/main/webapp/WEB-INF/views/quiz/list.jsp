@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>퀴즈 목록</title>
+<title>퀴즈</title>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
@@ -41,7 +41,7 @@ $(function(){
 </head>
 <body>
 <div class="container">
-	<h1 class="my-4">퀴즈 리스트</h1>
+	<h1 class="my-4">퀴즈</h1>
 	
 	<table class="table">
 		<thead class="thead-dark">

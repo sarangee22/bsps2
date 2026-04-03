@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>제보게시판리스트</title>
+<title>제보게시판</title>
 <style type="text/css">
 .dataRow:hover{cursor: pointer; background: #f9f9f9; }
 .list-img{ width: 40px; height: 40px; object-fit: cover;}
@@ -23,7 +23,7 @@ $(function(){
 </head>
 <body>
 <div class="container">
-	<h3>제보 게시판 리스트</h3>
+	<h3>제보 게시판</h3>
 	<table class="table">
 		<thead>
 			<tr>
