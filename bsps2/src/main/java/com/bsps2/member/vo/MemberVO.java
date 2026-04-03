@@ -11,7 +11,8 @@ public class MemberVO {
 	private String email;
 	private String regDate;
 	private String status;
-	private Integer gradeNo;
+	private int gradeNo;
+	private String gradeName;
 	public String getId() {
 		return id;
 	}
@@ -66,24 +67,29 @@ public class MemberVO {
 	public void setRegDate(String regDate) {
 		this.regDate = regDate;
 	}
-	
 	public String getStatus() {
 		return status;
 	}
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public Integer getGradeNo() {
+	public int getGradeNo() {
 		return gradeNo;
 	}
-	public void setGradeNo(Integer gradeNo) {
+	public void setGradeNo(int gradeNo) {
 		this.gradeNo = gradeNo;
+	}
+	public String getGradeName() {
+		return gradeName;
+	}
+	public void setGradeName(String gradeName) {
+		this.gradeName = gradeName;
 	}
 	@Override
 	public String toString() {
 		return "MemberVO [id=" + id + ", pw=" + pw + ", newPw=" + newPw + ", name=" + name + ", gender=" + gender
-				+ ", birth=" + birth + ", tel=" + tel + ", email=" + email + ", regDate=" + regDate + ", conDate="
-				+ ", status=" + status + ", gradeNo=" + gradeNo + "]";
+				+ ", birth=" + birth + ", tel=" + tel + ", email=" + email + ", regDate=" + regDate + ", status="
+				+ status + ", gradeNo=" + gradeNo + ", gradeName=" + gradeName + "]";
 	}
 	
 }

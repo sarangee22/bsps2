@@ -25,14 +25,27 @@ public class MemberController implements Controller {
             if (loginVO != null) 
             	loginId = loginVO.getId();
 
+            
             switch (uri) {
+
+			  // 0. 관리자 메인 (대시보드)
+			  case "/admin/main.do":
+				// 관리자가 아니면 못 들어오게 막는 로직 (보안!)
+				if (loginVO == null || loginVO.getGradeNo() != 9) {
+					throw new Exception("관리자 권한이 필요한 페이지입니다.");
+				}
+					Object listData = Execute.execute(Init.getService("/member/list.do"), null);
+				    request.setAttribute("list", listData);
+				
+				return "loginAdmin/main"; // views/loginAdmin/main.jsp 로 이동
+            
                 // 1. 회원 리스트 (관리자 전용) - 추가된 부분!
                 case "/member/list.do":
                 	// System.out.println("회원 리스트 진입 성공!");
                     // MemberListService를 실행하여 DB에서 회원 목록을 가져옴
                     request.setAttribute("list", Execute.execute(Init.getService(uri), null));
                     // /WEB-INF/views/member/list.jsp 로 이동
-                    return "member/list";
+                    return "loginAdmin/main";
 
                 // 2. 로그인 폼
                 case "/member/loginForm.do":
@@ -44,10 +57,14 @@ public class MemberController implements Controller {
                     LoginVO userVO = new LoginVO();
                     userVO.setId(request.getParameter("id"));
                     userVO.setPw(request.getParameter("pw"));
+                    
                     loginVO = (LoginVO) Execute.execute(Init.getService(uri), userVO);
+                    
                     if (loginVO == null)
                         throw new Exception("회원 정보를 확인하시고 다시 실행해 보세요.");
+                    
                     session.setAttribute("login", loginVO);
+                    
                     session.setAttribute("msg", "로그인이 되었습니다.");
                     return "redirect:/main/main.do";
 
@@ -112,38 +129,50 @@ public class MemberController implements Controller {
                     session.setAttribute("msg", "회원의 정보가 수정되었습니다.");
                     return "redirect:/member/view.do";
 
-                // 10. 비밀번호 변경
+                // 10. 비밀번호 변경 폼
+                case "/member/changePwForm.do":
+                    return "member/pwChange";
+                 
+                    
+                 // 10-1. 비밀번호 변경 처리 
                 case "/member/changePw.do":
                     vo = new MemberVO();
                     vo.setId(loginId);
                     vo.setPw(request.getParameter("pw"));
                     vo.setNewPw(request.getParameter("newPw"));
                     
-                    System.out.println("변경 시도 아이디: " + loginId);
-                    System.out.println("입력한 기존 비번: " + vo.getPw());
+                    // 로그 찍어보기 (값이 잘 들어오는지 콘솔에서 확인용)
+                    System.out.println("전달된 아이디: " + vo.getId());
+                    System.out.println("전달된 기존비번: " + vo.getPw());
+                    System.out.println("전달된 새비번: " + vo.getNewPw());
                     
+                    // 여기서 DB를 실행합니다.
                     intResult = (Integer) Execute.execute(Init.getService(uri), vo);
                     if (intResult == 1) {
-                    	
                         session.removeAttribute("login");
+                        session.setAttribute("msg", "비밀번호가 변경되었습니다. 다시 로그인해주세요.");
                         return "redirect:/member/loginForm.do";
-                 
                     } else {
                         throw new Exception("비밀번호 변경에 실패하였습니다. 기존 비밀번호를 확인해주세요.");
                     }
 
-                // 11. 회원 탈퇴
+                // 11. 회원 탈퇴 폼
+                case "/member/deleteForm.do":
+                       return "member/delete";
+                       
+                // 11-1. 회원 탈퇴 처리 
                 case "/member/delete.do":
                     vo = new MemberVO();
                     vo.setId(loginId);
                     vo.setPw(request.getParameter("pw"));
+                    
                     intResult = (Integer) Execute.execute(Init.getService(uri), vo);
                     if (intResult == 1) {
                         session.removeAttribute("login");
-                        session.setAttribute("msg", "회원 탈퇴가 되었습니다.");
-                        return "redirect:/";
+                        session.setAttribute("msg", "회원 탈퇴가 완료되었습니다.");
+                        return "redirect:/main/main.do";
                     } else {
-                        throw new Exception("회원 탈퇴에 실패하였습니다.");
+                        throw new Exception("회원 탈퇴에 실패하였습니다. 비밀번호를 확인해주세요.");
                     }
 
                 // 12. 아이디 중복체크

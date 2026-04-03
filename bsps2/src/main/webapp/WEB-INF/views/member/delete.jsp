@@ -16,8 +16,8 @@
     .menu-list { list-style: none; padding: 0; margin: 0; }
     .menu-item { padding: 15px 30px; border-bottom: 1px solid #f9f9f9; }
     .menu-item a { text-decoration: none; color: #666; font-size: 14px; display: block; }
-    .menu-item.active.danger { background-color: #d32f2f; }
-    .menu-item.active.danger a { color: #fff; font-weight: bold; }
+    .menu-item.active { background-color: #001f3f;}
+    .menu-item.active a { color: #fff; font-weight: bold; }
     
     main { flex: 1; padding: 50px; }
     .content-title { font-size: 24px; font-weight: bold; text-align: center; margin-bottom: 20px; color: #d32f2f; }
@@ -36,8 +36,8 @@
             <ul class="menu-list">
                 <li class="menu-item"><a href="view.do">내 정보</a></li>
                 <li class="menu-item"><a href="editForm.do">회원정보 수정</a></li>
-                <li class="menu-item"><a href="pwChange.jsp">비밀번호 변경</a></li>
-                <li class="menu-item active danger"><a href="#">회원 탈퇴</a></li>
+                <li class="menu-item"><a href="changePwForm.do">비밀번호 변경</a></li>
+                <li class="menu-item active"><a href="deleteForm.do">회원 탈퇴</a></li>
             </ul>
         </aside>
         <main>

@@ -61,9 +61,9 @@
                     <a href="${pageContext.request.contextPath}/member/editForm.do">회원정보 수정</a>
                 </li>
                 <li class="menu-item">
-                     <a href="${pageContext.request.contextPath}/member/changePw.do">비밀번호 변경</a>
+                     <a href="${pageContext.request.contextPath}/member/changePwForm.do">비밀번호 변경</a>
                 <li class="menu-item danger">
-                     <a href="${pageContext.request.contextPath}/member/delete.do" 
+                     <a href="${pageContext.request.contextPath}/member/deleteForm.do" 
                          onclick="return confirm('정말로 탈퇴하시겠습니까? 모든 정보가 사라집니다.');">회원 탈퇴</a>
                  </li>
             </ul>

@@ -65,9 +65,9 @@
             <h2>마이페이지</h2>
             <ul class="menu-list">
                 <li class="menu-item"><a href="view.do">내 정보</a></li>
-                <li class="menu-item active"><a href="#">회원정보 수정</a></li>
-                <li class="menu-item"><a href="changePw.do">비밀번호 변경</a></li>
-                <li class="menu-item danger"><a href="delete.do">회원 탈퇴</a></li>
+                <li class="menu-item active"><a href="editForm.do">회원정보 수정</a></li>
+                <li class="menu-item"><a href="changePwForm.do">비밀번호 변경</a></li>
+                <li class="menu-item danger"><a href="deleteForm.do">회원 탈퇴</a></li>
             </ul>
         </aside>
 

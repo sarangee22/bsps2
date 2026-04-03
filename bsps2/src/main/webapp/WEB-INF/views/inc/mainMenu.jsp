@@ -43,8 +43,8 @@
          <c:if test="${!empty login }">
            <li class="nav-item"><a class="nav-link" href="/member/view.do">${login.name }(${login.gradeName })</a></li>
            <li class="nav-item"><a class="nav-link" href="/member/logout.do">로그아웃</a></li>
-           <li class="nav-item"><a class="nav-link" href="/member/searchIdForm.do">비밀번호 변경</a></li>
-           <li class="nav-item"><a class="nav-link" href="/member/searchPwForm.do">회원 탈퇴</a></li>
+           <li class="nav-item"><a class="nav-link" href="/member/changePwForm.do">비밀번호 변경</a></li>
+           <li class="nav-item"><a class="nav-link" href="/member/deleteForm.do">회원 탈퇴</a></li>
          </c:if>
       </ul>
     </div>
