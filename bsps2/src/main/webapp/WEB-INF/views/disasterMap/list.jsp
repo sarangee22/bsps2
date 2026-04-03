@@ -12,7 +12,7 @@
     body { background-color: #f4f7f6; font-family: 'Noto Sans KR', sans-serif; color: #333; }
     .container { max-width: 1100px; padding: 50px 20px; }
 
-    /* 헤더 & 요약 섹션 */
+    // 요약
     .header-box { margin-bottom: 30px; text-align: center; }
     .header-box h2 { font-weight: 700; color: #1a1a1a; margin-bottom: 15px; }
     
@@ -25,7 +25,7 @@
         display: flex; align-items: center; border: 1px solid #eee;
     }
 
-    /* 📍 지도 섹션 */
+    // 지도
     .map-section { margin-bottom: 40px; }
     .map-card { 
         background: white; padding: 15px; border-radius: 30px; 
@@ -36,7 +36,7 @@
         overflow: hidden; position: relative;
     }
 
-    /* 📋 리스트 섹션 */
+    //리스트
     .list-card { 
         background: white; border-radius: 25px; padding: 35px; 
         box-shadow: 0 10px 30px rgba(0,0,0,0.04); border: none;
@@ -46,16 +46,14 @@
     .table tbody tr:hover { background-color: #f8f9ff; }
     .table td { vertical-align: middle !important; border-top: 1px solid #f1f3f5; padding: 18px 10px; }
 
-    /* 배지 스타일 */
+    //배지 스타일
     .badge-custom { padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 11px; }
     .badge-fire { background-color: #fff0f0; color: #ff4d4d; }
     .badge-flood { background-color: #eef2ff; color: #4361ee; }
     
-    /* 현재 선택된 행 강조 */
     .selected-row { background-color: #f0f4ff !important; }
     .selected-row td:first-child { border-left: 4px solid #4361ee; border-top-left-radius: 10px; border-bottom-left-radius: 10px; }
 
-    /* 상세보기 버튼 */
     .btn-view-detail { 
         background-color: #4361ee; color: white; border-radius: 8px; 
         font-size: 12px; padding: 6px 12px; border: none; transition: 0.2s;
@@ -85,7 +83,7 @@
                   style="border:0"
                   loading="lazy"
                   allowfullscreen
-                  src="https://maps.google.com/maps?q=$${list[0].address}&t=&z=14&ie=UTF8&iwloc=&output=embed">
+                  src="https://maps.google.com/maps?q=${list[0].address}&t=&z=14&ie=UTF8&iwloc=&output=embed">
                 </iframe>
             </div>
         </div>
@@ -97,7 +95,10 @@
     <div class="list-card">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h5 class="m-0 font-weight-bold">최근 발생 내역</h5>
-            <a href="writeForm.do" class="btn btn-sm btn-outline-primary" style="border-radius: 8px;">새 재난 등록</a>
+            
+            <c:if test="${!empty login && login.gradeName == '관리자'}">
+                <a href="writeForm.do" class="btn btn-sm btn-outline-primary" style="border-radius: 8px;">+ 새 재난 등록</a>
+            </c:if>
         </div>
         
         <table class="table text-center">
@@ -111,7 +112,6 @@
             </thead>
             <tbody>
                 <c:forEach items="${list}" var="vo" varStatus="vs">
-                    <%-- 💡 클릭 시 지도만 바꿈 --%>
                     <tr onclick="changeMap('${vo.address}', this)" class="${vs.first ? 'selected-row' : ''}">
                         <td>
                             <span class="badge-custom ${vo.disasterType == '화재' ? 'badge-fire' : 'badge-flood'}">
@@ -124,7 +124,6 @@
                         </td>
                         <td><small class="text-secondary">${vo.address}</small></td>
                         <td>
-                            <%-- 💡 이 버튼을 눌러야 상세 페이지(view.do)로 넘어감 --%>
                             <button class="btn-view-detail" 
                                     onclick="event.stopPropagation(); location.href='view.do?disasterId=${vo.disasterId}'">
                                 내용 보기
@@ -139,21 +138,17 @@
 
 <script>
 function changeMap(address, element) {
-    // 1. 지도 소스 변경
     var mapIframe = document.getElementById('googleMap');
-    // 주소 인코딩 처리
-    var newSrc = "https://maps.google.com/maps?q=$" + encodeURIComponent(address) + "&t=&z=15&ie=UTF8&iwloc=&output=embed";
+    // 구글 지도 임베드 URL 표준 형식으로 수정
+    var newSrc = "https://maps.google.com/maps?q=" + encodeURIComponent(address) + "&t=&z=15&ie=UTF8&iwloc=&output=embed";
     mapIframe.src = newSrc;
     
-    // 2. 하단 주소 텍스트 업데이트
     document.getElementById('currentAddr').innerText = address;
     
-    // 3. 행 강조 스타일 변경
     var rows = document.querySelectorAll('tr');
     rows.forEach(r => r.classList.remove('selected-row'));
     element.classList.add('selected-row');
     
-    // 4. 지도가 잘 보이게 상단으로 스크롤
     window.scrollTo({top: 0, behavior: 'smooth'});
 }
 </script>

@@ -16,10 +16,8 @@
     .title-box h2 { font-weight: 700; font-size: 28px; margin-bottom: 5px; }
     .title-box p { color: #888; font-size: 14px; }
 
-    /* 메인 카드 */
     .content-card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05); border: none; }
 
-    /* 검색 영역 스타일 수정 */
     .search-filter-box {
         background-color: #fcfcfc;
         border: 1px solid #eee;
@@ -35,7 +33,6 @@
         font-size: 14px;
     }
 
-    /* 테이블 스타일 */
     .table { border-collapse: separate; border-spacing: 0 10px; }
     .table thead th { border: none; color: #888; font-size: 13px; padding-bottom: 15px; }
     .table tbody tr { background-color: white; transition: all 0.2s; cursor: pointer; }
@@ -44,7 +41,7 @@
     .table td:first-child { border-left: 1px solid #f1f3f5; border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
     .table td:last-child { border-right: 1px solid #f1f3f5; border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
 
-    /* 배지 스타일 */
+   
     .badge-custom { padding: 6px 14px; border-radius: 20px; font-weight: 500; font-size: 12px; display: inline-block; min-width: 70px; }
     .badge-fire { background-color: #fff0f0; color: #ff4d4d; }
     .badge-police { background-color: #eef2ff; color: #4361ee; }
@@ -66,7 +63,9 @@
             <h2>🏢 재난 안전 기관</h2>
             <p>유형별 기관 연락처를 빠르게 조회하고 검색할 수 있습니다.</p>
         </div>
-        <a href="writeForm.do" class="btn-add">+ 새 기관 등록</a>
+        <c:if test="${!empty login && login.gradeName == '관리자' }">
+        	<a href="writeForm.do" class="btn-add"> + 새 기관 등록</a>
+        </c:if>
     </div>
 
     <div class="content-card">
