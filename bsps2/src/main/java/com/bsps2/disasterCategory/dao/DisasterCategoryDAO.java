@@ -1,6 +1,8 @@
 package com.bsps2.disasterCategory.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import com.bsps2.disaster.vo.DisasterVO;
@@ -28,48 +30,67 @@ public class DisasterCategoryDAO extends DAO {
     }
 
     // [2] 동시 삽입 (Connection 인자 추가)
-    public void insertAll(Connection con, DisasterVO vo, int catID) throws Exception {
+    public void insertAll(Connection con, DisasterVO vo, List<Integer> catIDs) throws Exception {
+    		PreparedStatement pstmtList = null;
+        PreparedStatement pstmtDetail = null;
+        PreparedStatement pstmtAssign = null;
+        ResultSet rsKeys = null;
+        
         try {
-            con.setAutoCommit(false); 
+        	con.setAutoCommit(false); // 트랜잭션 시작
 
-            String sqlList = "INSERT INTO DISASTER_LIST (NO, CATID, SUMMARY, OCCUR_DATE, REGION, RISK_GRADE, API_ID) " 
-                    + " VALUES (DISASTER_LIST_SEQ.NEXTVAL, ?, ?, TO_DATE(?, 'YYYY-MM-DD HH24:MI:SS'), ?, ?, ?) ";
+            // 1. DISASTER_LIST 삽입 (CATID 컬럼은 삭제했으므로 뺍니다)
+            String sqlList = "INSERT INTO DISASTER_LIST (NO, SUMMARY, OCCUR_DATE, REGION, RISK_GRADE, API_ID) " 
+                           + " VALUES (DISASTER_LIST_SEQ.NEXTVAL, ?, TO_DATE(?, 'YYYY-MM-DD HH24:MI:SS'), ?, ?, ?) ";
             
-            pstmt = con.prepareStatement(sqlList, new String[]{"NO"}); 
-            pstmt.setInt(1, catID);
-            pstmt.setString(2, vo.getContent());
-            pstmt.setString(3, vo.getCreateDate());
-            pstmt.setString(4, vo.getLocationName());
-            pstmt.setInt(5, vo.getDangerLevel());
-            pstmt.setString(6, vo.getApiId());
-            pstmt.executeUpdate();
+            pstmtList = con.prepareStatement(sqlList, new String[]{"NO"}); 
+            pstmtList.setString(1, vo.getContent());
+            pstmtList.setString(2, vo.getCreateDate());
+            pstmtList.setString(3, vo.getLocationName());
+            pstmtList.setInt(4, vo.getDangerLevel());
+            pstmtList.setString(5, vo.getApiId());
+            pstmtList.executeUpdate();
 
-            rs = pstmt.getGeneratedKeys();
+            // 생성된 시퀀스 번호(NO) 가져오기
+            rsKeys = pstmtList.getGeneratedKeys();
             long newNo = 0;
-            if(rs.next()) newNo = rs.getLong(1);
+            if(rsKeys.next()) newNo = rsKeys.getLong(1);
 
+            // 2. DISASTER_DETAIL 삽입 (기존과 동일)
             String sqlDetail = "INSERT INTO DISASTER_DETAIL(DETAILID, NO, DETAIL_INFO, SITUATION_DESC, MAP_LOCATION) "
                              + " VALUES(DISASTER_DETAIL_SEQ.NEXTVAL, ?, ?, ?, ?)";
-            
-            // 기존 pstmt 닫고 새로 생성
-            if (pstmt != null) pstmt.close();
-            pstmt = con.prepareStatement(sqlDetail);
-            pstmt.setLong(1, newNo);
-            pstmt.setString(2, vo.getContent());
-            pstmt.setString(3, "현재 상황 확인 중");
-            pstmt.setString(4, vo.getLocationName());
-            pstmt.executeUpdate();
+            pstmtDetail = con.prepareStatement(sqlDetail);
+            pstmtDetail.setLong(1, newNo);
+            pstmtDetail.setString(2, vo.getContent());
+            pstmtDetail.setString(3, "현재 상황 확인 중");
+            pstmtDetail.setString(4, vo.getLocationName());
+            pstmtDetail.executeUpdate();
 
-            con.commit(); 
-            System.out.println(">>> [저장 완료] NO: " + newNo + " / API_ID: " + vo.getApiId());
+            // 3. 💡 [핵심] DISASTER_CAT_ASSIGN 매핑 테이블 삽입
+            // 넘겨받은 카테고리 리스트(catIDs)만큼 반복해서 저장합니다.
+            String sqlAssign = "INSERT INTO DISASTER_CAT_ASSIGN (NO, CATID) VALUES (?, ?)";
+            pstmtAssign = con.prepareStatement(sqlAssign);
             
-        }  catch (Exception e) {
+            for (int catID : catIDs) {
+                pstmtAssign.setLong(1, newNo);
+                pstmtAssign.setInt(2, catID);
+                pstmtAssign.executeUpdate();
+                // 팁: Batch 처리를 쓰면 더 빠르지만, 일단 이해하기 쉽게 기본 루프로 짭니다.
+            }
+
+            con.commit(); // 모든 삽입 성공 시 커밋
+            System.out.println(">>> [전처리 저장] NO: " + newNo + " / 카테고리 개수: " + catIDs.size());
+            
+        } catch (Exception e) {
             if (con != null) con.rollback();
             e.printStackTrace();
             throw e;
         } finally {
-            if (rs != null) rs.close();
-            if (pstmt != null) pstmt.close();
+            // 리소스 해제 (생성 역순)
+            if (rsKeys != null) rsKeys.close();
+            if (pstmtAssign != null) pstmtAssign.close();
+            if (pstmtDetail != null) pstmtDetail.close();
+            if (pstmtList != null) pstmtList.close();
         }
     }
 

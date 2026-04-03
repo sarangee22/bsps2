@@ -69,15 +69,18 @@
 						${vo.content}</div>
 				</div>
 				<div class="card-footer text-right">
-					<a href="/scrap/scrap.do?no=${vo.no}" class="btn btn-warning">⭐스크랩하기</a>
-					<a href="list.do" class="btn btn-secondary">전체 목록</a> <a
-						href="/scrap/list.do" class="btn btn-info">내 스크랩 목록</a>
+					<a href="list.do?catID=${param.catID}&page=${pageObject.page}&perPageNum=${pageObject.perPageNum}"
+						class="btn btn-primary"> <i class="bi bi-list-ul"></i> 목록으로
+					</a> <a href="/scrap/scrap.do?no=${vo.no}" class="btn btn-warning">
+						<i class="bi bi-star-fill"></i> 스크랩하기
+					</a> <a href="/scrap/list.do" class="btn btn-info">내 스크랩 목록</a> <a
+						href="/disasterCategory/list.do" class="btn btn-secondary"> <i
+						class="bi bi-grid-fill"></i> 카테고리 목록
+					</a>
 				</div>
 			</div>
 
-			<div class="card-footer text-right bg-white border-0 pb-4">
-				
-			</div>
+			<div class="card-footer text-right bg-white border-0 pb-4"></div>
 		</div>
 	</div>
 </body>

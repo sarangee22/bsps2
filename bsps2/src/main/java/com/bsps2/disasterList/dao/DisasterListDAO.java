@@ -11,19 +11,22 @@ import com.bsps2.util.page.PageObject;
 
 public class DisasterListDAO extends DAO {
 
-    public List<DisasterVO> list(int catID, PageObject pageObject) throws Exception {
+	public List<DisasterVO> list(int catID, PageObject pageObject) throws Exception {
         List<DisasterVO> list = null;
         try {
             con = DB.getConnection();
             
-            // 1. 기본 쿼리 (catID 조건 포함)
-            String sql = "SELECT no, summary, region, occur_date FROM disaster_list WHERE catID = ? ";
+            // 1. 기본 쿼리 (매핑 테이블 DISASTER_CAT_ASSIGN 조인)
+            // L.catID = ? 대신 A.catID = ? 를 사용하고 L.no = A.no 조건을 추가합니다.
+            String sql = "SELECT l.no, l.summary, l.region, l.occur_date "
+                       + " FROM disaster_list l, disaster_cat_assign a "
+                       + " WHERE (l.no = a.no AND a.catID = ?) ";
             
             // 2. 검색 조건 추가
             String searchSql = search(pageObject);
             sql += searchSql;
             
-            sql += " ORDER BY no DESC";
+            sql += " ORDER BY l.no DESC";
             
             // 3. 페이징 처리를 위한 3중 서브쿼리
             sql = "SELECT rownum rnum, no, summary, region, occur_date FROM (" + sql + ")";
@@ -59,7 +62,7 @@ public class DisasterListDAO extends DAO {
             DB.close(con, pstmt, rs);
         }
         return list;
-    }
+    }// list()의 끝
 
     private String search(PageObject pageObject) {
         String sql = "";
@@ -88,7 +91,9 @@ public class DisasterListDAO extends DAO {
         long totalRow = 0;
         try {
             con = DB.getConnection();
-            String sql = "SELECT COUNT(*) FROM disaster_list WHERE catID = ? ";
+            // 데이터 개수를 셀 때도 매핑 테이블과 조인해야 정확한 카운트가 나옵니다.
+            String sql = "SELECT COUNT(*) FROM disaster_list l, disaster_cat_assign a "
+                       + " WHERE (l.no = a.no AND a.catID = ?) ";
             sql += search(pageObject);
             
             pstmt = con.prepareStatement(sql);
@@ -102,7 +107,7 @@ public class DisasterListDAO extends DAO {
             DB.close(con, pstmt, rs);
         }
         return totalRow;
-    }
+    } // getTotalRow()의 끝
 
  // DisasterListDAO.java 내의 view 메서드 부분 수정
     public DisasterVO view(long no) throws Exception {
