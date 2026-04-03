@@ -99,8 +99,13 @@ $(function(){
         
         <div class="card-footer bg-white text-right">
             <button type="button" id="btnSolve" class="btn btn-info btn-lg">퀴즈 풀기</button>
-            <a href="updateForm.do?no=${vo.vo.no}&inc=0" class="btn btn-warning btn-lg">수정</a>
-            <button type="button" id="btnDelete" class="btn btn-danger btn-lg">삭제</button>
+            
+            <%-- ✨ 관리자(gradeNo == 9)인 경우만 수정, 삭제 버튼 노출 --%>
+            <c:if test="${!empty login && login.gradeNo == 9}">
+                <a href="updateForm.do?no=${vo.vo.no}&inc=0" class="btn btn-warning btn-lg">수정</a>
+                <button type="button" id="btnDelete" class="btn btn-danger btn-lg">삭제</button>
+            </c:if>
+            
             <a href="list.do" class="btn btn-secondary btn-lg">돌아가기</a>
         </div>
     </div>

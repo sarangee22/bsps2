@@ -70,7 +70,9 @@ $(function(){
 		</tbody>
 	</table>
 	
-	<a href="writeForm.do" class="btn btn-primary">퀴즈 등록</a>
+    <c:if test="${!empty login && login.gradeNo == 9}">
+	    <a href="writeForm.do" class="btn btn-primary">퀴즈 등록</a>
+    </c:if>
 	
 </div>
 
