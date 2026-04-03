@@ -3,90 +3,118 @@
 <%@ taglib prefix="pageNav" tagdir="/WEB-INF/tags" %>
 
 <decorator:head>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Bootstrap의 container 여백 무력화 및 커스텀 스타일 */
-        .priority-high { background-color: #FEE2E2 !important; color: #991B1B !important; } 
-        .priority-mid { background-color: #FEF3C7 !important; color: #92400E !important; }  
-        .priority-low { background-color: #E0F2FE !important; color: #075985 !important; }  
-        /* 데코레이터 margin-top 때문에 겹쳐 보이면 아래 수치 조절 */
-        .main-content-wrapper { margin-top: 20px; }
+        /* 1. 배경 및 전체 톤 설정 */
+        body { background-color: #f4f7f9; font-family: 'Noto Sans KR', sans-serif; }
+        
+        /* 2. 컨테이너 여백 (상단바 고정 고려) */
+        .main-content-wrapper { margin-top: 130px; padding-bottom: 80px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+
+        /* 3. 상단 헤더 영역 */
+        .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .header-title h1 { font-weight: 700; color: #1A237E; font-size: 32px; margin-bottom: 5px; }
+        .header-title p { color: #6c7a89; font-size: 16px; }
+
+        /* 4. 등록 버튼 (네이비 톤) */
+        .btn-add { 
+            background-color: #1A237E; color: white; padding: 12px 25px; 
+            border-radius: 12px; font-weight: 600; transition: 0.3s; text-decoration: none !important;
+        }
+        .btn-add:hover { background-color: #0d145a; color: white; transform: translateY(-2px); }
+
+        /* 5. 요약 카드 디자인 */
+        .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 40px; }
+        .stat-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; }
+        .stat-label { color: #888; font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; display: block; }
+        .stat-value { font-size: 36px; font-weight: 800; color: #1A237E; }
+        .stat-value.ready { color: #2ecc71; }
+        .stat-value.pending { color: #e67e22; }
+
+        /* 6. 테이블 디자인 */
+        .table-container { background: white; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; }
+        .custom-table { width: 100%; border-collapse: collapse; }
+        .custom-table th { background: #f8f9fa; padding: 18px; text-align: center; color: #555; font-size: 14px; border-bottom: 2px solid #edf2f7; }
+        .custom-table td { padding: 20px; border-bottom: 1px solid #f1f4f8; vertical-align: middle; }
+        .custom-table tr:hover { background-color: #fcfdfe; cursor: pointer; }
+
+        /* 7. 우선순위 배지 스타일 */
+        .badge-p { padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; }
+        .p-high { background-color: #fff0f0; color: #ff4d4d; }
+        .p-mid { background-color: #fff9e6; color: #f39c12; }
+        .p-low { background-color: #eef2ff; color: #4361ee; }
+
+        /* 8. 체크박스 및 액션 버튼 */
+        .check-custom { width: 20px; height: 20px; cursor: pointer; }
+        .action-link { color: #ccc; margin: 0 8px; font-size: 18px; transition: 0.3s; }
+        .action-link.edit:hover { color: #4361ee; }
+        .action-link.delete:hover { color: #ff4d4d; }
     </style>
 </decorator:head>
 
-<div class="main-content-wrapper w-full overflow-x-hidden">
+<div class="main-content-wrapper">
 
-    <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-        <div class="flex items-center gap-4">
-            <div class="p-4 bg-blue-600 rounded-2xl text-white shadow-xl shadow-blue-100">
-                <i class="fa fa-check-square-o fa-2x"></i> 
-            </div> 
-            <div>
-                <h1 class="text-3xl font-black text-slate-900 tracking-tighter">비상물품 체크리스트</h1>
-                <p class="text-slate-500 font-medium text-sm">재난 대비를 위한 필수 물품을 점검하세요.</p>
-            </div>
+    <div class="header-section">
+        <div class="header-title">
+            <h1>📋 비상물품 체크리스트</h1>
+            <p>재난 대비를 위한 필수 물품을 점검하고 관리하세요.</p>
         </div>
-        <a href="writeForm.do?perPageNum=${pageObject.perPageNum}" class="bg-blue-600 text-white px-6 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">
-            <i class="fa fa-plus"></i> 새 물품 추가
+        <a href="writeForm.do?perPageNum=${pageObject.perPageNum}" class="btn-add">
+            <i class="fa fa-plus mr-2"></i> 새 물품 추가
         </a>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-sm flex items-center justify-between">
-            <div><p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">Total Items</p><p class="text-4xl font-black text-slate-900 mt-1">${meta.total}</p></div>
-            <div class="text-blue-500 opacity-20"><i class="fa fa-archive fa-3x"></i></div>
+    <div class="stat-grid">
+        <div class="stat-card">
+            <span class="stat-label">전체 물품</span>
+            <div class="stat-value">${meta.total}</div>
         </div>
-        <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-sm flex items-center justify-between">
-            <div><p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">Ready</p><p class="text-4xl font-black text-green-600 mt-1">${meta.ready}</p></div>
-            <div class="text-green-500 opacity-20"><i class="fa fa-check-circle fa-3x"></i></div>
+        <div class="stat-card">
+            <span class="stat-label">준비 완료</span>
+            <div class="stat-value ready">${meta.ready}</div>
         </div>
-        <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-sm flex items-center justify-between">
-            <div><p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">Pending</p><p class="text-4xl font-black text-orange-600 mt-1">${meta.notReady}</p></div>
-            <div class="text-orange-500 opacity-20"><i class="fa fa-clock-o fa-3x"></i></div>
+        <div class="stat-card">
+            <span class="stat-label">준비 필요</span>
+            <div class="stat-value pending">${meta.notReady}</div>
         </div>
     </div>
 
-    <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead class="bg-slate-50/50 border-b border-slate-100">
-                    <tr class="text-slate-400 text-[11px] font-black uppercase tracking-widest">
-                        <th class="px-8 py-5 text-center">Status</th>
-                        <th class="px-8 py-5">Item Name</th>
-                        <th class="px-8 py-5">Category</th>
-                        <th class="px-8 py-5 text-center">Qty</th>
-                        <th class="px-8 py-5 text-center">Priority</th>
-                        <th class="px-8 py-5 text-center">Expiry</th>
-                        <th class="px-8 py-5 text-center">Actions</th>
+    <div class="table-container">
+        <table class="custom-table text-center">
+            <thead>
+                <tr>
+                    <th>상태</th>
+                    <th class="text-left">물품명</th>
+                    <th>카테고리</th>
+                    <th>수량</th>
+                    <th>우선순위</th>
+                    <th>유효기간</th>
+                    <th>관리</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:forEach var="vo" items="${list}">
+                    <tr onclick="location='view.do?no=${vo.no}'">
+                        <td onclick="event.stopPropagation();">
+                            <input type="checkbox" ${vo.isReady == 'Y' ? 'checked' : ''} class="check-custom">
+                        </td>
+                        <td class="text-left" style="font-weight: 700; color: #333;">${vo.name}</td>
+                        <td style="color: #666;">${vo.category}</td>
+                        <td style="font-weight: 700;">${vo.quantity} ${vo.unit}</td>
+                        <td>
+                            <c:set var="pClass" value="${vo.priority == '높음' ? 'p-high' : (vo.priority == '낮음' ? 'p-low' : 'p-mid')}" />
+                            <span class="badge-p ${pClass}">${vo.priority}</span>
+                        </td>
+                        <td style="color: #999; font-size: 13px;">${vo.expiryDate}</td>
+                        <td onclick="event.stopPropagation();">
+                            <a href="updateForm.do?no=${vo.no}" class="action-link edit"><i class="fa fa-pencil"></i></a>
+                            <a href="delete.do?no=${vo.no}" class="action-link delete" onclick="return confirm('삭제할까요?')"><i class="fa fa-trash"></i></a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-50">
-                    <c:forEach var="vo" items="${list}">
-                        <tr class="hover:bg-slate-50/50 transition-colors cursor-pointer" onclick="location='view.do?no=${vo.no}'">
-                            <td class="px-8 py-6 text-center" onclick="event.stopPropagation();">
-                                <input type="checkbox" ${vo.isReady == 'Y' ? 'checked' : ''} class="w-5 h-5 rounded-lg border-slate-300 text-blue-600 focus:ring-blue-500 transition-all">
-                            </td>
-                            <td class="px-8 py-6 font-bold text-slate-900">${vo.name}</td>
-                            <td class="px-8 py-6 text-slate-500 font-medium text-sm">${vo.category}</td>
-                            <td class="px-8 py-6 text-center font-black text-slate-700">${vo.quantity}${vo.unit}</td>
-                            <td class="px-8 py-6 text-center">
-                                <c:set var="pClass" value="${vo.priority == '높음' ? 'priority-high' : (vo.priority == '낮음' ? 'priority-low' : 'priority-mid')}" />
-                                <span class="px-3 py-1.5 text-[10px] font-black rounded-lg ${pClass}">${vo.priority}</span>
-                            </td>
-                            <td class="px-8 py-6 text-center text-slate-400 font-bold text-xs">${vo.expiryDate}</td>
-                            <td class="px-8 py-6 text-center" onclick="event.stopPropagation();">
-                                <div class="flex items-center justify-center gap-3">
-                                    <a href="updateForm.do?no=${vo.no}" class="text-slate-300 hover:text-blue-600 transition-colors"><i class="fa fa-pencil"></i></a>
-                                    <a href="delete.do?no=${vo.no}" class="text-slate-300 hover:text-rose-500 transition-colors" onclick="return confirm('삭제할까요?')"><i class="fa fa-trash"></i></a>
-                                </div>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-        </div>
+                </c:forEach>
+            </tbody>
+        </table>
         
-        <div class="py-12 flex justify-center bg-slate-50/30 border-t border-slate-50">
+        <div style="padding: 40px 0; background: #fafbfc;">
             <pageNav:pageNav listURI="list.do" pageObject="${pageObject}" />
         </div>
     </div>
