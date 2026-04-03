@@ -54,7 +54,8 @@
     <main>
         <div class="form-title">질문답변 수정</div>
 
-        <form action="qnaEdit.do" method="post" id="editForm">
+        <form action="update.do" method="post" id="editForm">
+        <input type="hidden" name="no" value="${vo.no}">
             
             <div class="input-group">
                 <label>글번호</label>
@@ -90,7 +91,6 @@
         </form>
     </main>
 
-    <footer>푸터</footer>
 </div>
 
 <script>

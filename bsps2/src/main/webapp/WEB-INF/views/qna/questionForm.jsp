@@ -52,7 +52,7 @@
     <main>
         <div class="form-title">질문하기</div>
 
-        <form action="qnaWrite.do" method="post" id="qnaForm">
+        <form action="question.do" method="post" id="qnaForm">
             <!-- 제목 (D1) -->
             <div class="input-group">
                 <label>제목</label>
@@ -85,13 +85,12 @@
 
             <div class="btn-area">
                 <button type="submit" class="btn btn-submit">등록</button>
-                <button type="button" class="btn btn-cancel" onclick="location.href='qnaList.do'">취소</button>
+                <button type="button" class="btn btn-cancel" onclick="location.href='list.do'">취소</button>
                 <button type="reset" class="btn btn-reset">다시 입력</button>
             </div>
         </form>
     </main>
 
-    <footer>푸터</footer>
 </div>
 
 <script>

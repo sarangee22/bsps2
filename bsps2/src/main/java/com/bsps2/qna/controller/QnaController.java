@@ -1,10 +1,12 @@
 package com.bsps2.qna.controller;
 
 import com.bsps2.qna.vo.QnaVO;
+import com.bsps2.util.page.PageObject;
 import com.bsps2.main.controller.Controller;
 import com.bsps2.main.controller.Init;
 import com.bsps2.main.controller.Main;
 import com.bsps2.main.service.Execute;
+import com.bsps2.member.vo.LoginVO;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -28,131 +30,104 @@ public class QnaController implements Controller{
 			// 사용 변수 선언
 			QnaVO vo;
 			Integer result;
-			Long no;
+			Long no1;
+			int inc;
+			
 			switch (uri) {
+			// QnaController.java의 case "/qna/list.do": 부분
 			case "/qna/list.do":
-				// System.out.println("질문답변 리스트 처리");
-				// 생성된 Service를 가져와서 실행 -> Execute가 실행하면 로그를 남긴다.
-				// DB에서 데이터 수집을 해온다.
-				// 사용자에게 제공한다.
-				request.setAttribute("list", Execute.execute(Init.getService(uri), null));
-				// jsp의 위치 정보 "/WEB-INF/views/" + "qna/list" + ".jsp"
-				return "qna/list";
-			case "/qna/view.do":
-				// 글번호를 받는다. 1증가 데이터를 받는다. - 2개의 데이터는 반드시 넘어와야만 한다.
-				no = Long.parseLong(request.getParameter("no"));
-				long inc = Long.parseLong(request.getParameter("inc"));
+			    // 1. 브라우저에서 보낸 검색어(searchKeyword)를 가져온다.
+			    String word = request.getParameter("searchKeyword");
+			    
+			    // 2. 서비스 실행할 때 검색어(word)를 같이 넘겨줌.
+			    request.setAttribute("list", Execute.execute(Init.getService(uri), word));
+			    
+			    return "qna/list";
 
-				//DB에서 데이터 가져오기
-				// new Long[] {no, 1L} - new Long[] {번호[0], 증가[1]} - 생성하고 바로 초기값을 세팅한다.
-				// EL 또는 JSTL을 사용하기 위해서 4개의 저장 - request에 담자.
-				request.setAttribute("vo", Execute.execute(Init.getService(uri), new Long[] {no, inc}));
-				
-				// jsp의 위치 정보 "/WEB-INF/views/" + "qna/view" + ".jsp"
-				return "qna/view";
-				
-			case "/qna/questionForm.do":
-				// jsp의 위치 정보 "/WEB-INF/views/" + "qna/writeForm" + ".jsp"
-				return "qna/questionForm";
-				
-			case "/qna/question.do":
-				// System.out.println("질문 등록 처리");
-				// 사용자에게 데이터 받기 - 제목, 내용 - vo에 저장한다.
-				System.out.println("question.do - 질문 등록 처리");
-				// 넘어오는 데이터 수집
-				// 사용자에게 데이터 받기 - 제목, 내용, 작성자, 비밀번호 - vo에 저장한다.
-				//   - QnaVO를 생성 -> 데이터 받기 setter()와 In.getStr()이용.
-				vo = new QnaVO();
-				vo.setTitle(request.getParameter("title"));
-				vo.setCotent(request.getParameter("content"));
-				// 원래 아이디는 세션에서 가져와야 한다. Member table 에 있는 아이디를 하드코딩해서 입력
-				vo.setId("test");
-				Execute.execute(Init.getService(uri), vo);
-				
-				// 처리 결과 메시지 담기.
-				request.getSession().setAttribute("msg", "질문이 등록되었습니다.");
-				
-				return "redirect:list.do";
-				
-			case "/qna/answer.do":
-				// System.out.println("답변 등록 처리");
-				// 사용자에게 데이터 받기 - 제목, 내용, 4개의 번호 - vo에 저장한다.
-				System.out.println("answer.do - 답변 등록 처리");
-				// 넘어오는 데이터 수집
-				// 사용자에게 데이터 받기 - 제목, 내용, 작성자, 비밀번호 - vo에 저장한다.
-				//   - QnaVO를 생성 -> 데이터 받기 setter()와 In.getStr()이용.
-				vo = new QnaVO();
-				vo.setRefNo(Long.parseLong(request.getParameter("refNo")));
-				vo.setOrdNo(Long.parseLong(request.getParameter("ordNo")));
-				vo.setLevNo(Long.parseLong(request.getParameter("levNo")));
-				vo.setParentNo(Long.parseLong(request.getParameter("parentNo")));
-				vo.setTitle(request.getParameter("title"));
-				vo.setCotent(request.getParameter("content"));
-				// 원래 아이디는 세션에서 가져와야 한다. Member table 에 있는 아이디를 하드코딩해서 입력
-				vo.setId("admin");
-				Execute.execute(Init.getService(uri), vo);
-				
-				// 처리 결과 메시지 담기.
-				request.getSession().setAttribute("msg", "질문이 등록되었습니다.");
-				
-				return "redirect:list.do";
-				
-			case "/qna/updateForm.do":
-				// System.out.println("질문답변 글수정 폼");
-				
-				// 글번호를 받는다. 1증가 데이터를 받는다. - 2개의 데이터는 반드시 넘어와야만 한다.
-				no = Long.parseLong(request.getParameter("no"));
-				inc = Long.parseLong(request.getParameter("inc"));
+            case "/qna/view.do":
+                no1 = Long.parseLong(request.getParameter("no"));
+                inc = Integer.parseInt(request.getParameter("inc"));
+                // Object 배열로 서비스에 전달
+                request.setAttribute("vo", Execute.execute(Init.getService(uri), new Long[]{no1, (long)inc}));
+                return "qna/view";
+                
+            case "/qna/questionForm.do":
+                return "qna/questionForm";
+                
+            case "/qna/question.do":
+                vo = new QnaVO();
+                vo.setTitle(request.getParameter("title"));
+                vo.setContent(request.getParameter("content"));
 
-				//DB에서 데이터 가져오기
-				// new Long[] {no, 1L} - new Long[] {번호[0], 증가[1]} - 생성하고 바로 초기값을 세팅한다.
-				// EL 또는 JSTL을 사용하기 위해서 4개의 저장 - request에 담자.
-				request.setAttribute("vo", 
-						Execute.execute(Init.getService("/qna/view.do"), new Long[] {no, inc}));
-				return "qna/updateForm";
-				
-			case "/qna/update.do":
-				// System.out.println("질문답변 글수정 처리");
-				// 넘어오는 데이터 수집
-				// 사용자에게 데이터 받기 - 번호, 제목, 내용 - vo에 저장한다.
-				//   - QnaVO를 생성 -> 데이터 받기 setter()와 In.getStr()이용.
-				vo = new QnaVO();
-				vo.setNo(Long.parseLong(request.getParameter("no")));
-				vo.setTitle(request.getParameter("title"));
-				vo.setCotent(request.getParameter("content"));
-				// DB에 저장
-				result = (Integer) Execute.execute(Init.getService(uri), vo);
-				
-				// 처리 결과 메시지 담기.
-				if(result == 1)
-					request.getSession().setAttribute("msg", "수정이 되었습니다.");
-				else
-					request.getSession().setAttribute("msg", "수정에 실패하였습니다. 정보를 확인해주세요.");
-				
-				return "redirect:view.do?no=" + vo.getNo() + "&inc=0";
-				
-			case "/qna/delete.do":
-				System.out.println("질문답변 글삭제 처리");
-				// request : 클라이언트가 서버에 요청. - 클라이언트 정보를 서버에 전달해주는데 저장해서 전달되는 객체
-				// 글번호만 받는다.
-				no = Long.parseLong(request.getParameter("no"));
-				result = (Integer) Execute.execute(Init.getService(uri), no);
-				// 처리 결과 메시지 담기.
-				if(result == 1) {
-					request.getSession().setAttribute("msg", "삭제가 되었습니다.");
-					return "redirect:list.do";
-				} else {
-					request.getSession().setAttribute("msg", "삭제에 실패하였습니다. 정보를 확인해주세요.");
-					return "redirect:view.do?no=" + no + "&inc=0";
-				}
-			default:
-				// 잘못된 URI 처리
-				request.setAttribute("url", request.getRequestURL());
-				// /WEB-INF/views/ + error/noPage + .jsp
-				return "error/noPage";
-			} // switch ~ case 라벨: ~ default 의 끝
-		} // try 정상처리 의 끝
-		catch (Exception e) { // 예외 처리
+                com.bsps2.member.vo.LoginVO login = (com.bsps2.member.vo.LoginVO) request.getSession().getAttribute("login");
+                
+                if (login != null) {
+                    // 로그인 상태라면 로그인한 사람의 ID를 세팅!
+                    vo.setId(login.getId()); 
+                } else {
+                    
+                    vo.setId("admin");
+                }
+
+                Execute.execute(Init.getService(uri), vo);
+                return "redirect:list.do";
+                
+            case "/qna/answerForm.do":
+                // 1. 변수 선언(Long) 없이 이미 만들어둔 no1을 사용합니다.
+                no1 = Long.parseLong(request.getParameter("no"));
+                // 2. [번호, inc] 배열로 전달 (상세보기 서비스와 규격 맞춤)
+                request.setAttribute("vo", Execute.execute(Init.getService("/qna/view.do"), new Long[]{no1, 0L}));
+                return "qna/answerForm";
+
+            case "/qna/answer.do":
+                vo = new QnaVO();
+                vo.setTitle(request.getParameter("title"));
+                vo.setContent(request.getParameter("content"));
+                // 세션에서 로그인 정보 꺼내기
+                LoginVO loginUser = (LoginVO)request.getSession().getAttribute("login");
+                vo.setId(loginUser.getId());
+
+                // 족보 세팅
+                vo.setRefNo(Long.parseLong(request.getParameter("refNo")));
+                vo.setOrdNo(Long.parseLong(request.getParameter("ordNo")) + 1);
+                vo.setLevNo(Long.parseLong(request.getParameter("levNo")) + 1);
+                vo.setParentNo(Long.parseLong(request.getParameter("no")));
+
+                Execute.execute(Init.getService(uri), vo);
+                return "redirect:list.do";
+                
+            case "/qna/updateForm.do":
+                // 여기도 Long 빼고 no1만 씁니다.
+                no1 = Long.parseLong(request.getParameter("no"));
+                // 역시 배열로 전달
+                request.setAttribute("vo", Execute.execute(Init.getService("/qna/view.do"), new Long[]{no1, 0L}));
+                return "qna/updateForm";
+                
+            case "/qna/update.do":
+                // 수정된 데이터를 받아서 DB에 업데이트
+                vo = new QnaVO();
+                vo.setNo(Long.parseLong(request.getParameter("no")));
+                vo.setTitle(request.getParameter("title"));
+                vo.setContent(request.getParameter("content"));
+                Execute.execute(Init.getService(uri), vo);
+                return "redirect:view.do?no=" + vo.getNo() + "&inc=0";
+                
+            case "/qna/delete.do":
+                no1 = Long.parseLong(request.getParameter("no"));
+                result = (Integer) Execute.execute(Init.getService(uri), no1);
+                if(result == 1) {
+                    request.getSession().setAttribute("msg", "삭제가 되었습니다.");
+                    return "redirect:list.do";
+                } else {
+                    request.getSession().setAttribute("msg", "삭제에 실패하였습니다.");
+                    return "redirect:view.do?no=" + no1 + "&inc=0";
+                }
+            default:
+                request.setAttribute("url", request.getRequestURL());
+                return "error/noPage";
+			}
+	 
+		} catch (Exception e) { // 예외 처리
 			e.printStackTrace(); // 개발자를 위한 예외 상세 출력
 			// 잘못된 예외 처리 - 사용자에게 보여주기
 			request.setAttribute("url", request.getRequestURL());
@@ -161,10 +136,8 @@ public class QnaController implements Controller{
 			// /WEB-INF/views/ + error/err_500 + .jsp
 			return "error/err_500";
 		} // catch 의 끝
-		// return null;
-		
-		
+			// return null;
+
 	} // execute()의 끝
-	
-	
+
 }// 클래스의 끝

@@ -26,11 +26,11 @@ public class QnaVO {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public String getCotent() {
+	public String getContent() {
 		return content;
 	}
-	public void setCotent(String cotent) {
-		this.content = cotent;
+	public void setContent(String content) {
+		this.content = content;
 	}
 	public String getId() {
 		return id;
@@ -83,7 +83,7 @@ public class QnaVO {
 	}
 	@Override
 	public String toString() {
-		return "QnaVO [no=" + no + ", title=" + title + ", cotent=" + content + ", id=" + id + ", name=" + name
+		return "QnaVO [no=" + no + ", title=" + title + ", content=" + content + ", id=" + id + ", name=" + name
 				+ ", hit=" + hit + ", ref=" + ", writeDate=" + writeDate + ", refNo=" + refNo + ", ordNo=" + ordNo
 				+ ", levNo=" + levNo + ", parentNo=" + parentNo + "]";
 	}

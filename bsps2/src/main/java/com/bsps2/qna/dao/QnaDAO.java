@@ -9,52 +9,55 @@ import com.bsps2.util.db.DB;
 
 public class QnaDAO extends DAO{
 	
+	// 1. 질문답변 리스트 (검색어 word 추가)
+		public List<QnaVO> list(String word) throws Exception{
+			
+			List<QnaVO> list = new ArrayList<>();
+			
+			con = DB.getConnection();
+			
+			// 3. 실행할 쿼리 작성 (검색 조건 추가를 위해 String으로 분리)
+			String sql = "select q.no, q.title, q.id, m.name, q.writeDate, q.hit, q.levNo "
+					+ " from qna q, member m "
+					+ " where q.id = m.id ";
+			
+			// 검색어가 들어왔을 때만 WHERE 절에 조건 추가
+			if(word != null && !word.equals("")) {
+				sql += " and (q.title like ? or q.content like ? or q.id like ?) ";
+			}
+			
+			sql += " order by q.refNo desc, q.ordNo";
+					
+			pstmt = con.prepareStatement(sql);
+			
+			// 검색어가 있을 때만 물음표(?)에 데이터 세팅
+			if(word != null && !word.equals("")) {
+				pstmt.setString(1, "%" + word + "%");
+				pstmt.setString(2, "%" + word + "%");
+				pstmt.setString(3, "%" + word + "%");
+			}
+					
+			rs = pstmt.executeQuery();
+					
+			if(rs != null) {
+				while(rs.next()) {
+					QnaVO vo = new QnaVO();
+					vo.setNo(rs.getLong("no"));
+					vo.setTitle(rs.getString("title"));
+					vo.setId(rs.getString("id"));
+					vo.setName(rs.getString("name"));
+					vo.setWriteDate(rs.getString("writeDate"));
+					vo.setHit(rs.getLong("hit"));
+					vo.setLevNo(rs.getLong("levNo"));
+					list.add(vo);
+				}
+			}
+					
+			DB.close(con, pstmt, rs);
+			
+			return list;
+		}
 	
-	// 1. 질문답변 리스트
-	public List<QnaVO> list() throws Exception{
-		
-		// System.out.println("QnaDAO.list()----------------------");
-		
-		List<QnaVO> list = new ArrayList<>();
-		
-		// 1. 드라이버 확인 
-		con = DB.getConnection();
-		
-		// 3. 실행할 쿼리 작성
-				String sql = "select q.no, q.title, q.id, m.name, q.writeDate, q.hit, q.levNo "
-						+ " from qna q, member m "
-						+ " where q.id = m.id "
-						+ " order by q.refNo desc, q.ordNo";
-				
-				// 4. 실행 객체 & 데이터 세팅
-				pstmt = con.prepareStatement(sql);
-				
-				// 5. 실행 : select :executeQuery() -> rs, insert / update / delete :executeUpdate() -> Integer
-				rs = pstmt.executeQuery();
-				
-				// 6. DB에서 가져온 데이터 채우기
-				if(rs != null) {
-					while(rs.next()) { // 데이터가 있는 만큼 반복 실행
-						// 저장할 객체를 생성한다.
-						QnaVO vo = new QnaVO();
-						// 데이터를 저장한다.
-						vo.setNo(rs.getLong("no"));
-						vo.setTitle(rs.getString("title"));
-						vo.setId(rs.getString("id"));
-						vo.setName(rs.getString("name"));
-						vo.setWriteDate(rs.getString("writeDate"));
-						vo.setHit(rs.getLong("hit"));
-						vo.setLevNo(rs.getLong("levNo"));
-						// list에 담는다.
-						list.add(vo);
-					} // while() 끝
-				} // if의 끝
-				
-				// 7. DB 닫기
-				DB.close(con, pstmt, rs);
-		
-		return list;
-	} // list()의 끝
 	
 	// 2-0. 조회수 1 증가
 		public Integer increase(Long no) throws Exception{
@@ -97,7 +100,7 @@ public class QnaDAO extends DAO{
 				vo = new QnaVO();
 				vo.setNo(rs.getLong("no"));
 				vo.setTitle(rs.getString("title"));
-				vo.setCotent(rs.getString("content"));
+				vo.setContent(rs.getString("content"));
 				vo.setId(rs.getString("id"));
 				vo.setName(rs.getString("name"));
 				vo.setWriteDate(rs.getString("writeDate"));
@@ -114,6 +117,7 @@ public class QnaDAO extends DAO{
 		
 		// 3-1. 질문 등록
 		public Integer question(QnaVO vo) throws Exception {
+			System.out.println("DAO에 도착한 vo: " + vo); // ⬅️ 이 줄을 추가!
 			Integer result = 0;
 			
 			// 1. 드라이버 확인 & 2. 연결 객체
@@ -124,7 +128,7 @@ public class QnaDAO extends DAO{
 			// 4. 실행객체 & 데이터 세팅
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, vo.getTitle());
-			pstmt.setString(2, vo.getCotent());
+			pstmt.setString(2, vo.getContent());
 			pstmt.setString(3, vo.getId());
 			// 5. 실행 //6. 데이터 저장
 			// select - executeQuery() : rs, insert, update, delete - executeUpdate() : Integer
@@ -147,7 +151,7 @@ public class QnaDAO extends DAO{
 			// 4. 실행객체 & 데이터 세팅
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, vo.getTitle());
-			pstmt.setString(2, vo.getCotent());
+			pstmt.setString(2, vo.getContent());
 			pstmt.setString(3, vo.getId());
 			pstmt.setLong(4, vo.getRefNo());
 			pstmt.setLong(5, vo.getOrdNo());
@@ -195,7 +199,7 @@ public class QnaDAO extends DAO{
 			// 4. 실행객체 & 데이터 세팅
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, vo.getTitle());
-			pstmt.setString(2, vo.getCotent());
+			pstmt.setString(2, vo.getContent());
 			pstmt.setLong(3, vo.getNo());
 			// 5. 실행 & //6. 결과 저장
 			result = pstmt.executeUpdate();

@@ -18,6 +18,6 @@ public class QnaListService implements Service{
 	}
 	
 	public List<QnaVO> service(Object obj) throws Exception{
-		return dao.list();
+		return dao.list((String)obj);
 	}
 }
