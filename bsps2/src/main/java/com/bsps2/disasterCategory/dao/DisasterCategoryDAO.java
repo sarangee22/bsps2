@@ -98,7 +98,7 @@ public class DisasterCategoryDAO extends DAO {
         List<DisasterVO> list = new ArrayList<>();
         // 💡 팁: BSPS.DISASTER 처럼 스키마명을 붙여주면 더 안전합니다.
         String sql = "SELECT DISASTER_ID, DESCRIPTION, DISASTER_NAME, DISASTER_DATE "
-                   + " FROM DISASTER WHERE ROWNUM <= 50";
+                   + " FROM DISASTER ORDER BY DISASTER_ID DESC";
         try {
             pstmt = con.prepareStatement(sql);
             rs = pstmt.executeQuery();

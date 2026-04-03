@@ -4,7 +4,7 @@
 
 <div class="container mt-5">
     <div class="mb-4">
-        <h2 class="fw-bold"><i class="bi bi-exclamation-triangle-fill text-danger"></i> 재난 상세 정보 목록</h2>
+        <h2 class="fw-bold"><i class="bi bi-exclamation-triangle-fill text-danger"></i> ${(empty headTitle) ? "재난" : headTitle} 상세 정보 목록</h2>
         <p class="text-muted">선택하신 카테고리의 실시간 재난 문자 현황입니다.</p>
     </div>
 
@@ -74,7 +74,7 @@
             <i class="bi bi-arrow-left"></i> 카테고리 목록
         </a>
 	 	<div>
-			<pageNav:pageNav listURI="list.do" pageObject="${pageObject }" />
+			<pageNav:pageNav listURI="list.do" pageObject="${pageObject }" query="&catID=${param.catID}"/>
 		</div>
 	   </div>
 </div>
