@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <title>QnA 상세보기</title>
 <style>
-    /* 지원이님이 작성하신 기존 스타일 그대로 유지 */
+
     body { font-family: 'Malgun Gothic', sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
     .container { width: 900px; margin: 50px auto; border: 1px solid #ccc; background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
     :root { --navy-color: #001f3f; }
@@ -24,6 +24,10 @@
     .btn { padding: 6px 15px; border-radius: 4px; font-size: 12px; cursor: pointer; border: 1px solid #ccc; text-decoration: none; color: #333; background-color: #eee; }
     .btn:hover { background-color: #ddd; }
     .list-btn-area { margin-top: 20px; }
+    .btn-area-right { display: flex; justify-content: flex-end; /* 오른쪽 정렬 */
+    margin-top: 20px; width: 100%; }
+    .btn-area-right .btn { padding: 10px 25px; background-color: #888; color: white; border: none;
+    border-radius: 4px; cursor: pointer; font-weight: bold; }
     .btn-list { background-color: #bbb; color: #000; padding: 10px 25px; font-weight: bold; }
     .btn-reply { background-color: var(--navy-color); color: white; border: none; }
     footer { background-color: #eee; text-align: center; padding: 20px; font-size: 12px; border-top: 1px solid #ccc; }
@@ -59,26 +63,23 @@
                     
                     <div class="btn-group">
                         <%-- 본인 글이거나 관리자일 때만 수정/삭제 버튼 노출 (예시) --%>
-                        <c:if test="${login.id == vo.id || login.id == 'admin'}">
-                            <a href="updateForm.do?no=${vo.no}" class="btn">수정</a>
-                            <a href="javascript:void(0);" 
-                               onclick="if(confirm('정말 삭제하시겠습니까?')) location.href='delete.do?no=${vo.no}';" 
-                               class="btn">삭제</a>
-                        </c:if>
-                        
-                        <%-- 질문글일 때만 '답변하기' 버튼 노출 --%>
-                        <c:if test="${vo.levNo == 0}">
-                             <a href="answerForm.do?no=${vo.no}" class="btn btn-reply">답변하기</a>
-                        </c:if>
-                    </div>
+							<c:if test="${login.id == vo.id}">
+								<a href="updateForm.do?no=${vo.no}" class="btn">수정</a>
+								<a href="delete.do?no=${vo.no}" class="btn"
+									onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+							</c:if>
+							<c:if test="${login.id == 'admin'}">
+								<a href="answerForm.do?no=${vo.no}" class="btn">답변하기</a>
+							</c:if>
+						</div>
                 </div>
             </div>
         </div>
 
-        <div class="list-btn-area">
-            <a href="list.do" class="btn btn-list">← 목록</a>
-        </div>
-    </main>
+			<div class="btn-area-right">
+				<button type="button" class="btn" onclick="location.href='list.do'">←목록</button>
+		</div>
+	</main>
 </div>
 
 </body>
