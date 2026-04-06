@@ -63,21 +63,6 @@
         </a>
     </div>
 
-    <div class="stat-grid">
-        <div class="stat-card">
-            <span class="stat-label">전체 물품</span>
-            <div class="stat-value">${meta.total}</div>
-        </div>
-        <div class="stat-card">
-            <span class="stat-label">준비 완료</span>
-            <div class="stat-value ready">${meta.ready}</div>
-        </div>
-        <div class="stat-card">
-            <span class="stat-label">준비 필요</span>
-            <div class="stat-value pending">${meta.notReady}</div>
-        </div>
-    </div>
-
     <div class="table-container">
         <table class="custom-table text-center">
             <thead>
