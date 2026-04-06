@@ -11,7 +11,7 @@
 <div class="container mt-5">
     <div class="card shadow">
         <div class="card-header bg-warning text-dark">
-            <h4><i class="fas fa-edit"></i> 퀴즈 및 해설 수정</h4>
+            <h4>퀴즈 및 해설 수정</h4>
         </div>
         <div class="card-body">
             <form action="update.do" method="post">
@@ -44,7 +44,7 @@
 
                 <%-- 5. 추가된 상세 해설 수정란 --%>
                 <div class="form-group">
-                    <label for="explain"><strong class="text-danger">💡 상세 해설 수정</strong></label>
+                    <label for="explain"><strong class="text-danger"> 상세 해설 수정</strong></label>
                     <%-- 해설 데이터는 Map의 explain 키에 들어있습니다. --%>
                     <textarea name="explain" id="explain" rows="4" class="form-control" 
                               placeholder="수정할 해설 내용을 입력하세요" required>${vo.explain}</textarea>

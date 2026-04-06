@@ -20,7 +20,7 @@ $(function(){
 <div class="container mt-5">
     <div class="card shadow">
         <div class="card-header bg-primary text-white">
-            <h4><i class="fas fa-edit"></i> 새로운 퀴즈 및 해설 등록</h4>
+            <h4> 새로운 퀴즈 및 해설 등록</h4>
         </div>
         <div class="card-body">
             <form action="write.do" method="post">
@@ -47,7 +47,7 @@ $(function(){
 
                 <%-- 4. 상세 해설 (추가된 부분) --%>
                 <div class="form-group">
-                    <label for="explain"><strong class="text-danger">✨ 상세 해설 (정답 시 노출)</strong></label>
+                    <label for="explain"><strong class="text-danger">상세 해설 등록</strong></label>
                     <textarea name="explain" id="explain" rows="4" class="form-control" 
                               placeholder="사용자가 정답을 맞혔을 때 보여줄 상세한 설명을 입력하세요" required></textarea>
                 </div>

@@ -9,6 +9,7 @@ import com.bsps2.community.vo.CommunityVO;
 import com.bsps2.main.controller.Controller;
 import com.bsps2.main.controller.Init;
 import com.bsps2.main.service.Execute;
+import com.bsps2.member.vo.LoginVO;
 import com.bsps2.util.image.ImageUtil;
 import com.bsps2.util.page.PageObject;
 
@@ -57,7 +58,13 @@ public class CommunityController implements Controller {
 				CommunityVO vo = new CommunityVO();
 				vo.setTitle(request.getParameter("title"));
 				vo.setContent(request.getParameter("content"));
-				vo.setWriter(request.getParameter("writer"));
+				//vo.setWriter(request.getParameter("writer"));
+				// 세션에서 로그인 정보를 직접 꺼내서 작성자로 등록합니다.
+			    LoginVO login = (LoginVO) session.getAttribute("login");
+			    if (login != null) {
+			        // 권한 체크 시 ID로 비교하신다면 login.getId()를, 이름으로 비교하신다면 login.getName()을 넣으세요.
+			        vo.setWriter(login.getId()); 
+			    }
 				vo.setPw(request.getParameter("pw"));
 				
 				// 2. 파일 업로드 설정

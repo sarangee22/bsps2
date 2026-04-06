@@ -138,8 +138,9 @@ $(function(){
 		
 		<div class="mb-3 mt-3">
 			<label for="writer" class="form-label">작성자</label>
+			<%-- 수정 포인트: 사용자가 이름을 직접 쓰지 못하게 readonly를 걸고 로그인한 사용자 이름을 넣습니다. --%>
 			<input name="writer" id="writer" required class="form-control"
-				placeholder="작성자 성함을 입력하세요.">
+				value="${login.name}" readonly>
 		</div>
 		
 		<div class="mb-3 mt-3">
