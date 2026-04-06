@@ -118,7 +118,7 @@ $(function(){
 });
 </script>
 
-</head>
+</head> 
 
 <body>
 

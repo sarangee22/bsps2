@@ -70,7 +70,7 @@ h3 {
 
 .btn-info {
     background: blue;
-    border: 1px solid #ddd;
+    border: 1px solid #ddd; 
     color: #555;
 }
 

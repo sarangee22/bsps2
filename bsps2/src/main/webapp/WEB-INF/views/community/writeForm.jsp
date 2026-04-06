@@ -11,7 +11,7 @@ body {
 }
 
 /* 제목 */
-h2 {
+h2 { 
     font-size: 28px;
     font-weight: 800;
     color: #1A237E;
