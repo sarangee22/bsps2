@@ -4,6 +4,131 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<style>
+body {
+    background-color: #f4f7f9;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+
+
+/* 제목 */
+h3 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #1A237E;
+}
+
+/* 라벨 */
+.form-label {
+    font-weight: 700;
+    color: #333;
+}
+
+/* input */
+.form-control {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #1A237E;
+    box-shadow: 0 0 8px rgba(26,35,126,0.1);
+}
+
+/* textarea */
+textarea.form-control {
+    resize: vertical;
+}
+
+/* 이미지 */
+.img-thumbnail {
+    border-radius: 12px;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+    border: none;
+}
+
+/* 버튼 */
+.btn {
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 700;
+    border: none;
+    transition: 0.3s;
+}
+
+/* 메인 버튼 */
+.btn-primary {
+    background: #1A237E;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #0d145c;
+}
+
+/* 보조 */
+.btn-warning {
+    background: #f1f4f8;
+    color: #555;
+}
+
+.btn-warning:hover {
+    background: #e1e6ed;
+}
+
+.btn-secondary {
+    background: white;
+    border: 1px solid #ddd;
+    color: #555;
+}
+
+.btn-secondary:hover {
+    background: #f8f9fa;
+}
+
+/* 이미지 변경 버튼 */
+.btn-success {
+    background: #eef2ff;
+    color: #1A237E;
+    border: 1px solid #c7d2fe;
+}
+
+.btn-success:hover {
+    background: #e0e7ff;
+}
+
+/* 간격 */
+.mb-3, .mt-3 {
+    margin-bottom: 18px !important;
+}
+
+/* modal 커스터마이징 */
+.modal-content {
+    border-radius: 20px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.modal-header {
+    border-bottom: 1px solid #eee;
+}
+
+.modal-title {
+    font-weight: 800;
+    color: #1A237E;
+}
+
+.modal-footer {
+    border-top: 1px solid #eee;
+}
+</style>
+
 <title>제보 수정</title>
 <script type="text/javascript">
 $(function(){

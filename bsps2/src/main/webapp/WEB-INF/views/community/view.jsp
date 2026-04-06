@@ -7,10 +7,107 @@
 <meta charset="UTF-8">
 <title>제보 상세 보기</title>
 <style type="text/css">
-#deleteDiv {display: none; margin-top: 20px;}
-.community-img{max-width: 100%; height:auto; border-radius: 5px; box-shadow:0 0 10px rgba(0,0,0,0.1);}
-th { width: 150px; background-color: #f8f9fa; vertical-align: middle !important;}
+body {
+    background-color: #f4f7f9;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 제목 */
+h3 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #1A237E;
+}
+
+/* 테이블 */
+.table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table th {
+    width: 140px;
+    background: #f8f9fa;
+    color: #555;
+    font-weight: 300;
+    text-align: center;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.table td {
+    padding: 18px;
+    border-bottom: 1px solid #f1f4f8;
+    color: #333;
+}
+
+/* 이미지 */
+.community-img {
+    max-width: 100%;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+/* 버튼 */
+.btn {
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    border: none;
+}
+
+.btn-primary {
+    background: #1A237E;
+    color: white;
+}
+
+.btn-danger {
+    background: white;
+    border: 1px solid #ff4d4f;
+    color: #ff4d4f;
+}
+
+.btn-info {
+    background: blue;
+    border: 1px solid #ddd;
+    color: #555;
+}
+
+/* 삭제 영역 */
+#deleteDiv {
+    display: none;
+    margin-top: 20px;
+    border: 1px solid #ff4d4f;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+#deleteDiv .card-header {
+    background: #ff4d4f;
+    color: white;
+    padding: 12px;
+    font-weight: 700;
+}
+
+#deleteDiv .card-body {
+    padding: 15px;
+}
+
+#deleteDiv input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+#deleteDiv .card-footer {
+    padding: 15px;
+    display: flex;
+    gap: 10px;
+}
 </style>
+
 
 <script type="text/javascript">
 $(function(){
