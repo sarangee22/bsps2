@@ -27,13 +27,15 @@
     .td-title:hover { text-decoration: underline; color: var(--navy-color); background-color: #fcfcfc; }
     .reply-icon { color: #999; margin-right: 5px; font-weight: bold; }
 
-    .list-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
+    .list-footer { display: flex; justify-content: center; align-items: center; margin-top: 30px; position: relative; } /* 버튼을 오른쪽 끝에 고정하기 위한 기준점 */
     .pagination { display: flex; gap: 8px; font-size: 15px; align-items: center; }
     .pagination a { text-decoration: none; color: #666; padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; background-color: #fff; }
     .pagination a:hover { background-color: #f0f0f0; border-color: #bbb; }
     .pagination .active { background-color: #001f3f; color: white; border-color: #001f3f; font-weight: bold; pointer-events: none; }
 
-    .btn-write { background-color: #fff; color: #333; padding: 10px 25px; border: 1px solid #333; border-radius: 4px; font-weight: bold; text-decoration: none; font-size: 14px; transition: 0.2s; }
+    .btn-write {position: absolute; right: 0; background-color: #fff; color: #333; padding: 10px 25px; 
+        border: 1px solid #333; border-radius: 4px; font-weight: bold; text-decoration: none; font-size: 14px; 
+        transition: 0.2s; }
     .btn-write:hover { background-color: #333; color: #fff; }
 </style>
 </head>
@@ -43,6 +45,7 @@
     <header>
         <div class="user-area"></div>
     </header>
+    
 
     <main>
         <div class="list-header">
@@ -94,7 +97,7 @@
         </table>
 
         <div class="list-footer">
-            <div></div> <div class="pagination">
+            <div class="pagination">
                 <c:forEach var="i" begin="1" end="5">
                     <a href="${pageContext.request.contextPath}/qna/list.do?page=${i}&searchKeyword=${param.searchKeyword}"
                         class="${(param.page == i || (empty param.page && i == 1)) ? 'active' : ''}">${i}</a>
@@ -103,8 +106,17 @@
                 <a href="${pageContext.request.contextPath}/qna/list.do?page=${curPage + 1}&searchKeyword=${param.searchKeyword}">&gt;</a>
             </div>
 
-            <a href="${pageContext.request.contextPath}/qna/questionForm.do" class="btn-write">질문 작성</a>
-        </div>
+				<c:if test="${!empty login}">
+        <a href="${pageContext.request.contextPath}/qna/questionForm.do" class="btn-write">
+            <c:choose>
+                <%-- 관리자(admin)일 때 문구 --%>
+                <c:when test="${login.id == 'admin'}">공지/안내 등록</c:when>
+                <%-- 일반 회원일 때 문구 (지원이님이 원하시는 '질문 등록'!) --%>
+                <c:otherwise>질문 등록</c:otherwise>
+            </c:choose>
+        </a>
+    </c:if>
+</div>
     </main>
 </div>
 

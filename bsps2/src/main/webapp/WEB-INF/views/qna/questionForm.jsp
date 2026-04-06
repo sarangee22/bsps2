@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -50,9 +52,22 @@
     <header>재난/안전 정보 사이트</header>
 
     <main>
-        <div class="form-title">질문하기</div>
+			<div class="form-title"
+				style="text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 20px;">
+				<c:choose>
+					<%-- 1. 아이디가 정확히 'admin'일 때만 '공지하기' --%>
+		            <c:when test="${login.id == 'admin'}">
+                          공지하기
+                    </c:when>
+                    
+					<%-- 2. 그 외의 모든 경우(일반 회원 등)는 '질문하기' --%>
+					<c:otherwise>
+                        질문하기
+                    </c:otherwise>
+				</c:choose>
+			</div>
 
-        <form action="question.do" method="post" id="qnaForm">
+			<form action="question.do" method="post" id="qnaForm">
             <!-- 제목 (D1) -->
             <div class="input-group">
                 <label>제목</label>

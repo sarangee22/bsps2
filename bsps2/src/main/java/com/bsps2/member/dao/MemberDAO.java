@@ -42,7 +42,7 @@ public class MemberDAO extends DAO {
         return vo;
     }
 
-    // 1-3. 회원가입
+    // 1-3. 회원가입..
     public Integer write(MemberVO vo) throws Exception {
         Integer result = 0;
         try {
