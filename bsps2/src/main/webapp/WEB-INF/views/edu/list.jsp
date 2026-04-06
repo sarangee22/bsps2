@@ -81,12 +81,6 @@
         </div>
     </div>
 
-    <div class="stat-grid">
-        <div class="stat-card"><span class="stat-label">전체 가이드</span><div class="stat-value">${meta.total}</div></div>
-        <div class="stat-card"><span class="stat-label">누적 조회수</span><div class="stat-value" style="color: #4361ee;">${meta.views}</div></div>
-        <div class="stat-card"><span class="stat-label">카테고리 수</span><div class="stat-value" style="color: #2ecc71;">${meta.cats}</div></div>
-    </div>
-
     <div class="filter-section">
         <form action="list.do" class="search-box">
             <input type="hidden" name="perPageNum" value="${pageObject.perPageNum}">
