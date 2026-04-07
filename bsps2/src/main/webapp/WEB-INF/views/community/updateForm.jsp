@@ -62,50 +62,52 @@ textarea.form-control {
     transition: 0.3s;
 }
 
-/* 메인 버튼 */
+/* 등록/수정 완료 버튼 (메인) */
 .btn-primary {
-    background: #1A237E;
-    color: white;
+    background: #1A237E ;
+    color: white ;
 }
 
 .btn-primary:hover {
     background: #0d145c;
 }
 
-/* 보조 */
+/* 새로입력 버튼 (강조된 노란색) */
 .btn-warning {
-    background: #f1f4f8;
-    color: #555;
+    background: #FFB300 ; /* 명확한 노란색 */
+    color: white !important ;  /* 글자색 흰색 */
+    border: none ;
 }
 
 .btn-warning:hover {
-    background: #e1e6ed;
+    background: #FFA000;
 }
 
+/* 취소 버튼 (강조된 회색) */
 .btn-secondary {
-    background: white;
-    border: 1px solid #ddd;
-    color: #555;
+    background: #757575 ; /* 진한 회색 */
+    border: 1px solid #616161;
+    color: white ;        /* 글자색 흰색 */
 }
 
 .btn-secondary:hover {
-    background: #f8f9fa;
+    background: #616161 ;
 }
 
-/* 이미지 변경 버튼 */
+/* 이미지 변경 버튼 (중요도가 높으므로 남색 테마 유지) */
 .btn-success {
-    background: #eef2ff;
-    color: #1A237E;
-    border: 1px solid #c7d2fe;
+    background: #1A237E ;
+    color: white ;
+    border: none ;
 }
 
 .btn-success:hover {
-    background: #e0e7ff;
+    background: #0d145c;
 }
 
 /* 간격 */
 .mb-3, .mt-3 {
-    margin-bottom: 18px !important;
+    margin-bottom: 18px ;
 }
 
 /* modal 커스터마이징 */

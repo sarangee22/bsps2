@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <style>
+
 body {
     background-color: #f4f7f9;
     font-family: 'Noto Sans KR', sans-serif;
@@ -14,7 +15,7 @@ body {
 h2 { 
     font-size: 28px;
     font-weight: 800;
-    color: #1A237E;
+    color: #1A237E;    
 }
 
 /* 라벨 */
@@ -65,30 +66,32 @@ textarea.form-control {
     background: #0d145c;
 }
 
-/* 새로입력 */
+/* 새로입력 버튼 (색상 강조) */
 .btn-warning {
-    background: #f1f4f8;
-    color: #555;
+    background: #FFB300; /* 명확한 노란색 */
+    color: white;        /* 글자를 흰색으로 해서 가독성 높임 */
 }
 
 .btn-warning:hover {
-    background: #e1e6ed;
+    background: #FFA000; /* 마우스 올렸을 때 살짝 어둡게 */
+    color: white;
 }
 
-/* 취소 */
+/* 취소 버튼 (테두리와 텍스트 강조) */
 .btn-secondary {
-    background: white;
-    border: 1px solid #ddd;
-    color: #555;
+    background: #757575; /* 진한 회색으로 변경 */
+    border: 1px solid #616161;
+    color: white;        /* 글자를 흰색으로 변경 */
 }
 
 .btn-secondary:hover {
-    background: #f8f9fa;
+    background: #616161;
+    color: white;
 }
 
 /* 간격 정리 */
 .mb-3, .mt-3 {
-    margin-bottom: 18px !important;
+    margin-bottom: 18px ;
 }
 </style>
 

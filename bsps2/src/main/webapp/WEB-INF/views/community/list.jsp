@@ -7,114 +7,100 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>제보 게시판</title>
+<title>제보 게시판.</title>
 
 <style>
 body {
-    background-color: #f4f7f9;
+    /* 배경색을 조금 더 차분하게 해서 카드가 떠 보이게 함 */
+    background-color: #f0f3f7 !important; 
     font-family: 'Noto Sans KR', sans-serif;
 }
 
-/* 전체 컨테이너 */
 .wrapper {
-    max-width: 1100px;
-    margin: 100px auto 80px auto;
+    max-width: 1200px; 
+    margin: 80px auto;
+    padding: 0 20px;
 }
 
-/* 헤더 */
-.header {
-    margin-bottom: 30px;
-}
+.header { margin-bottom: 30px; }
+.title { font-size: 30px; font-weight: 800; color: #1A237E; }
 
-.title {
-    font-size: 30px;
-    font-weight: 800;
-    color: #1A237E;
-}
-
-/* [두번째 사진 스타일] 카드 레이아웃 (그림자, 둥근 테두리) */
+/* 입체감을 더 살리기 위해 카드 전체 테두리 농도 살짝 조절 */
 .table-card {
-    background: white;
-    border-radius: 25px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    background: white !important;
+    border-radius: 25px !important;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15) !important;
     overflow: hidden;
-    margin-bottom: 25px; 
+    margin-bottom: 25px;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
 }
 
-/* 테이블 디자인 */
-.custom-table {
-    width: 100%;
-    border-collapse: collapse;
+.custom-table { width: 100%; border-collapse: collapse; }
+
+/* 추가 보정: thead 영역 전체를 한 번 더 누릅니다. */
+.custom-table thead {
+    background-color: #e2e6ea !important;
+    display: table-header-group; /* 렌더링 방식 강제 */
 }
 
-.custom-table th {
-    background: #f8f9fa;
-    padding: 16px;
-    font-size: 14px;
-    color: #666;
-    border-bottom: 1px solid #eee;
-    text-align: center;
-}
-
+/*  */
 .custom-table td {
-    padding: 18px;
-    border-bottom: 1px solid #f1f4f8;
+    padding: 20px;
     text-align: center;
     color: #444;
+    
+    /* [수정] 선의 색상을 더 진하게(#dee2e6) 하고 두께를 1px로 확실하게 줍니다. */
+    border-bottom: 1.5px solid #dee2e6 !important; 
 }
 
-/* [첫번째 사진 스타일] 제목 열 왼쪽 정렬 맞춤 */
+/* 제목 행(th) 아래 선도 밸런스를 맞추기 위해 조금 더 진하게 고정 */
+.custom-table th {
+    padding: 20px 16px;
+    font-size: 14px;
+    color: #333 !important;
+    text-align: center;
+    font-weight: 800;
+    background: linear-gradient(#e2e6ea, #e2e6ea) !important;
+    background-color: #e2e6ea !important;
+
+    
+    filter: brightness(0.95);
+}
+
+
+.custom-table tbody tr:last-child td {
+    border-bottom: none !important;
+}
+
 .text-left {
     text-align: left !important;
     padding-left: 25px !important;
     font-weight: 700;
-    color: #333;
 }
 
-.custom-table tr:hover {
-    background: #fcfdff;
-    cursor: pointer;
-}
+.custom-table tr:hover { background: #fcfdff; cursor: pointer; }
 
-/* 이미지 스타일 */
 .list-img {
-    width: 45px;
-    height: 45px;
-    border-radius: 8px;
+    width: 50px; height: 50px; /* 크기 살짝 키움 */
+    border-radius: 10px;
     object-fit: cover;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* [첫번째 사진 스타일] 제보하기 버튼 위치 (왼쪽 하단) */
-.button-area {
-    margin-top: 15px;
-    text-align: left;
-}
-
+.button-area { margin-top: 15px; text-align: left; }
 .btn {
     display: inline-block;
     padding: 12px 22px;
-    border-radius: 10px;
+    border-radius: 12px;
     font-weight: 700;
     text-decoration: none;
     transition: 0.2s;
 }
 
-.btn-primary {
-    background: #1A237E;
-    color: white;
-}
+.btn-primary { background: #1A237E; color: white; }
+.btn-primary:hover { background: #0d145c; box-shadow: 0 4px 12px rgba(26, 35, 126, 0.3); }
 
-.btn-primary:hover {
-    background: #0d145c;
-    box-shadow: 0 4px 12px rgba(26, 35, 126, 0.2);
-}
-
-/* [요청사항] 페이지네이션 정중앙 배치 */
-.pagination-container {
-    margin-top: 40px;
-    display: flex;
-    justify-content: center;
-}
+.pagination-container { margin-top: 40px; display: flex; justify-content: center; }
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -143,7 +129,8 @@ $(function(){
                 <tr>
                     <th style="width: 80px;">번호</th>
                     <th style="width: 100px;">이미지</th>
-                    <th class="text-left">제목</th> <th style="width: 120px;">작성자</th>
+                    <th class="text-left">제목</th> 
+                    <th >작성자</th>
                     <th style="width: 150px;">작성일</th>
                     <th style="width: 100px;">조회수</th>
                 </tr>
