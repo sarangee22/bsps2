@@ -177,9 +177,26 @@
 				<div class="card-footer text-right mt-5 bg-white border-0 p-0">
 					<a href="list.do?catID=${vo.catID}&page=${pageObject.page}&perPageNum=${pageObject.perPageNum}"
 						class="btn btn-primary"> <i class="bi bi-list-ul"></i> 목록으로
-					</a> <a href="/scrap/scrap.do?no=${vo.no}" class="btn btn-warning text-white">
-						<i class="bi bi-star-fill"></i> 스크랩하기
-					</a> <a href="/scrap/list.do" class="btn btn-info">내 스크랩 목록</a> <a
+					</a> 
+					<c:choose>
+					    <%-- 로그인 된 경우 --%>
+					    <c:when test="${!empty login}">
+						    <a href="/scrap/write.do?no=${vo.no}&id=${login.id}" 
+						       class="btn btn-warning" id="scrapBtn">
+						        <i class="bi bi-star-fill"></i> 스크랩하기
+						    </a>
+						</c:when>
+					    
+					    <%-- 로그인 안 된 경우 --%>
+					    <c:otherwise>
+					        <button type="button" class="btn btn-outline-secondary" onclick="if(confirm('로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?')) { location='/member/loginForm.do'; }">
+					            <i class="bi bi-star"></i> 스크랩하기
+					        </button>
+					    </c:otherwise>
+					</c:choose>
+					
+					
+					<a href="/scrap/list.do" class="btn btn-info">내 스크랩 목록</a> <a
 						href="/disasterCategory/list.do" class="btn btn-secondary"> <i
 						class="bi bi-grid-fill"></i> 카테고리 목록
 					</a>

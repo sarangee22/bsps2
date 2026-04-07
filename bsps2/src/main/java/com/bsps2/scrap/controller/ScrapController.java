@@ -1,6 +1,8 @@
 package com.bsps2.scrap.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 import com.bsps2.main.controller.Controller;
 import com.bsps2.main.controller.Init;
 import com.bsps2.main.service.Execute;
@@ -17,6 +19,7 @@ public class ScrapController implements Controller {
         String jsp = null;
         // 요청한 URI 가져오기
         String uri = request.getRequestURI();
+        HttpSession session = request.getSession();
         
         // [임시 처리] 회원 모듈 미완성으로 인한 고정 아이디 사용
         String id = "test"; 
@@ -50,10 +53,24 @@ public class ScrapController implements Controller {
                     Execute.execute(Init.getService(uri), scrapNo);
                     jsp = "redirect:list.do";
                     break;
+                    
+                case "/scrap/write.do":
+                    // 1. 데이터 수집 (글번호, 아이디)
+                    String noStr = request.getParameter("no");
+                    id = request.getParameter("id");
+                    
+                    // 2. 서비스 실행 (DB 저장)
+                    // Execute.execute(Init.getService(uri), new Object[]{noStr, id});
+                    
+                    // 3. 처리 후 리다이렉트 (상세보기로 돌아가거나 메시지 띄우기)
+                    session.setAttribute("msg", "성공적으로 스크랩되었습니다.");
+                    jsp = "redirect:/disasterList/view.do?no=" + noStr + "&inc=0"; 
+                    break;
 
                 default:
                     jsp = "error/404";
                     break;
+                    
             }
         } catch (Exception e) {
             // 예외 발생 시 콘솔 출력 및 에러 페이지 설정
