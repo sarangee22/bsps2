@@ -10,6 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <style>
+
     body { background-color: #f8f9fa; font-family: 'Noto Sans KR', sans-serif; color: #333; }
     
     .header-section { display: flex; justify-content: space-between; align-items: center; margin-top: 50px; margin-bottom: 30px; }

@@ -4,81 +4,91 @@
 <head>
 <meta charset="UTF-8">
 <title>회원가입</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-    /* 전체 레이아웃 1100px 통일 */
-    body { font-family: 'Malgun Gothic', sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
-    .container { width: 1100px; margin: 30px auto; border: 1px solid #ccc; background-color: #fff; box-shadow: 0 0 15px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }
+    body { font-family: 'Noto Sans KR', sans-serif; margin: 0; padding: 0; background-color: #f4f7f9; color: #2c3e50; }
     
-    header { background-color: #001f3f; color: white; padding: 20px 30px; text-align: center; }
-    header h1 { font-size: 20px; margin: 0; }
+    .container { width: 1100px; margin: 50px auto; background-color: #fff; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; min-height: 800px; }
+    
+    :root { --main-navy: #1a2a4e; --accent-blue: #3498db; --border-light: #eff2f5; }
 
-    main { padding: 50px; }
-    .content-title { font-size: 24px; font-weight: bold; text-align: center; margin-bottom: 40px; color: #333; }
+    main { padding: 60px 50px; }
     
-    #writeForm { max-width: 600px; margin: 0 auto; }
-    .form-group label { font-size: 14px; font-weight: bold; color: #333; margin-bottom: 10px; }
-    .form-control { font-size: 14px; padding: 10px; }
-    
-    .gender-box { padding: 10px; border: 1px solid #ced4da; border-radius: 4px; background-color: #fff; font-size: 14px; }
+    .form-header { text-align: center; margin-bottom: 50px; }
+    .form-header .icon { font-size: 32px; margin-bottom: 10px; display: block; }
+    .form-header .list-title { font-size: 28px; font-weight: 700; color: var(--main-navy); margin: 0; }
+    .form-header .sub-text { font-size: 14px; color: #7f8c8d; margin-top: 10px; }
 
-    .button-group { display: flex; gap: 15px; justify-content: center; margin-top: 40px; }
-    .btn-submit { background-color: #001f3f; color: white; border: none; padding: 12px 40px; border-radius: 4px; font-weight: bold; font-size: 14px; }
-    .btn-cancel { background-color: #6c757d; color: white; border: none; padding: 12px 40px; border-radius: 4px; font-size: 14px; }
+    #writeForm { max-width: 550px; margin: 0 auto; }
+
+    .form-group { margin-bottom: 25px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 700; color: #94a3b8; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    .form-control { width: 100%; padding: 14px 16px; border: 1px solid #e1e4e8; border-radius: 10px; font-size: 15px; outline: none; transition: 0.3s; box-sizing: border-box; background-color: #f8f9fa; }
+    .form-control:focus { border-color: var(--accent-blue); background-color: #fff; box-shadow: 0 0 8px rgba(52, 152, 219, 0.1); }
+    
+    .gender-box { display: flex; gap: 20px; padding: 12px 16px; background-color: #f8f9fa; border: 1px solid #e1e4e8; border-radius: 10px; }
+    .gender-item { display: flex; align-items: center; cursor: pointer; font-size: 15px; color: #555; }
+    .gender-item input { margin-right: 8px; cursor: pointer; }
+
+    .button-group { display: flex; gap: 15px; justify-content: center; margin-top: 50px; }
+    .btn-submit { flex: 2; background-color: var(--main-navy); color: white; padding: 16px; border: none; border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 4px 12px rgba(26, 42, 78, 0.15); transition: 0.3s; }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(26, 42, 78, 0.25); background-color: #233966; }
+    
+    .btn-cancel { flex: 1; background-color: #fff; color: #94a3b8; padding: 16px; border: 1px solid #e1e4e8; border-radius: 10px; font-weight: 600; font-size: 16px; cursor: pointer; transition: 0.2s; }
+    .btn-cancel:hover { background-color: #f8f9fa; color: #64748b; }
 </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
-        <h1>재난/안전 정보 사이트</h1>
-    </header>
-
     <main>
-        <div class="content-title">회원가입</div>
+        <div class="form-header">
+            <span class="icon">📝</span>
+            <h1 class="list-title">회원가입</h1>
+            <p class="sub-text">안전한 서비스 이용을 위해 정보를 입력해주세요</p>
+        </div>
         
         <form action="write.do" method="post" id="writeForm">
             <div class="form-group">
-                <label for="id">아이디</label>
-                <input type="text" id="id" name="id" class="form-control" placeholder="아이디를 입력하세요" required>
+                <label for="id">ID</label>
+                <input type="text" id="id" name="id" class="form-control" placeholder="사용할 아이디를 입력하세요" required>
             </div>
             <div class="form-group">
-                <label for="pw">비밀번호</label>
+                <label for="pw">Password</label>
                 <input type="password" id="pw" name="pw" class="form-control" placeholder="비밀번호를 입력하세요" required>
             </div>
             <div class="form-group">
-                <label for="name">이름</label>
-                <input type="text" id="name" name="name" class="form-control" placeholder="이름을 입력하세요" required>
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="실명을 입력하세요" required>
             </div>
             <div class="form-group">
-                <label>성별</label>
+                <label>Gender</label>
                 <div class="gender-box">
-                    <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" id="male" name="gender" class="custom-control-input" value="남자" checked>
-                        <label class="custom-control-label" for="male">남자</label>
-                    </div>
-                    <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" id="female" name="gender" class="custom-control-input" value="여자">
-                        <label class="custom-control-label" for="female">여자</label>
-                    </div>
+                    <label class="gender-item">
+                        <input type="radio" name="gender" value="남자" checked> 남자
+                    </label>
+                    <label class="gender-item">
+                        <input type="radio" name="gender" value="여자"> 여자
+                    </label>
                 </div>
             </div>
             <div class="form-group">
-                <label for="birth">생년월일</label>
+                <label for="birth">Birth Date</label>
                 <input type="date" id="birth" name="birth" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="tel">연락처</label>
+                <label for="tel">Phone</label>
                 <input type="tel" id="tel" name="tel" class="form-control" placeholder="010-0000-0000">
             </div>
             <div class="form-group">
-                <label for="email">이메일</label>
-                <input type="email" id="email" name="email" class="form-control" placeholder="example@naver.com" required>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="example@domain.com" required>
             </div>
 
             <div class="button-group">
-                <button type="submit" class="btn btn-submit">가입하기</button>
-                <button type="button" class="btn btn-cancel" onclick="history.back()">취소</button>
+                <button type="submit" class="btn-submit">가입하기</button>
+                <button type="button" class="btn-cancel" onclick="history.back()">취소</button>
             </div>
         </form>
     </main>

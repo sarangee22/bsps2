@@ -6,59 +6,93 @@
 <meta charset="UTF-8">
 <title>실시간 재난 현황 지도</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <style>
-    body { background-color: #f4f7f6; font-family: 'Noto Sans KR', sans-serif; color: #333; }
-    .container { max-width: 1100px; padding: 50px 20px; }
-
-    // 요약
-    .header-box { margin-bottom: 30px; text-align: center; }
-    .header-box h2 { font-weight: 700; color: #1a1a1a; margin-bottom: 15px; }
+    /* 1. 배경 및 폰트 */
+    body { background-color: #f4f7f9; font-family: 'Noto Sans KR', sans-serif; color: #333; }
     
+    /* 2. 상단 메뉴바와의 간격 통일 (150px) */
+    .container { 
+        margin-top: 150px !important; 
+        padding-bottom: 80px; 
+        max-width: 1100px; 
+    }
+
+    /* 3. 헤더 섹션 (중앙 정렬 핵심) */
+    .header-box { 
+        margin-bottom: 50px; 
+        text-align: center; /* ⭐ 모든 텍스트 중앙 정렬 */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .header-box h2 { 
+        font-weight: 700; 
+        color: #1A237E; 
+        margin-bottom: 20px; 
+        font-size: 34px; 
+        letter-spacing: -1px;
+    }
+    
+    /* 요약 배지 중앙 정렬 */
     .summary-container { 
-        display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; 
+        display: flex; 
+        justify-content: center; 
+        gap: 15px; 
+        margin-bottom: 10px; 
     }
     .summary-badge {
-        background: white; padding: 10px 20px; border-radius: 50px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.03); font-weight: 600; font-size: 14px;
-        display: flex; align-items: center; border: 1px solid #eee;
+        background: white; padding: 12px 25px; border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05); font-weight: 700; font-size: 14px;
+        display: flex; align-items: center; border: 1px solid #edf2f7;
     }
 
-    // 지도
-    .map-section { margin-bottom: 40px; }
+    /* 4. 지도 섹션 */
+    .map-section { margin-bottom: 50px; }
     .map-card { 
         background: white; padding: 15px; border-radius: 30px; 
         box-shadow: 0 20px 40px rgba(0,0,0,0.08); border: none;
     }
     .map-wrapper { 
         width: 100%; height: 500px; border-radius: 20px; 
-        overflow: hidden; position: relative;
+        overflow: hidden; border: 1px solid #eee;
     }
 
-    //리스트
+    /* 5. 리스트 섹션 */
     .list-card { 
-        background: white; border-radius: 25px; padding: 35px; 
+        background: white; border-radius: 25px; padding: 40px; 
         box-shadow: 0 10px 30px rgba(0,0,0,0.04); border: none;
     }
-    .table thead th { border: none; color: #999; font-weight: 500; font-size: 13px; text-transform: uppercase; }
-    .table tbody tr { transition: 0.2s; cursor: pointer; }
-    .table tbody tr:hover { background-color: #f8f9ff; }
-    .table td { vertical-align: middle !important; border-top: 1px solid #f1f3f5; padding: 18px 10px; }
+    .list-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+    .list-title { font-weight: 700; color: #1A237E; font-size: 22px; margin: 0; }
 
-    //배지 스타일
-    .badge-custom { padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 11px; }
+    .table thead th { border: none; color: #888; font-weight: 700; font-size: 14px; padding-bottom: 20px; }
+    .table tbody tr { transition: 0.3s; cursor: pointer; }
+    .table tbody tr:hover { background-color: #f8faff; }
+    .table td { vertical-align: middle !important; border-top: 1px solid #f1f3f5; padding: 22px 15px; }
+
+    /* 6. 배지 및 버튼 */
+    .badge-custom { padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 12px; }
     .badge-fire { background-color: #fff0f0; color: #ff4d4d; }
     .badge-flood { background-color: #eef2ff; color: #4361ee; }
     
     .selected-row { background-color: #f0f4ff !important; }
-    .selected-row td:first-child { border-left: 4px solid #4361ee; border-top-left-radius: 10px; border-bottom-left-radius: 10px; }
+    .selected-row td:first-child { border-left: 5px solid #1A237E; border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
 
     .btn-view-detail { 
-        background-color: #4361ee; color: white; border-radius: 8px; 
-        font-size: 12px; padding: 6px 12px; border: none; transition: 0.2s;
+        background-color: #1A237E; color: white; border-radius: 10px; 
+        font-size: 13px; padding: 8px 16px; border: none; font-weight: 600;
     }
-    .btn-view-detail:hover { background-color: #3049c9; transform: translateY(-1px); }
+    .btn-view-detail:hover { background-color: #0d145a; color: white; }
+    
+    .btn-add { background-color: #1A237E; color: white !important; border-radius: 10px; padding: 10px 20px; font-weight: 600; text-decoration: none !important; }
 </style>
 </head>
 <body>
@@ -67,9 +101,9 @@
     <div class="header-box">
         <h2>🚨 실시간 재난 모니터링</h2>
         <div class="summary-container">
-            <div class="summary-badge"><span class="text-danger mr-2">●</span> 화재 3건</div>
-            <div class="summary-badge"><span class="text-primary mr-2">●</span> 침수 2건</div>
-            <div class="summary-badge"><span class="text-dark mr-2">●</span> 총 ${list.size()}건 발생</div>
+            <div class="summary-badge"><i class="fas fa-fire text-danger mr-2"></i> 화재 3건</div>
+            <div class="summary-badge"><i class="fas fa-water text-primary mr-2"></i> 침수 2건</div>
+            <div class="summary-badge"><i class="fas fa-info-circle text-dark mr-2"></i> 총 ${list.size()}건 발생</div>
         </div>
     </div>
 
@@ -83,21 +117,20 @@
                   style="border:0"
                   loading="lazy"
                   allowfullscreen
-                  src="https://maps.google.com/maps?q=${list[0].address}&t=&z=14&ie=UTF8&iwloc=&output=embed">
+                  src="https://maps.google.com/maps?q={list[0].address}&t=&z=14&ie=UTF8&iwloc=&output=embed">
                 </iframe>
             </div>
         </div>
-        <div class="text-center mt-3">
-            <p class="text-muted" style="font-size: 14px;">📍 현재 지도 위치: <span id="currentAddr" class="font-weight-bold text-dark">${list[0].address}</span></p>
+        <div class="text-center mt-4">
+            <p style="color: #6c7a89; font-size: 15px;">📍 현재 지도 위치: <span id="currentAddr" class="font-weight-bold" style="color: #1A237E;">${list[0].address}</span></p>
         </div>
     </div>
 
     <div class="list-card">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="m-0 font-weight-bold">최근 발생 내역</h5>
-            
+        <div class="list-header">
+            <h5 class="list-title"><i class="fas fa-list-ul mr-2"></i> 최근 발생 내역</h5>
             <c:if test="${!empty login && login.gradeName == '관리자'}">
-                <a href="writeForm.do" class="btn btn-sm btn-outline-primary" style="border-radius: 8px;">+ 새 재난 등록</a>
+                <a href="writeForm.do" class="btn-add">+ 새 재난 등록</a>
             </c:if>
         </div>
         
@@ -106,7 +139,7 @@
                 <tr>
                     <th style="width: 15%">유형</th>
                     <th class="text-left">재난 명칭 / 일시</th>
-                    <th style="width: 30%">지역 주소</th>
+                    <th style="width: 35%">지역 주소</th>
                     <th style="width: 15%">상세보기</th>
                 </tr>
             </thead>
@@ -119,10 +152,10 @@
                             </span>
                         </td>
                         <td class="text-left">
-                            <span class="font-weight-bold d-block" style="font-size: 15px;">${vo.disasterName}</span>
-                            <small class="text-muted">${vo.createdAt}</small>
+                            <span class="font-weight-bold d-block" style="font-size: 16px; color: #1e293b;">${vo.disasterName}</span>
+                            <small style="color: #94a3b8;">${vo.createdAt}</small>
                         </td>
-                        <td><small class="text-secondary">${vo.address}</small></td>
+                        <td><small style="color: #64748b; font-weight: 500;">${vo.address}</small></td>
                         <td>
                             <button class="btn-view-detail" 
                                     onclick="event.stopPropagation(); location.href='view.do?disasterId=${vo.disasterId}'">
@@ -139,7 +172,6 @@
 <script>
 function changeMap(address, element) {
     var mapIframe = document.getElementById('googleMap');
-    // 구글 지도 임베드 URL 표준 형식으로 수정
     var newSrc = "https://maps.google.com/maps?q=" + encodeURIComponent(address) + "&t=&z=15&ie=UTF8&iwloc=&output=embed";
     mapIframe.src = newSrc;
     
@@ -148,8 +180,6 @@ function changeMap(address, element) {
     var rows = document.querySelectorAll('tr');
     rows.forEach(r => r.classList.remove('selected-row'));
     element.classList.add('selected-row');
-    
-    window.scrollTo({top: 0, behavior: 'smooth'});
 }
 </script>
 
