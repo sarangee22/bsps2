@@ -18,19 +18,19 @@ public class DisasterListDAO extends DAO {
             
             // 1. 기본 쿼리 (매핑 테이블 DISASTER_CAT_ASSIGN 조인)
             // L.catID = ? 대신 A.catID = ? 를 사용하고 L.no = A.no 조건을 추가합니다.
-            String sql = "SELECT l.no, l.summary, l.region, l.occur_date "
-                       + " FROM disaster_list l, disaster_cat_assign a "
-                       + " WHERE (l.no = a.no AND a.catID = ?) ";
+            String sql = "SELECT l.no, l.summary, l.region, l.occur_date, l.risk_grade " 
+                    + " FROM disaster_list l, disaster_cat_assign a "
+                    + " WHERE l.no = a.no AND a.catID = ? ";
             
-            // 2. 검색 조건 추가
-            String searchSql = search(pageObject);
-            sql += searchSql;
+            /// 2. 검색 조건 추가
+            sql += search(pageObject);
             
+            // 정렬 추가 (최신글이 위로)
             sql += " ORDER BY l.no DESC";
             
             // 3. 페이징 처리를 위한 3중 서브쿼리
-            sql = "SELECT rownum rnum, no, summary, region, occur_date FROM (" + sql + ")";
-            sql = "SELECT rnum, no, summary, region, occur_date FROM (" + sql + ") WHERE rnum BETWEEN ? AND ?";
+            sql = "SELECT rownum rnum, no, summary, region, occur_date, risk_grade FROM (" + sql + ")";
+            sql = "SELECT rnum, no, summary, region, occur_date, risk_grade FROM (" + sql + ") WHERE rnum BETWEEN ? AND ?";
             
             pstmt = con.prepareStatement(sql);
             int idx = 1;
@@ -48,10 +48,12 @@ public class DisasterListDAO extends DAO {
                 list = new ArrayList<>();
                 while(rs.next()) {
                     DisasterVO vo = new DisasterVO();
-                    vo.setNo(rs.getInt("no"));
+                    vo.setNo(rs.getLong("no"));
                     vo.setContent(rs.getString("summary"));
                     vo.setLocationName(rs.getString("region"));
                     vo.setCreateDate(rs.getString("occur_date"));
+                    // 💡 VO에 위험 등급 세팅
+                    vo.setDangerLevel(rs.getInt("risk_grade")); 
                     list.add(vo);
                 }
             }
@@ -75,7 +77,7 @@ public class DisasterListDAO extends DAO {
             sql += " ) ";
         }
         return sql;
-    }
+    }// search()의 끝
 
     private int searchDataSet(PreparedStatement pstmt, int idx, PageObject pageObject) throws SQLException {
         String key = pageObject.getKey();
@@ -85,7 +87,7 @@ public class DisasterListDAO extends DAO {
             if(key.indexOf("l") >= 0) pstmt.setString(idx++, "%" + word + "%");
         }
         return idx;
-    }
+    }//searchDataSet()의 끝
 
     public long getTotalRow(int catID, PageObject pageObject) throws Exception {
         long totalRow = 0;
@@ -116,9 +118,9 @@ public class DisasterListDAO extends DAO {
             con = DB.getConnection();
             // 💡 ACTION_GUIDE를 빼고 테이블에 실제 존재하는 컬럼들만 적어주세요.
             String sql = "SELECT l.no, l.summary, l.occur_date, l.region, l.risk_grade, "
-                       + " d.detail_info, d.situation_desc, d.map_location " // ACTION_GUIDE 제거
-                       + " FROM disaster_list l, disaster_detail d "
-                       + " WHERE l.no = ? AND l.no = d.no";
+                       + " d.detail_info, d.situation_desc, d.map_location, a.catID " 
+                       + " FROM disaster_list l, disaster_detail d, disaster_cat_assign a "
+                       + " WHERE l.no = ? AND l.no = d.no AND l.no = a.no";
             
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, no);
@@ -135,10 +137,11 @@ public class DisasterListDAO extends DAO {
                 vo.setDetailContent(rs.getString("detail_info")); 
                 vo.setSituationDesc(rs.getString("situation_desc"));
                 vo.setMapLocation(rs.getString("map_location"));
+                vo.setCatID(rs.getInt("catID"));
             }
         } finally {
             DB.close(con, pstmt, rs);
         }
         return vo;
-    }
+    }// view()의 끝
 }

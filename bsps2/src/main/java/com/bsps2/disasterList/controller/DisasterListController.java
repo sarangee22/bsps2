@@ -1,8 +1,13 @@
 package com.bsps2.disasterList.controller;
 
+import java.util.Map;
+
+import com.bsps2.disaster.vo.DisasterVO;
 import com.bsps2.main.controller.Controller;
 import com.bsps2.main.controller.Init;
 import com.bsps2.main.service.Execute;
+import com.bsps2.main.service.Service;
+import com.bsps2.util.api.RealTimeApiService;
 import com.bsps2.util.page.PageObject;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -68,19 +73,28 @@ public class DisasterListController implements Controller{
 				return "disasterList/list";
 				
 			case "/disasterList/view.do":
-				// 글번호를 받는다. 1증가 데이터를 받는다. - 2개의 데이터는 반드시 넘어와야만 한다.
-				Long no = (Long) Long.parseLong(request.getParameter("no"));
-				//조회수
-				long inc = Long.parseLong(request.getParameter("inc"));
+			    // 1. 파라미터 수집 (글번호, 조회수)
+			    long no = Long.parseLong(request.getParameter("no"));
+			    long inc = Long.parseLong(request.getParameter("inc"));
 
-				//DB에서 데이터 가져오기
-				// new Long[] {no, 1L} - new Long[] {번호[0], 증가[1]} - 생성하고 바로 초기값을 세팅한다.
-				// EL 또는 JSTL을 사용하기 위해서 4개의 저장 - request에 담자.
-				request.setAttribute("vo", Execute.execute(Init.getService(uri), new Long[] {no, inc}));
-				
-				// jsp의 위치 정보 "/WEB-INF/views/" + "board/view" + ".jsp"
-				return "disasterList/view";
-
+			    // 2. DB에서 재난안전문자 상세 정보 가져오기
+			    DisasterVO vo = (DisasterVO) Execute.execute(Init.getService(uri), new Object[]{no, inc}); 
+			    
+			    // 3. 실시간 API 데이터 결합
+			    RealTimeApiService apiService = new RealTimeApiService();
+			    
+			    // 💡 DB에서 데이터를 잘 가져왔을 때만 API 호출 (방어 로직)
+			    Map<String, String> extraData = null;
+			    if (vo != null) {
+			        // vo의 필드명(getCatID, getLocationName 등)이 정확한지 확인하세요.
+			    		extraData = apiService.getExtraData(vo.getCatID(), vo.getLocationName(), vo.getCreateDate());
+			    }
+			    
+			    // 4. JSP로 두 데이터 바구니를 모두 전달
+			    request.setAttribute("vo", vo);           // DB 데이터 (문자 내용 등)
+			    request.setAttribute("extra", extraData); // 실시간 API 데이터 (산불 현황 등)
+			    
+			    return "disasterList/view";
 
 			default:
 				// /WEB-INF/views/ + error/noPage + .jsp

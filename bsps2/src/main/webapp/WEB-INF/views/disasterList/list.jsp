@@ -36,36 +36,51 @@
             <thead class="table-light">
                 <tr class="text-center">
                     <th style="width: 8%">번호</th>
-                    <th style="width: 12%">지역</th>
+                    <th style="width: 100px;">등급</th> <th>지역</th>
                     <th>재난 내용</th>
                     <th style="width: 18%">발송일시</th>
                 </tr>
             </thead>
             <tbody>
-                <c:forEach items="${list}" var="vo">
-                    <tr class="text-center">
-                        <td class="text-muted">${vo.no}</td>
-                        <td>
-                            <span class="badge rounded-pill bg-info text-dark">${vo.locationName}</span>
-                        </td>
-                        <td class="text-start">
-                            <a href="view.do?no=${vo.no}&inc=1" class="text-decoration-none text-dark fw-semibold">
-                                ${vo.content}
-                            </a>
-                        </td>
-                        <td class="text-muted">${vo.createDate}</td>
-                    </tr>
-                </c:forEach>
-                
-                <c:if test="${empty list}">
-                    <tr>
-                        <td colspan="4" class="text-center py-5">
-                            <i class="bi bi-search d-block fs-1 text-secondary mb-3"></i>
-                            <span class="text-muted">검색 결과가 없거나 등록된 정보가 없습니다.</span>
-                        </td>
-                    </tr>
-                </c:if>
-            </tbody>
+			    <c:forEach items="${list}" var="vo">
+			        <tr onclick="location='view.do?no=${vo.no}&inc=1&catID=${param.catID}&page=${pageObject.page}&perPageNum=${pageObject.perPageNum}'" style="cursor:pointer;">
+			            <td>${vo.no}</td>
+			            
+			            <td>
+			                <span class="badge" 
+			                      style="
+			                        display: inline-block;
+			                        width: 60px;
+			                        color: white !important; 
+			                        padding: 5px 0;
+			                        font-weight: bold;
+			                        border-radius: 4px;
+			                        background-color: ${vo.dangerLevel == 3 ? '#dc3545' : (vo.dangerLevel == 2 ? '#ffc107' : (vo.dangerLevel == 1 ? '#28a745' : '#17a2b8'))} !important;
+			                      ">
+			                    ${vo.dangerLevel == 3 ? '위험' : (vo.dangerLevel == 2 ? '주의' : (vo.dangerLevel == 1 ? '보통' : '정보'))}
+			                </span>
+			                
+			                
+			            </td>
+			
+			            <td class="text-left">
+			                <span class="badge badge-info mr-2"
+			                		style="
+					            background-color: rgba(23, 162, 184, 0.1) !important; /* 연한 하늘색 배경 */
+					            color: #222 !important;                              /* 진한 검정색 글자 */
+					            border: 1px solid #17a2b8 !important;                /* 하늘색 테두리 */
+					            padding: 5px 10px;
+					            font-weight: 600;
+					            font-size: 0.9em;
+					          ">${vo.locationName}</span>
+			            </td>
+			            <td class="text-left text-truncate" style="max-width: 400px;">
+			                ${vo.content}
+			            </td>
+			            <td>${vo.createDate}</td>
+			        </tr>
+			    </c:forEach>
+			</tbody>
         </table>
     </div>
 
