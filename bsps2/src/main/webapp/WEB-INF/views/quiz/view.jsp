@@ -9,31 +9,76 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <style type="text/css">
+    body {
+        background-color: #f4f7f9;
+        font-family: 'Noto Sans KR', sans-serif;
+    }
+    
     #answerArea, #explainArea { display: none; } 
     .quiz-content { white-space: pre-wrap; background: #f8f9fa; padding: 25px; border-radius: 10px; border: 1px solid #dee2e6; min-height: 100px; }
     #explainContent { white-space: pre-wrap; font-size: 1.1em; color: #2c3e50; }
-    .card { border: none; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    
+    .card { border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 10px; overflow: hidden; }
+
+    /* 헤더 및 제목 색상: 커뮤니티 네이비 */
+    .card-header.bg-primary {
+        background-color: #1A237E !important;
+    }
+    .text-info { color: #1A237E !important; }
+
+    /* [커뮤니티 스타일 규격 적용] */
+    .btn {
+        display: inline-block;
+        padding: 12px 22px !important; /* 커뮤니티와 동일한 패딩 */
+        border-radius: 12px !important; /* 커뮤니티와 동일한 둥글기 */
+        font-weight: 700 !important;    /* 커뮤니티와 동일한 글자 두께 */
+        font-size: 1rem !important;     /* 글자 크기 일치 */
+        text-decoration: none;
+        border: none !important;
+        transition: 0.2s;
+        cursor: pointer;
+    }
+    
+    /* 1. 퀴즈 풀기: 요청하신 민트색 (#17a2b8) */
+    .btn-info { background-color: #17a2b8 !important; color: white !important; }
+    .btn-info:hover { background-color: #138496 !important; }
+
+    /* 2. 다시 입력: 배경색이 있는 그레이 스타일 */
+    .btn-outline-secondary, .btn-secondary { 
+        background-color: #6c757d !important; 
+        color: white !important; 
+    }
+    .btn-outline-secondary:hover, .btn-secondary:hover { 
+        background-color: #5a6268 !important; 
+    }
+
+    /* 3. 정답 제출: 초록색 */
+    .btn-success { background-color: #28a745 !important; color: white !important; }
+    .btn-success:hover { background-color: #218838 !important; }
+
+    /* 4. 수정: 네이비 */
+    .btn-primary { background-color: #1A237E !important; color: white !important; }
+    .btn-primary:hover { background-color: #0d145c !important; }
+    
+    /* 5. 삭제: 레드 */
+    .btn-danger { background-color: #ff4d4f !important; color: white !important; }
+    .btn-danger:hover { background-color: #d9363e !important; }
 </style>
 
 <script type="text/javascript">
 $(function(){
-    // 1. 퀴즈 풀기 버튼 클릭
     $("#btnSolve").click(function(){
         $("#answerArea").slideDown();
         $(this).hide();
     });
 
-    // 2. 정답 제출 및 해설 노출 로직
     $("#btnSubmit").click(function(){
         let userAns = $("#userAns").val().trim();
         let dbAns = "${vo.vo.ans}"; 
 
         if(userAns.toUpperCase() == dbAns.toUpperCase()) {
             alert("정답입니다! 🎉\n확인을 누르시면 상세 해설이 나타납니다."); 
-            
-            // 🔥 [수정 포인트] 따옴표("") 대신 백틱(``)을 사용하여 DB의 줄바꿈 에러를 방지합니다.
             let explainData = `${vo.explain}`;
-            
             $("#explainContent").text(explainData); 
             $("#explainArea").fadeIn(); 
             $("#btnSubmit, #userAns, #btnReset").attr("disabled", true);
@@ -43,13 +88,11 @@ $(function(){
         }
     });
 
-    // 3. 다시 입력 버튼
     $("#btnReset").click(function(){
         $("#userAns").val("").focus();
         $("#explainArea").hide();
     });
 
-    // 4. 삭제 확인
     $("#btnDelete").click(function(){
         if(confirm("정말로 이 퀴즈를 삭제하시겠습니까?")) {
             location = "delete.do?no=${vo.vo.no}";
@@ -76,7 +119,6 @@ $(function(){
             <h5 class="text-info"><strong>문제 내용</strong></h5>
             <div class="quiz-content mb-4">${vo.vo.content}</div>
 
-            <%-- 정답 입력 영역 --%>
             <div id="answerArea" class="p-4 border rounded bg-light">
                 <div class="form-group">
                     <label for="userAns"><strong>정답을 입력하세요:</strong></label>
@@ -86,7 +128,6 @@ $(function(){
                 <button type="button" id="btnReset" class="btn btn-outline-secondary btn-lg">다시 입력</button>
             </div>
 
-            <%-- 상세 해설 영역 --%>
             <div id="explainArea" class="mt-4">
                 <div class="alert alert-warning border-warning">
                     <h5 class="alert-heading"><strong>💡 상세 해설</strong></h5>
@@ -100,9 +141,8 @@ $(function(){
         <div class="card-footer bg-white text-right">
             <button type="button" id="btnSolve" class="btn btn-info btn-lg">퀴즈 풀기</button>
             
-            <%-- ✨ 관리자(gradeNo == 9)인 경우만 수정, 삭제 버튼 노출 --%>
             <c:if test="${!empty login && login.gradeNo == 9}">
-                <a href="updateForm.do?no=${vo.vo.no}&inc=0" class="btn btn-warning btn-lg">수정</a>
+                <a href="updateForm.do?no=${vo.vo.no}&inc=0" class="btn btn-primary btn-lg">수정</a>
                 <button type="button" id="btnDelete" class="btn btn-danger btn-lg">삭제</button>
             </c:if>
             
