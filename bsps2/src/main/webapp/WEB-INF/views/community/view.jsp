@@ -6,6 +6,9 @@
 <head>
 <meta charset="UTF-8">
 <title>제보 상세 보기</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <style type="text/css">
 body {
     background-color: #f4f7f9;
@@ -101,14 +104,16 @@ h3 {
     cursor: pointer;
 }
 
-.btn-primary { background: #1A237E; color: white; }
-.btn-primary:hover { background: #0d145c; }
+
 
 .btn-danger { background: #ff4d4f; color: white; }
 .btn-danger:hover { background: #d9363e; }
 
-.btn-info { background: #007bff; color: white !important; }
+.btn-info{ background: #007bff; color: white !important; }
 .btn-info:hover { background: #0069d9; }
+
+.btn-primary{ background-color: #1A237E !important; color: white !important; }
+.btn-primary:hover { background-color: #0d145c !important; }
 
 .btn-secondary { background: #6c757d; color: white; }
 

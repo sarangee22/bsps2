@@ -4,6 +4,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
 
 body {
@@ -48,46 +50,35 @@ textarea.form-control {
 }
 
 /* 버튼 */
-.btn {
-    padding: 10px 18px;
-    border-radius: 10px;
-    font-weight: 700;
-    border: none;
-    transition: 0.3s;
-}
+    .btn {
+        display: inline-block;
+        padding: 12px 22px !important; /* 커뮤니티와 동일한 패딩 */
+        border-radius: 12px !important; /* 커뮤니티와 동일한 둥글기 */
+        font-weight: 700 !important;    /* 커뮤니티와 동일한 글자 두께 */
+        font-size: 1rem !important;     /* 글자 크기 일치 */
+        text-decoration: none;
+        border: none !important;
+        transition: 0.2s;
+        cursor: pointer;
+    }
 
 /* 등록 */
-.btn-primary {
-    background: #1A237E;
-    color: white;
-}
-
-.btn-primary:hover {
-    background: #0d145c;
-}
+    .btn-primary { background-color: #1A237E !important; color: white !important; }
+    .btn-primary:hover { background-color: #0d145c !important; }
 
 /* 새로입력 버튼 (색상 강조) */
 .btn-warning {
-    background: #FFB300; /* 명확한 노란색 */
-    color: white;        /* 글자를 흰색으로 해서 가독성 높임 */
+    background: #FFA000;; /* 명확한 노란색 */
+    color: white !important ;  /* 글자색 흰색 */
+    border: none ;
 }
-
-.btn-warning:hover {
-    background: #FFA000; /* 마우스 올렸을 때 살짝 어둡게 */
-    color: white;
-}
+.btn-waring:hover{  background-color:  #FFB300;}
 
 /* 취소 버튼 (테두리와 텍스트 강조) */
-.btn-secondary {
-    background: #757575; /* 진한 회색으로 변경 */
-    border: 1px solid #616161;
-    color: white;        /* 글자를 흰색으로 변경 */
-}
 
-.btn-secondary:hover {
-    background: #616161;
-    color: white;
-}
+  .btn-outline-secondary:hover, .btn-secondary:hover { 
+        background-color: #5a6268 !important; 
+    }
 
 /* 간격 정리 */
 .mb-3, .mt-3 {

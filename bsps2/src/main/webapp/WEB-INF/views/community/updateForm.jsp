@@ -4,6 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <style>
 body {
     background-color: #f4f7f9;
@@ -54,23 +57,21 @@ textarea.form-control {
 }
 
 /* 버튼 */
-.btn {
-    padding: 10px 18px;
-    border-radius: 10px;
-    font-weight: 700;
-    border: none;
-    transition: 0.3s;
-}
+    .btn {
+        display: inline-block;
+        padding: 12px 22px !important; /* 커뮤니티와 동일한 패딩 */
+        border-radius: 12px !important; /* 커뮤니티와 동일한 둥글기 */
+        font-weight: 700 !important;    /* 커뮤니티와 동일한 글자 두께 */
+        font-size: 1rem !important;     /* 글자 크기 일치 */
+        text-decoration: none;
+        border: none !important;
+        transition: 0.2s;
+        cursor: pointer;
+    }
 
 /* 등록/수정 완료 버튼 (메인) */
-.btn-primary {
-    background: #1A237E ;
-    color: white ;
-}
-
-.btn-primary:hover {
-    background: #0d145c;
-}
+    .btn-primary { background-color: #1A237E !important; color: white !important; }
+    .btn-primary:hover { background-color: #0d145c !important; }
 
 /* 새로입력 버튼 (강조된 노란색) */
 .btn-warning {
@@ -79,31 +80,18 @@ textarea.form-control {
     border: none ;
 }
 
-.btn-warning:hover {
-    background: #FFA000;
-}
+
+.btn-waring:hover{  background-color: #FFA000;}
 
 /* 취소 버튼 (강조된 회색) */
-.btn-secondary {
-    background: #757575 ; /* 진한 회색 */
-    border: 1px solid #616161;
-    color: white ;        /* 글자색 흰색 */
-}
-
-.btn-secondary:hover {
-    background: #616161 ;
-}
+  .btn-outline-secondary:hover, .btn-secondary:hover { 
+        background-color: #5a6268 !important; 
+    }
 
 /* 이미지 변경 버튼 (중요도가 높으므로 남색 테마 유지) */
-.btn-success {
-    background: #1A237E ;
-    color: white ;
-    border: none ;
-}
+.btn-success { background-color: #28a745 !important; color: white !important; }
+.btn-success:hover { background-color: #218838 !important; }
 
-.btn-success:hover {
-    background: #0d145c;
-}
 
 /* 간격 */
 .mb-3, .mt-3 {
