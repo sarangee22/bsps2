@@ -8,13 +8,15 @@
 <head>
 <meta charset="UTF-8">
 <title>제보 게시판.</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 <style>
 body {
-    /* 배경색을 조금 더 차분하게 해서 카드가 떠 보이게 함 */
-    background-color: #f0f3f7 !important; 
-    font-family: 'Noto Sans KR', sans-serif;
-}
+        background-color: #f4f7f9;
+        font-family: 'Noto Sans KR', sans-serif;
+    }
 
 .wrapper {
     max-width: 1200px; 
@@ -88,17 +90,19 @@ body {
 }
 
 .button-area { margin-top: 15px; text-align: left; }
-.btn {
-    display: inline-block;
-    padding: 12px 22px;
-    border-radius: 12px;
-    font-weight: 700;
-    text-decoration: none;
-    transition: 0.2s;
-}
-
-.btn-primary { background: #1A237E; color: white; }
-.btn-primary:hover { background: #0d145c; box-shadow: 0 4px 12px rgba(26, 35, 126, 0.3); }
+    .btn {
+        display: inline-block;
+        padding: 12px 22px !important; /* 커뮤니티와 동일한 패딩 */
+        border-radius: 12px !important; /* 커뮤니티와 동일한 둥글기 */
+        font-weight: 700 !important;    /* 커뮤니티와 동일한 글자 두께 */
+        font-size: 1rem !important;     /* 글자 크기 일치 */
+        text-decoration: none;
+        border: none !important;
+        transition: 0.2s;
+        cursor: pointer;
+    }
+.btn-primary { background-color: #1A237E !important; color: white !important; }
+.btn-primary:hover { background-color: #0d145c !important; }
 
 .pagination-container { margin-top: 40px; display: flex; justify-content: center; }
 </style>
