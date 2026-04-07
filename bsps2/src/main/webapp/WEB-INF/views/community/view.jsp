@@ -12,188 +12,216 @@ body {
     font-family: 'Noto Sans KR', sans-serif;
 }
 
+/* 전체 컨테이너 */
+.container {
+    max-width: 1000px;
+    margin: 80px auto;
+}
+
 /* 제목 */
 h3 {
     font-size: 28px;
     font-weight: 800;
     color: #1A237E;
+    margin-bottom: 30px;
 }
 
-/* 테이블 */
-.table {
-    border-collapse: collapse;
+/* [1] 리스트와 동일한 입체감 카드 레이아웃 */
+.table-card {
+    background: white !important;
+    border-radius: 25px !important;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15) !important;
+    overflow: hidden;
+    margin-bottom: 30px;
+    border: 1px solid #dee2e6 !important;
+}
+
+/* [2] 테이블 구조 설정 */
+.view-table {
     width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
 }
 
-.table th {
-    width: 140px;
-    background: #f8f9fa;
-    color: #555;
-    font-weight: 300;
+/* [3] 왼쪽 항목명(th): list.jsp와 동일한 회색 적용 */
+.view-table tbody tr th {
+    width: 160px;
+    
+    /* list.jsp 스타일 그대로 가져옴: 배경색과 그라디언트 병행 */
+    background-color: #e2e6ea !important;
+    background: linear-gradient(#e2e6ea, #e2e6ea) !important; 
+    
+    /* 약간 더 어둡게 하고 싶다면 brightness 조절 (선택사항) */
+    filter: brightness(0.97); 
+    
+    color: #333 !important;
+    font-weight: 800;
     text-align: center;
-    padding: 15px;
-    border-bottom: 1px solid #eee;
+    padding: 20px;
+    
+    /* 선명한 구분선 */
+    border-bottom: 1.5px solid #dee2e6 !important;
+    border-right: 1.5px solid #dee2e6 !important;
+    
+    vertical-align: middle;
+    -webkit-print-color-adjust: exact;
 }
-
-.table td {
-    padding: 18px;
-    border-bottom: 1px solid #f1f4f8;
+/* [4] 오른쪽 데이터 칸(td) */
+.view-table tbody tr td {
+    padding: 20px;
+    background-color: #ffffff !important;
+    border-bottom: 1.5px solid #dee2e6 !important;
     color: #333;
+    vertical-align: middle;
 }
 
-/* 이미지 */
+/* 마지막 줄 바닥 선 제거 */
+.view-table tr:last-child th,
+.view-table tr:last-child td {
+    border-bottom: none !important;
+}
+
+/* 이미지 스타일 */
 .community-img {
     max-width: 100%;
+    height: auto;
     border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-/* 버튼 */
+/* 버튼 디자인 */
 .btn {
-    padding: 10px 18px;
-    border-radius: 10px;
+    display: inline-block;
+    padding: 12px 22px;
+    border-radius: 12px;
     font-weight: 700;
     text-decoration: none;
     border: none;
+    transition: 0.2s;
+    cursor: pointer;
 }
 
-.btn-primary {
-    background: #1A237E;
-    color: white;
-}
+.btn-primary { background: #1A237E; color: white; }
+.btn-primary:hover { background: #0d145c; }
 
-.btn-danger {
-    background: white;
-    border: 1px solid #ff4d4f;
-    color: #ff4d4f;
-}
+.btn-danger { background: #ff4d4f; color: white; }
+.btn-danger:hover { background: #d9363e; }
 
-.btn-info {
-    background: blue;
-    border: 1px solid #ddd; 
-    color: #555;
-}
+.btn-info { background: #007bff; color: white !important; }
+.btn-info:hover { background: #0069d9; }
+
+.btn-secondary { background: #6c757d; color: white; }
 
 /* 삭제 영역 */
 #deleteDiv {
     display: none;
     margin-top: 20px;
-    border: 1px solid #ff4d4f;
-    border-radius: 15px;
+    border-radius: 20px;
     overflow: hidden;
+    box-shadow: 0 10px 25px rgba(255, 77, 79, 0.2);
+    border: 1px solid #ff4d4f;
 }
 
-#deleteDiv .card-header {
-    background: #ff4d4f;
-    color: white;
-    padding: 12px;
-    font-weight: 700;
+.card-header { background: #ff4d4f; color: white; padding: 15px; font-weight: 800; }
+.card-body { padding: 25px; background: white; }
+.card-body input { 
+    width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; 
 }
+.card-footer { padding: 15px; background: #f8f9fa; text-align: right; }
 
-#deleteDiv .card-body {
-    padding: 15px;
-}
-
-#deleteDiv input {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-}
-
-#deleteDiv .card-footer {
-    padding: 15px;
-    display: flex;
-    gap: 10px;
-}
+.button-group { display: flex; gap: 10px; margin-bottom: 40px; margin-left: 15px; }
 </style>
 
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
 $(function(){
 	// 삭제 버튼 및 취소 버튼 클릭 시 동작
 	$("#deleteBtn, #cancelBtn").click(function(){
 		$("#pw").val("");
 		$("#deleteDiv").toggle();
-		if($("#deleteDiv").is(":visible"))$("#pw").focus();
+		if($("#deleteDiv").is(":visible")) {
+            $('html, body').animate({scrollTop: $("#deleteDiv").offset().top}, 500);
+            $("#pw").focus();
+        }
 	})
 })
 </script>
 </head>
 <body>
-<div class = "container">
-	<h3 class="m-4 mb-4">제보 상세 내용</h3>
+<div class="container">
+	<h3 class="mt-4 mb-4">제보 상세 내용</h3>
 	
-	<table class="table table-boardered">
-		<tbody>
-			<tr>
-				<th>번호</th>
-				<td>${vo.no }</td>
-			</tr>
-			<tr>
-				<th>제목</th>
-				<td>${vo.title }</td>
-			</tr>
-			<tr>
-				<th>
-				제보이미지 <br><br>
-				<td class="text-center">
-    					<c:if test="${!empty vo.fileName}">
-        					<img src="${vo.fileName}" alt="제보 이미지" class="community-img">
-    					</c:if>
-				</td>
-				
-			</tr>
-			<tr>
-				<th>내용</th>
-				<td><pre style="white-space: pre-wrap; border: none; padding: 0;">${vo.content}</pre></td>
-			</tr>
-			<tr>
-				<th>작성자</th>
-				<td>${vo.writer }</td>
-			</tr>
-			<tr>
-				<th>작성일</th>
-				<td>${vo.writeDate }</td>
-			</tr>
-			<tr>
-				<th>조회수</th>
-				<td>${vo.hit }</td>
-			</tr>
-		</tbody>
-	</table>
+    <div class="table-card">
+        <table class="view-table">
+            <tbody>
+                <tr>
+                    <th>번호</th>
+                    <td>${vo.no}</td>
+                </tr>
+                <tr>
+                    <th>제목</th>
+                    <td>${vo.title}</td>
+                </tr>
+                <tr>
+                    <th>제보 이미지</th>
+                    <td>
+                        <c:if test="${!empty vo.fileName}">
+                            <div class="text-center">
+                                <img src="${vo.fileName}" alt="제보 이미지" class="community-img">
+                            </div>
+                        </c:if>
+                        <c:if test="${empty vo.fileName}">이미지가 없습니다.</c:if>
+                    </td>
+                </tr>
+                <tr>
+                    <th>내용</th>
+                    <td>
+                        <pre style="white-space: pre-wrap; border: none; padding: 0; font-family: inherit; background: transparent;">${vo.content}</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <th>작성자</th>
+                    <td>${vo.writer}</td>
+                </tr>
+                <tr>
+                    <th>작성일</th>
+                    <td>${vo.writeDate}</td>
+                </tr>
+                <tr>
+                    <th>조회수</th>
+                    <td>${vo.hit}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 	
-	<div class="mb-4">
-        <%-- ✨ 권한 체크: 로그인 중이고 (작성자 본인이거나 관리자인 경우) --%>
+	<div class="button-group">
         <c:if test="${!empty login && (login.id == vo.writer || login.gradeNo == 9)}">
-		    <a href="updateForm.do?no=${vo.no }&page=${param.page }&perPageNum=${param.perPageNum}&key=${param.key}&word=${param.word}"
+		    <a href="updateForm.do?no=${vo.no}&page=${param.page}&perPageNum=${param.perPageNum}&key=${param.key}&word=${param.word}"
 		    class="btn btn-primary">수정</a>
 		    <button type="button" class="btn btn-danger" id="deleteBtn">삭제</button>
         </c:if>
-        
-		<a href="list.do?page=${param.page }&perPageNum=${param.perPageNum}&key=${param.key}&word=${param.word}" 
-		   class="btn btn-info text-white">리스트</a>
+		<a href="list.do?page=${param.page}&perPageNum=${param.perPageNum}&key=${param.key}&word=${param.word}" 
+		   class="btn btn-info">리스트</a>
 	</div>
 	
-    <%-- ✨ 삭제 영역도 권한이 있을 때만 렌더링되도록 감싸줍니다 --%>
     <c:if test="${!empty login && (login.id == vo.writer || login.gradeNo == 9)}">
-        <div class="card border-danger mb-5" id="deleteDiv">
-            <div class="card-header bg-danger text-white">삭제</div>
-            <form action="delete.do"method="post">
+        <div id="deleteDiv">
+            <div class="card-header">제보 삭제</div>
+            <form action="delete.do" method="post">
                 <input type="hidden" name="no" value="${vo.no}">
-                <input type="hidden" name="perPageNum" value="${param.perPageNum }">
+                <input type="hidden" name="perPageNum" value="${param.perPageNum}">
                 <div class="card-body">
-                    <input name="pw" type="password" id="pw" class="form-control" placeholder="삭제를 위해 비밀번호를 입력하세요" required>
+                    <p style="color: #666; margin-bottom: 10px;">삭제를 위해 비밀번호를 입력해 주세요.</p>
+                    <input name="pw" type="password" id="pw" required placeholder="비밀번호 입력">
                 </div>
-                <div class="card-footer text-end">
-                    <button type="submit"class="btn btn-danger">삭제 확정</button>
-                    <%-- 취소 버튼에 id="cancelBtn"이 빠져있어서 추가했습니다 --%>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-danger">삭제 확정</button>
                     <button type="button" class="btn btn-secondary" id="cancelBtn">취소</button>
                 </div>
             </form>
         </div>
     </c:if>
 </div>	
-
 </body>
 </html>
