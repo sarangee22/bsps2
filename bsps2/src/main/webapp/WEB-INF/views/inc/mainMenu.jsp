@@ -22,7 +22,6 @@
             <li class="nav-item"><a class="nav-link" href="/edu/list.do">교육</a></li>
             <li class="nav-item"><a class="nav-link" href="/item/list.do">체크리스트</a></li>
             <li class="nav-item"><a class="nav-link" href="/disasterCategory/list.do">재난목록</a></li>
-            <li class="nav-item"><a class="nav-link" href="/disasterList/list.do">재난리스트</a></li>
             <li class="nav-item"><a class="nav-link" href="/scrap/list.do">스크랩</a></li>
             <li class="nav-item"><a class="nav-link" href="/agency/list.do">재난기관</a></li>
             <li class="nav-item"><a class="nav-link" href="/disasterMap/list.do">실시간재난현황</a></li>
