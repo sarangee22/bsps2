@@ -123,7 +123,7 @@ public class MemberDAO extends DAO {
         try {
             con = DB.getConnection();
             
-            // SQL 수정: member(m)와 grade(g) 테이블을 조인하여 gradeName을 가져옵니다.
+            // SQL 수정: member(m)와 grade(g) 테이블을 조인하여 gradeName을 가져옵니다..
             String sql = "select m.id, m.name, m.gender, to_char(m.birth, 'yyyy-mm-dd') birth, "
                        + " m.tel, m.email, m.status, m.gradeNo, g.gradeName " // g.gradeName 추가
                        + " from member m, grade g " // 두 테이블 지정
