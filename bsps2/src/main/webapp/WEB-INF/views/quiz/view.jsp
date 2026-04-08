@@ -43,12 +43,21 @@
     .btn-info { background-color: #17a2b8 !important; color: white !important; }
     .btn-info:hover { background-color: #138496 !important; }
 
-    /* 2. 다시 입력: 배경색이 있는 그레이 스타일 */
-    .btn-outline-secondary, .btn-secondary { 
+.btn-warning {
+        background-color: #FFA000 !important; 
+        color: white !important; 
+        border: none !important;
+    }
+    .btn-warning:hover { 
+        background-color: #FFB300 !important; 
+    }
+
+    /* 돌아가기 버튼용 (기존 유지) */
+    .btn-secondary { 
         background-color: #6c757d !important; 
         color: white !important; 
     }
-    .btn-outline-secondary:hover, .btn-secondary:hover { 
+    .btn-secondary:hover { 
         background-color: #5a6268 !important; 
     }
 
@@ -125,7 +134,7 @@ $(function(){
                     <input type="text" id="userAns" class="form-control form-control-lg" placeholder="예: O 또는 X">
                 </div>
                 <button type="button" id="btnSubmit" class="btn btn-success btn-lg">정답 제출</button>
-                <button type="button" id="btnReset" class="btn btn-outline-secondary btn-lg">다시 입력</button>
+                <button type="button" id="btnReset" class="btn btn-warning btn-lg">다시 입력</button>
             </div>
 
             <div id="explainArea" class="mt-4">

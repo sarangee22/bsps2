@@ -109,8 +109,8 @@ h3 {
 .btn-danger { background: #ff4d4f; color: white; }
 .btn-danger:hover { background: #d9363e; }
 
-.btn-info{ background: #007bff; color: white !important; }
-.btn-info:hover { background: #0069d9; }
+.btn-info { background: #007bff !important; border: none; }
+.btn-info:hover { background: #0069d9 !important; }
 
 .btn-primary{ background-color: #1A237E !important; color: white !important; }
 .btn-primary:hover { background-color: #0d145c !important; }
