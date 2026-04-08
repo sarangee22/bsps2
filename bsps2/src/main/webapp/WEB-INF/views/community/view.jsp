@@ -109,8 +109,8 @@ h3 {
 .btn-danger { background: #ff4d4f; color: white; }
 .btn-danger:hover { background: #d9363e; }
 
-.btn-info { background: #007bff !important; border: none; }
-.btn-info:hover { background: #0069d9 !important; }
+.btn-info { background-color: #6c757d !important; color: white !important;   }
+.btn-info:hover { background-color: #5a6268 !important;  }
 
 .btn-primary{ background-color: #1A237E !important; color: white !important; }
 .btn-primary:hover { background-color: #0d145c !important; }
@@ -207,7 +207,7 @@ $(function(){
 		    <button type="button" class="btn btn-danger" id="deleteBtn">삭제</button>
         </c:if>
 		<a href="list.do?page=${param.page}&perPageNum=${param.perPageNum}&key=${param.key}&word=${param.word}" 
-		   class="btn btn-info">리스트</a>
+		   class="btn btn-info">돌아가기</a>
 	</div>
 	
     <c:if test="${!empty login && (login.id == vo.writer || login.gradeNo == 9)}">

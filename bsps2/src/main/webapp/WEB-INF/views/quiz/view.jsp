@@ -134,7 +134,7 @@ $(function(){
                     <input type="text" id="userAns" class="form-control form-control-lg" placeholder="예: O 또는 X">
                 </div>
                 <button type="button" id="btnSubmit" class="btn btn-success btn-lg">정답 제출</button>
-                <button type="button" id="btnReset" class="btn btn-warning btn-lg">다시 입력</button>
+                <button type="button" id="btnReset" class="btn btn-warning btn-lg">새로입력</button>
             </div>
 
             <div id="explainArea" class="mt-4">
