@@ -194,7 +194,7 @@ public class Init extends HttpServlet {
 				serviceMap.put("/member/changeStatus.do", new MemberChangeStatueService());
 				serviceMap.put("/member/checkId.do", new MemberCheckIdService());
 				serviceMap.put("/member/logout.do", new LogoutService());
-				serviceMap.put("/member/list.do", new MemberListService());
+       			serviceMap.put("/member/list.do", new MemberListService());
 				// -- DAO 저장 - 변수 이름
 				daoMap.put("memberDAO", new MemberDAO());
 				// 조립 service에 dao 넣기 - service를 가져온다. setter를 이용해서 가져온 dao를 넣는다.

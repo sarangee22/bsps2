@@ -117,15 +117,18 @@ public class MemberDAO extends DAO {
         return result;
     }
 
-    // 1-6. 회원 리스트 (관리자용)
+ // 1-6. 회원 리스트 (관리자용)
     public List<MemberVO> list() throws Exception {
         List<MemberVO> list = new ArrayList<>();
         try {
             con = DB.getConnection();
-            // SQL 수정: gradeNo 뒤에 있던 잘못된 콤마(,) 제거 및 m 별칭 정리
-            String sql = "select id, name, gender, to_char(birth, 'yyyy-mm-dd') birth, "
-                       + " tel, email, status, gradeNo "
-                       + " from member order by id";
+            
+            // SQL 수정: member(m)와 grade(g) 테이블을 조인하여 gradeName을 가져옵니다.
+            String sql = "select m.id, m.name, m.gender, to_char(m.birth, 'yyyy-mm-dd') birth, "
+                       + " m.tel, m.email, m.status, m.gradeNo, g.gradeName " // g.gradeName 추가
+                       + " from member m, grade g " // 두 테이블 지정
+                       + " where m.gradeNo = g.gradeNo " // 조인 조건
+                       + " order by m.id";
             
             pstmt = con.prepareStatement(sql);
             rs = pstmt.executeQuery();
@@ -141,6 +144,9 @@ public class MemberDAO extends DAO {
                     vo.setEmail(rs.getString("email"));
                     vo.setStatus(rs.getString("status"));
                     vo.setGradeNo(rs.getInt("gradeNo"));
+                    // 추가: MemberVO에 gradeName 필드가 있다면 아래 코드를 추가하세요.
+                    vo.setGradeName(rs.getString("gradeName")); 
+                    
                     list.add(vo);
                 }
             }
@@ -149,7 +155,6 @@ public class MemberDAO extends DAO {
         }
         return list;
     }
-
     // 1-7. 회원 상태 변경
     public Integer changeStatus(MemberVO vo) throws Exception {
         Integer result = 0;
