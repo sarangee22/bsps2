@@ -67,12 +67,14 @@ textarea.form-control {
     .btn-primary:hover { background-color: #0d145c !important; }
 
 /* 새로입력 버튼 (색상 강조) */
-.btn-warning {
-    background: #FFA000;; /* 명확한 노란색 */
-    color: white !important ;  /* 글자색 흰색 */
-    border: none ;
-}
-.btn-waring:hover{  background-color:  #FFB300;}
+	.btn-warning {
+        background-color: #FFA000 !important; 
+        color: white !important; 
+        border: none !important;
+    }
+    .btn-warning:hover { 
+        background-color: #FFB300 !important; 
+    }
 
 /* 취소 버튼 (테두리와 텍스트 강조) */
 
