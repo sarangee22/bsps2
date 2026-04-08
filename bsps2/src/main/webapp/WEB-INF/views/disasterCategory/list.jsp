@@ -81,7 +81,7 @@
 <body>
     <div class="container mt-5">
         <div class="header-section">
-            <h2 class="display-5 fw-bold">재난 정보 카테고리</h2>
+            <h2 class="display-6 fw-bold">재난 정보 카테고리</h2>
             <p class="text-muted">원하는 카테고리를 선택하여 실시간 분석 데이터를 확인하세요.</p>
         </div>
     

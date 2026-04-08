@@ -8,7 +8,13 @@
     
     /* 헤더 섹션 */
     .header-section { padding: 40px 0 20px; }
-    .header-section h2 { font-weight: 800; color: #1a237e; letter-spacing: -1px; }
+    .header-section h2 { 
+    /* display-6의 크기는 유지하되 두께만 조절하고 싶을 때 */
+    font-size: 2rem;            /* 👈 필요하다면 크기도 여기서 미세 조정 가능 */
+    font-weight: 600 !important; /* 👈 기존 800(bold)에서 600(medium-bold)으로 하향 */
+    color: #1a237e; 
+    letter-spacing: -1px; 
+}
 
     /* 검색창 카드 디자인 */
     .search-card {
