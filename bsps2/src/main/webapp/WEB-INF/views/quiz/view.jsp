@@ -131,7 +131,7 @@ $(function(){
             <div id="answerArea" class="p-4 border rounded bg-light">
                 <div class="form-group">
                     <label for="userAns"><strong>정답을 입력하세요:</strong></label>
-                    <input type="text" id="userAns" class="form-control form-control-lg" placeholder="예: O 또는 X">
+                    <input type="text" id="userAns" class="form-control form-control-lg" placeholder="">
                 </div>
                 <button type="button" id="btnSubmit" class="btn btn-success btn-lg">정답 제출</button>
                 <button type="button" id="btnReset" class="btn btn-warning btn-lg">새로입력</button>
