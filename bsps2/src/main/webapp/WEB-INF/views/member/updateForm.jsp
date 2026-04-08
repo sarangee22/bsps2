@@ -5,132 +5,138 @@
 <head>
 <meta charset="UTF-8">
 <title>회원정보 수정</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-    /* view.jsp와 100% 동일한 기본 레이아웃 */
-    body { font-family: 'Malgun Gothic', sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
-    .container { width: 1100px; margin: 30px auto; border: 1px solid #ccc; background-color: #fff; box-shadow: 0 0 15px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }
+    body { font-family: 'Noto Sans KR', sans-serif; margin: 0; padding: 0; background-color: #f4f7f9; color: #2c3e50; }
     
-    :root { --navy-color: #001f3f; }
-
-    /* 상단바 */
-    header { background-color: var(--navy-color); color: white; padding: 15px 30px; display: flex; justify-content: flex-end; align-items: center; }
-    .user-area { font-size: 14px; }
-
-    /* 메인 레이아웃 (사이드바 + 컨텐츠) */
-    .wrapper { display: flex; min-height: 600px; }
+    .container { width: 1100px; margin: 50px auto; background-color: #fff; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); overflow: hidden; display: flex; min-height: 800px; }
     
-    /* 사이드 메뉴 (view.jsp와 동일) */
-    aside { width: 250px; background-color: #fff; border-right: 1px solid #eee; padding: 40px 0; }
-    aside h2 { padding: 0 30px; font-size: 18px; margin-bottom: 30px; color: #333; }
+    :root { --main-navy: #1a2a4e; --accent-blue: #3498db; --bg-light: #f8fafc; --border-color: #f1f5f9; }
+
+    aside { width: 280px; background-color: #fff; border-right: 1px solid var(--border-color); padding: 50px 0; }
+    aside h2 { padding: 0 35px; font-size: 22px; font-weight: 700; margin-bottom: 40px; color: var(--main-navy); display: flex; align-items: center; gap: 10px; }
+    aside h2::before { content: ''; display: block; width: 4px; height: 20px; background-color: var(--accent-blue); border-radius: 2px; }
+    
     .menu-list { list-style: none; padding: 0; margin: 0; }
-    .menu-item { padding: 15px 30px; border-bottom: 1px solid #f9f9f9; }
-    .menu-item a { text-decoration: none; color: #666; font-size: 14px; display: block; }
-    .menu-item.active { background-color: var(--navy-color); }
-    .menu-item.active a { color: #fff; font-weight: bold; }
-    .menu-item:hover:not(.active) { background-color: #fcfcfc; }
-    .menu-item.danger a { color: #d32f2f; }
-
-    /* 컨텐츠 영역 */
-    main { flex: 1; padding: 50px; }
-    .content-title { font-size: 24px; font-weight: bold; text-align: center; margin-bottom: 40px; color: #333; }
+    .menu-item { margin: 8px 20px; border-radius: 12px; overflow: hidden; transition: 0.2s; }
+    .menu-item a { text-decoration: none; color: #64748b; font-size: 15px; font-weight: 500; padding: 16px 20px; display: block; }
     
-    /* 폼 스타일 - 텍스트 크기 14px 유지 */
-    #updateForm { max-width: 700px; margin: 0 auto; }
-    .form-group label { font-size: 14px; font-weight: bold; color: #333; margin-bottom: 10px; }
-    .form-control { font-size: 14px; padding: 10px; border-radius: 4px; }
-    .form-control[readonly] { background-color: #f8f9fa; }
+    .menu-item.active { background-color: #eff6ff; }
+    .menu-item.active a { color: var(--accent-blue); font-weight: 700; }
+    
+    .menu-item:hover:not(.active) { background-color: #f8fafc; }
+    .menu-item.danger a { color: #ef4444; }
+    .menu-item.danger:hover { background-color: #fef2f2; }
 
-    /* 성별 라디오 버튼 영역 */
-    .gender-box { padding: 10px; border: 1px solid #ced4da; border-radius: 4px; background-color: #fff; font-size: 14px; }
+    main { flex: 1; padding: 60px 80px; background-color: #fff; }
+    
+    .header-user { display: flex; justify-content: flex-end; align-items: center; margin-bottom: 40px; }
+    .user-badge { background-color: var(--bg-light); padding: 8px 16px; border-radius: 30px; font-size: 14px; color: #64748b; border: 1px solid var(--border-color); }
 
-    /* 하단 버튼 영역 */
-    .button-group { display: flex; gap: 15px; justify-content: center; margin-top: 40px; }
-    .btn-save { background-color: var(--navy-color); color: white; border: none; padding: 12px 40px; border-radius: 4px; font-weight: bold; font-size: 14px; }
-    .btn-cancel { background-color: #6c757d; color: white; border: none; padding: 12px 40px; border-radius: 4px; font-size: 14px; }
-    .btn-save:hover { opacity: 0.9; }
+    .content-title { font-size: 28px; font-weight: 700; color: var(--main-navy); margin-bottom: 10px; }
+    .content-sub { font-size: 15px; color: #94a3b8; margin-bottom: 40px; }
+    
+    #updateForm { max-width: 600px; }
+    
+    .form-group { margin-bottom: 25px; }
+    .form-group label { display: block; font-size: 14px; font-weight: 600; color: #475569; margin-bottom: 10px; }
+    
+    .form-control { width: 100%; padding: 14px 18px; border: 1.5px solid var(--border-color); border-radius: 12px; font-size: 15px; outline: none; transition: 0.2s; box-sizing: border-box; background-color: var(--bg-light); color: #1e293b; }
+    .form-control:focus { border-color: var(--accent-blue); background-color: #fff; box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1); }
+    .form-control[readonly] { background-color: #f1f5f9; color: #94a3b8; cursor: not-allowed; }
+
+    .gender-wrap { display: flex; gap: 12px; }
+    .gender-option { flex: 1; position: relative; }
+    .gender-option input[type="radio"] { position: absolute; opacity: 0; }
+    .gender-option span { display: block; padding: 14px; text-align: center; background-color: var(--bg-light); border: 1.5px solid var(--border-color); border-radius: 12px; font-size: 15px; color: #64748b; cursor: pointer; transition: 0.2s; }
+    .gender-option input[type="radio"]:checked + span { background-color: #eff6ff; border-color: var(--accent-blue); color: var(--accent-blue); font-weight: 700; }
+
+    .button-group { display: flex; gap: 12px; margin-top: 50px; }
+    .btn { padding: 16px 40px; border-radius: 12px; font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.3s; border: none; }
+    .btn-save { flex: 2; background-color: var(--main-navy); color: white; box-shadow: 0 4px 12px rgba(26, 42, 78, 0.15); }
+    .btn-save:hover { background-color: #233966; transform: translateY(-2px); }
+    .btn-cancel { flex: 1; background-color: #f1f5f9; color: #64748b; }
+    .btn-cancel:hover { background-color: #e2e8f0; }
 </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
-        <div class="user-area">
-            <span><strong>${login.name}</strong>님</span>
+    <aside>
+        <h2>마이페이지</h2>
+        <ul class="menu-list">
+            <li class="menu-item"><a href="view.do">내 정보 보기</a></li>
+            <li class="menu-item active"><a href="editForm.do">회원정보 수정</a></li>
+            <li class="menu-item"><a href="changePwForm.do">비밀번호 변경</a></li>
+            <li class="menu-item danger">
+                <a href="deleteForm.do" onclick="return confirm('정말로 탈퇴하시겠습니까?');">회원 탈퇴</a>
+            </li>
+        </ul>
+    </aside>
+
+    <main>
+        <div class="header-user">
+            <div class="user-badge">
+                <strong>${login.name}</strong>님 정보 수정 중
+            </div>
         </div>
-    </header>
 
-    <div class="wrapper">
-        <aside>
-            <h2>마이페이지</h2>
-            <ul class="menu-list">
-                <li class="menu-item"><a href="view.do">내 정보</a></li>
-                <li class="menu-item active"><a href="editForm.do">회원정보 수정</a></li>
-                <li class="menu-item"><a href="changePwForm.do">비밀번호 변경</a></li>
-                <li class="menu-item danger"><a href="deleteForm.do">회원 탈퇴</a></li>
-            </ul>
-        </aside>
+        <div class="content-title">회원정보 수정</div>
+        <p class="content-sub">변경하실 내용을 입력하신 후 수정하기 버튼을 눌러주세요.</p>
+        
+        <form action="edit.do" method="post" id="updateForm">
+            <div class="form-group">
+                <label>아이디</label>
+                <input type="text" name="id" class="form-control" value="${vo.id}" readonly>
+            </div>
 
-        <main>
-            <div class="content-title">회원정보 수정</div>
-            
-            <form action="edit.do" method="post" id="updateForm">
-                <div class="form-group">
-                    <label>아이디</label>
-                    <input type="text" name="id" class="form-control" value="${vo.id}" readonly>
+            <div class="form-group">
+                <label for="name">이름</label>
+                <input type="text" id="name" name="name" class="form-control" value="${vo.name}" required>
+            </div>
+
+            <div class="form-group">
+                <label>성별</label>
+                <div class="gender-wrap">
+                    <label class="gender-option">
+                        <input type="radio" name="gender" value="남자" ${vo.gender == '남자' ? 'checked' : ''}>
+                        <span>남자</span>
+                    </label>
+                    <label class="gender-option">
+                        <input type="radio" name="gender" value="여자" ${vo.gender == '여자' ? 'checked' : ''}>
+                        <span>여자</span>
+                    </label>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label for="name">이름</label>
-                    <input type="text" id="name" name="name" class="form-control" value="${vo.name}" required>
-                </div>
+            <div class="form-group">
+                <label for="birth">생년월일</label>
+                <input type="date" id="birth" name="birth" class="form-control" value="${vo.birth}" required>
+            </div>
 
-                <div class="form-group">
-                    <label>성별</label>
-                    <div class="gender-box">
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="male" name="gender" class="custom-control-input" value="남자" ${vo.gender == '남자' ? 'checked' : ''}>
-                            <label class="custom-control-label" for="male">남자</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="female" name="gender" class="custom-control-input" value="여자" ${vo.gender == '여자' ? 'checked' : ''}>
-                            <label class="custom-control-label" for="female">여자</label>
-                        </div>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label for="tel">연락처</label>
+                <input type="tel" id="tel" name="tel" class="form-control" value="${vo.tel}" placeholder="010-0000-0000">
+            </div>
 
-                <div class="form-group">
-                    <label for="birth">생년월일</label>
-                    <input type="date" id="birth" name="birth" class="form-control" value="${vo.birth}" required>
-                </div>
+            <div class="form-group">
+                <label for="email">이메일</label>
+                <input type="email" id="email" name="email" class="form-control" value="${vo.email}" required>
+            </div>
 
-                <div class="form-group">
-                    <label for="tel">연락처</label>
-                    <input type="tel" id="tel" name="tel" class="form-control" value="${vo.tel}">
-                </div>
-
-                <div class="form-group">
-                    <label for="email">이메일</label>
-                    <input type="email" id="email" name="email" class="form-control" value="${vo.email}" required>
-                </div>
-
-                <div class="button-group">
-                    <button type="submit" class="btn btn-save">수정하기</button>
-                    <button type="button" class="btn btn-cancel" onclick="location.href='view.do'">취소</button>
-                </div>
-            </form>
-        </main>
-    </div>
+            <div class="button-group">
+                <button type="button" class="btn btn-cancel" onclick="location.href='view.do'">취소</button>
+                <button type="submit" class="btn btn-save">수정 완료</button>
+            </div>
+        </form>
+    </main>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
 <script>
 $(function() {
     $("#updateForm").submit(function() {
-        if(confirm("회원정보를 수정하시겠습니까?")) {
-            return true;
-        }
-        return false;
+        return confirm("입력하신 정보로 수정을 진행하시겠습니까?");
     });
 });
 </script>
