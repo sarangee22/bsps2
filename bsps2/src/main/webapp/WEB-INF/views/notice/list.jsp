@@ -132,7 +132,7 @@
                     </tr>
                 </c:forEach>
             </c:if>
-            </tbody>
+            </tbody> 
         </table>
 
         <div class="d-flex justify-content-center mt-4">

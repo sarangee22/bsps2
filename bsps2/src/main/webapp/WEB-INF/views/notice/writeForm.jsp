@@ -131,7 +131,7 @@ $(function(){
                     <i class="bi bi-arrow-counterclockwise"></i> 다시입력
                 </button>
                 <button type="button" class="cancelBtn btn btn-outline-secondary btn-custom">
-                    <i class="bi bi-x-lg"></i> 취소
+                    <i class="bi bi-x-lg"></i> 취소 
                 </button>
             </div>
         </form>

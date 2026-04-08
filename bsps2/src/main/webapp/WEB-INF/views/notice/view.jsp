@@ -124,7 +124,7 @@
                     </a>
                     <a id="deleteBtn" href="delete.do?no=${param.no}&page=${param.page}&perPageNum=${param.perPageNum}&key=${param.key}&word=${param.word}&period=${param.period}"
                        class="btn btn-danger btn-custom">
-                       <i class="bi bi-trash"></i> 삭제
+                       <i class="bi bi-trash"></i> 삭제 
                     </a>
                 </div>
             </c:if>
