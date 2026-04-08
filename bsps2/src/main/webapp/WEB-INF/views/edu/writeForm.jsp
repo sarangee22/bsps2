@@ -167,7 +167,7 @@ textarea.input {
                     취소
                 </a>
             </div>
-
+ 
         </form>
 
     </div>
