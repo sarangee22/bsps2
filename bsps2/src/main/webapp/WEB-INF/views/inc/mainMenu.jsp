@@ -26,6 +26,7 @@
             <li class="nav-item"><a class="nav-link" href="/agency/list.do">재난기관</a></li>
             <li class="nav-item"><a class="nav-link" href="/disasterMap/list.do">실시간재난현황</a></li>
             <li class="nav-item"><a class="nav-link" href="/qna/list.do">질문답변</a></li>
+            <li class="nav-item"><a class="nav-link" href="/notice/list.do">공지사항</a></li>
            
             <c:if test="${!empty login && login.gradeNo == 9 }">
                <li class="nav-item"><a class="nav-link" href="/member/list.do">회원관리</a></li>
