@@ -161,15 +161,13 @@ textarea.input {
                     발행하기
                 </button>
 
-                <button type="button" onclick="submitForm('임시저장')" class="btn btn-outline">
-                    임시저장
-                </button>
+                
 
                 <a href="list.do" class="btn btn-outline">
                     취소
                 </a>
             </div>
-
+ 
         </form>
 
     </div>
