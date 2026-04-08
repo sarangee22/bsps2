@@ -1,32 +1,48 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<title>제보하기</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
-
 body {
     background-color: #f4f7f9;
     font-family: 'Noto Sans KR', sans-serif;
 }
 
-/* 제목 */
-h2 { 
-    font-size: 28px;
-    font-weight: 800;
-    color: #1A237E;    
+/* 카드 박스 스타일 + 깊은 그림자 (통일감 유지) */
+.card {
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
 }
 
-/* 라벨 */
+/* 카드 헤더 (네이비 톤) */
+.card-header {
+    background-color: #1A237E !important;
+    color: white !important;
+    padding: 20px;
+    border-bottom: none;
+}
+
+.card-header h4 {
+    margin-bottom: 0;
+    font-weight: 800;
+    font-size: 22px;
+}
+
+/* 라벨 스타일 */
 .form-label {
     font-weight: 700;
     color: #333;
+    display: block;
+    margin-bottom: 8px;
 }
 
-/* 입력폼 */
+/* 입력폼 스타일 */
 .form-control {
     width: 100%;
     padding: 12px 14px;
@@ -43,122 +59,148 @@ h2 {
     background: white;
 }
 
+/* readonly 필드 (작성자) */
+.form-control[readonly] {
+    background-color: #f8f9fa;
+    color: #888;
+}
+
+/* 파일 업로드 폼 특화 */
+input[type="file"].form-control {
+    padding: 8px 12px;
+    height: auto;
+}
+
 /* textarea */
 textarea.form-control {
     min-height: 120px;
     resize: vertical;
 }
 
-/* 버튼 */
-    .btn {
-        display: inline-block;
-        padding: 12px 22px !important; /* 커뮤니티와 동일한 패딩 */
-        border-radius: 12px !important; /* 커뮤니티와 동일한 둥글기 */
-        font-weight: 700 !important;    /* 커뮤니티와 동일한 글자 두께 */
-        font-size: 1rem !important;     /* 글자 크기 일치 */
-        text-decoration: none;
-        border: none !important;
-        transition: 0.2s;
-        cursor: pointer;
-    }
+/* 버튼 공통 스타일 */
+.btn {
+    padding: 12px 22px !important;
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    border: none !important;
+    transition: 0.2s;
+    cursor: pointer;
+}
 
-/* 등록 */
-    .btn-primary { background-color: #1A237E !important; color: white !important; }
-    .btn-primary:hover { background-color: #0d145c !important; }
+/* 제보 등록 (Primary) */
+.btn-primary { 
+    background-color: #1A237E !important; 
+    color: white !important; 
+}
+.btn-primary:hover { 
+    background-color: #0d145c !important; 
+}
 
-/* 새로입력 버튼 (색상 강조) */
-	.btn-warning {
-        background-color: #FFA000 !important; 
-        color: white !important; 
-        border: none !important;
-    }
-    .btn-warning:hover { 
-        background-color: #FFB300 !important; 
-    }
+/* 새로입력 (Warning) */
+.btn-warning {
+    background-color: #FFA000 !important; 
+    color: white !important; 
+}
+.btn-warning:hover { 
+    background-color: #FFB300 !important; 
+}
 
-/* 취소 버튼 (테두리와 텍스트 강조) */
-
-  .btn-outline-secondary:hover, .btn-secondary:hover { 
-        background-color: #5a6268 !important; 
-    }
+/* 취소 (Secondary) */
+.btn-secondary {
+    background-color: #6c757d !important;
+    color: white !important;
+}
+.btn-secondary:hover { 
+    background-color: #5a6268 !important; 
+}
 
 /* 간격 정리 */
-.mb-3, .mt-3 {
-    margin-bottom: 18px ;
+.form-group {
+    margin-bottom: 20px;
 }
 </style>
 
-<title>제보하기</title>
 <script type="text/javascript">
 $(function(){
-	$("#writeForm").submit(function(){
+    // 비밀번호 확인 유효성 검사
+    $("#writeForm").submit(function(){
         if($("#pw").val() != $("#pw2").val()){
             alert("비밀번호와 비밀번호 확인은 같아야 합니다.");
             $("#pw, #pw2").val("");
             $("#pw").focus();
             return false;
-	}
-	
-});
-	$(".cancelBtn").click(function(){
-			history.back();
-	
-		});
+        }
+    });
+    
+    // 취소 버튼 클릭 시 이전 페이지로 이동
+    $(".cancelBtn").click(function(){
+        history.back();
+    });
 });
 </script>
 </head>
 <body>
-<div class="container">
-	<h2 class="mt-4 mb-4">제보하기</h2>
-	
-	<form action="write.do" method="post" id="writeForm" enctype="multipart/form-data">
-		<input type="hidden" name="perPageNum" value="${param.perPageNum }">
-		
-		<div class="mb-3 mt-3">
-			<label for="title" class="form-label">제목</label>
-			<input name="title" id="title" required class="form-control"
-				placeholder="상세 제보 제목을 입력하세요.">
-		</div>
-		
-		<div class="mb-3 mt-3">
-			<label for="imageFile" class="form-label">제보사진</label>
-			<input type="file" name="imageFile" id="imageFile" class="form-control"
-				accept="image/*" required>
-		</div>
-		
-		<div class="mb-3 mt-3">
-			<label for="content" class="form-label">내용</label>
-			<textarea name="content" id="content" required class="form-control"
-				placeholder="상세 제보 내용을 입력하세요."></textarea>
-		</div>
-		
-		<div class="mb-3 mt-3">
-			<label for="writer" class="form-label">작성자</label>
-			<%-- 수정 포인트: 사용자가 이름을 직접 쓰지 못하게 readonly를 걸고 로그인한 사용자 이름을 넣습니다. --%>
-			<input name="writer" id="writer" required class="form-control"
-				value="${login.name}" readonly>
-		</div>
-		
-		<div class="mb-3 mt-3">
-			<label for="pw" class="form-label">비밀번호</label>
-			<input type="password" name="pw" id="pw" required class="form-control"
-				placeholder="본인 확인용 비밀번호를 입력하세요.">
-		</div>
-		
-		<div class="mb-3 mt-3">
-			<label for="pw2" class="form-label">비밀번호 확인</label>
-			<input name="password" id="pw2" required class="form-control"
-				placeholder="비밀번호를 한 번 더 입력하세요.">
-		</div>
-		
-		<div class="mt-4 mb-5">
-			<button type="submit" class="btn btn-primary">제보 등록</button>
-			<button type="reset" class="btn btn-warning">새로입력</button>
-			<button type="button" class="btn btn-secondary cancelBtn">취소</button>
-		</div>
-		
-	</form>
-	
+<div class="container mt-5 mb-5">
+    <div class="card">
+        <div class="card-header text-center">
+            <h4>제보하기</h4>
+        </div>
+        <div class="card-body p-4">
+            <form action="write.do" method="post" id="writeForm" enctype="multipart/form-data">
+                <input type="hidden" name="perPageNum" value="${param.perPageNum}">
+                
+                <%-- 1. 제목 --%>
+                <div class="form-group">
+                    <label for="title" class="form-label">제목</label>
+                    <input name="title" id="title" required class="form-control"
+                        placeholder="상세 제보 제목을 입력하세요.">
+                </div>
+                
+                <%-- 2. 제보사진 --%>
+                <div class="form-group">
+                    <label for="imageFile" class="form-label">제보사진</label>
+                    <input type="file" name="imageFile" id="imageFile" class="form-control"
+                        accept="image/*" required>
+                </div>
+                
+                <%-- 3. 내용 --%>
+                <div class="form-group">
+                    <label for="content" class="form-label">내용</label>
+                    <textarea name="content" id="content" required class="form-control"
+                        placeholder="상세 제보 내용을 입력하세요."></textarea>
+                </div>
+                
+                <%-- 4. 작성자 (readonly) --%>
+                <div class="form-group">
+                    <label for="writer" class="form-label">작성자</label>
+                    <input name="writer" id="writer" required class="form-control"
+                        value="${login.name}" readonly>
+                </div>
+                
+                <%-- 5. 비밀번호 --%>
+                <div class="form-group">
+                    <label for="pw" class="form-label">비밀번호</label>
+                    <input type="password" name="pw" id="pw" required class="form-control"
+                        placeholder="본인 확인용 비밀번호를 입력하세요.">
+                </div>
+                
+                <%-- 6. 비밀번호 확인 --%>
+                <div class="form-group">
+                    <label for="pw2" class="form-label">비밀번호 확인</label>
+                    <input type="password" name="password" id="pw2" required class="form-control"
+                        placeholder="비밀번호를 한 번 더 입력하세요.">
+                </div>
+                
+                <%-- 하단 버튼 영역 --%>
+                <div class="text-left mt-4">
+                    <button type="submit" class="btn btn-primary">제보 등록</button>
+                    <button type="reset" class="btn btn-warning">새로입력</button>
+                    <button type="button" class="btn btn-secondary cancelBtn">취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 </body>
 </html>
