@@ -52,7 +52,7 @@ public class MemberController implements Controller {
                 	return "member/loginForm";
 
                 	
-                // 3. 로그인 처리
+                	// 3. 로그인 처리
                 case "/member/login.do":
                     LoginVO userVO = new LoginVO();
                     userVO.setId(request.getParameter("id"));
@@ -60,11 +60,15 @@ public class MemberController implements Controller {
                     
                     loginVO = (LoginVO) Execute.execute(Init.getService(uri), userVO);
                     
-                    if (loginVO == null)
-                        throw new Exception("회원 정보를 확인하시고 다시 실행해 보세요.");
+                    // [중요] 로그인 실패 시 처리
+                    if (loginVO == null) {
+                        // 예외를 던지지(throw) 않고, 메시지만 세션에 담아서 다시 로그인 폼으로 보냅니다.
+                        session.setAttribute("msg", "로그인 정보가 일치하지 않습니다. 다시 시도해주세요.");
+                        return "redirect:/member/loginForm.do"; 
+                    }
                     
+                    // 로그인 성공 시 (loginVO가 null이 아닐 때만 아래가 실행됨)
                     session.setAttribute("login", loginVO);
-                    
                     session.setAttribute("msg", "로그인이 되었습니다.");
                     return "redirect:/main/main.do";
 
