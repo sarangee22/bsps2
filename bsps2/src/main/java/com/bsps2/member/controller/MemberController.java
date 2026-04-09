@@ -52,7 +52,7 @@ public class MemberController implements Controller {
                 	return "member/loginForm";
 
                 	
-                	// 3. 로그인 처리
+                	// 3. 로그인 처리..
                 case "/member/login.do":
                     LoginVO userVO = new LoginVO();
                     userVO.setId(request.getParameter("id"));
