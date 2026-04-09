@@ -10,74 +10,73 @@ import com.bsps2.util.db.DB;
 public class QnaDAO extends DAO{
 	
 	// 1. 질문답변 리스트 (검색어 word 추가)
-	public List<QnaVO> list(String word) throws Exception{
-		
-		List<QnaVO> list = new ArrayList<>();
-		
-		con = DB.getConnection();
-		
-		// 3. 실행할 쿼리 작성
-		String sql = "select q.no, q.title, q.id, m.name, q.writeDate, q.hit, q.levNo "
-				+ " from qna q, member m "
-				+ " where q.id = m.id ";
-		
-		// 검색어가 숫자인지 판단하는 변수
-		boolean isNumber = false;
-		long searchNo = 0;
-
-		// 검색어가 들어왔을 때만 처리
-		if(word != null && !word.equals("")) {
+	// 1. 질문답변 리스트 (누구나 다 보이도록 조인 방식 변경)
+		public List<QnaVO> list(String word) throws Exception{
+			
+			List<QnaVO> list = new ArrayList<>();
+			
 			try {
-				searchNo = Long.parseLong(word);
-				isNumber = true;
-			} catch (Exception e) {
-				isNumber = false;
-			}
+				con = DB.getConnection();
+				
+				// 3. 실행할 쿼리 작성 (member 테이블 조인을 빼고 qna 테이블 위주로 가져옵니다)
+				String sql = "select no, title, id, writeDate, hit, levNo from qna where 1=1 ";
+				
+				// 검색어가 숫자인지 판단하는 변수
+				boolean isNumber = false;
+				long searchNo = 0;
 
-			// 쿼리에 조건 추가 (숫자면 no 조건 추가)
-			sql += " and (q.title like ? or q.content like ? or q.id like ? ";
-			if(isNumber) sql += " or q.no = ? ";
-			sql += ") ";
-		}
-		
-		sql += " order by q.refNo desc, q.ordNo";
+				// 검색어가 들어왔을 때만 처리
+				if(word != null && !word.equals("")) {
+					try {
+						searchNo = Long.parseLong(word);
+						isNumber = true;
+					} catch (Exception e) {
+						isNumber = false;
+					}
+
+					sql += " and (title like ? or content like ? or id like ? ";
+					if(isNumber) sql += " or no = ? ";
+					sql += ") ";
+				}
 				
-		pstmt = con.prepareStatement(sql);
-		
-		// 검색어가 있을 때 데이터 세팅
-		if(word != null && !word.equals("")) {
-			pstmt.setString(1, "%" + word + "%");
-			pstmt.setString(2, "%" + word + "%");
-			pstmt.setString(3, "%" + word + "%");
-			if(isNumber) {
-				pstmt.setLong(4, searchNo); // 4번째 물음표에 번호 세팅
+				// 정렬: 질문과 답변이 순서대로 나오게 refNo와 ordNo 기준
+				sql += " order by refNo desc, ordNo asc";
+						
+				pstmt = con.prepareStatement(sql);
+				
+				// 검색어가 있을 때 데이터 세팅
+				if(word != null && !word.equals("")) {
+					pstmt.setString(1, "%" + word + "%");
+					pstmt.setString(2, "%" + word + "%");
+					pstmt.setString(3, "%" + word + "%");
+					if(isNumber) {
+						pstmt.setLong(4, searchNo);
+					}
+				}
+						
+				rs = pstmt.executeQuery();
+						
+				if(rs != null) {
+					while(rs.next()) {
+						QnaVO vo = new QnaVO();
+						vo.setNo(rs.getLong("no"));
+						vo.setTitle(rs.getString("title"));
+						vo.setId(rs.getString("id"));
+						// 작성자 이름(name)이 필요하면 일단 id를 넣어두거나 나중에 조인하세요.
+						vo.setName(rs.getString("id")); 
+						vo.setWriteDate(rs.getString("writeDate"));
+						vo.setHit(rs.getLong("hit"));
+						vo.setLevNo(rs.getLong("levNo"));
+						list.add(vo);
+					}
+				}
+			} finally {
+				DB.close(con, pstmt, rs);
 			}
+			
+			return list;
 		}
-				
-		rs = pstmt.executeQuery();
-				
-		if(rs != null) {
-			while(rs.next()) {
-				QnaVO vo = new QnaVO();
-				vo.setNo(rs.getLong("no"));
-				vo.setTitle(rs.getString("title"));
-				vo.setId(rs.getString("id"));
-				vo.setName(rs.getString("name"));
-				vo.setWriteDate(rs.getString("writeDate"));
-				vo.setHit(rs.getLong("hit"));
-				vo.setLevNo(rs.getLong("levNo"));
-				list.add(vo);
-			}
-		}
-				
-		DB.close(con, pstmt, rs);
-		
-		return list;
-	}
-	
-	// [이하 increase, view, question, answer, update, delete 코드는 동일함]
-	// (지원이님의 원본 코드와 동일하므로 지면 관계상 생략하지만, 
-	// 실제 파일에는 지원이님 원본 그대로 두시면 됩니다!)
+
 
 	// 2-0. 조회수 1 증가
 	public Integer increase(Long no) throws Exception{

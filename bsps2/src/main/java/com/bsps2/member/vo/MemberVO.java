@@ -13,6 +13,14 @@ public class MemberVO {
 	private String status;
 	private int gradeNo;
 	private String gradeName;
+    private String conDate;   // 최근 접속일 (패턴: YYYY-MM-DD)
+    
+	public String getConDate() {
+		return conDate;
+	}
+	public void setConDate(String conDate) {
+		this.conDate = conDate;
+	}
 	public String getId() {
 		return id;
 	}
@@ -85,11 +93,12 @@ public class MemberVO {
 	public void setGradeName(String gradeName) {
 		this.gradeName = gradeName;
 	}
+	
 	@Override
 	public String toString() {
 		return "MemberVO [id=" + id + ", pw=" + pw + ", newPw=" + newPw + ", name=" + name + ", gender=" + gender
 				+ ", birth=" + birth + ", tel=" + tel + ", email=" + email + ", regDate=" + regDate + ", status="
-				+ status + ", gradeNo=" + gradeNo + ", gradeName=" + gradeName + "]";
+				+ status + ", gradeNo=" + gradeNo + ", gradeName=" + gradeName + ", conDate=" + conDate + "]";
 	}
 	
 }

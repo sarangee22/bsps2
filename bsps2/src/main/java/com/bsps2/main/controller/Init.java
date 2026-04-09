@@ -221,6 +221,7 @@ public class Init extends HttpServlet {
 				serviceMap.put("/qna/update.do", new QnaUpdateService());
 				serviceMap.put("/qna/delete.do", new QnaDeleteService());
 				serviceMap.put("/qna/writeForm.do", new QnaDeleteService());
+				
 			
 				// -- DAO 저장
 				daoMap.put("qnaDAO", new QnaDAO());

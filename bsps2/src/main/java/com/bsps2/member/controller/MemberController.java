@@ -4,7 +4,8 @@ import com.bsps2.main.controller.Controller;
 import com.bsps2.main.controller.Init;
 import com.bsps2.main.service.Execute;
 import com.bsps2.member.vo.LoginVO;
-import com.bsps2.member.vo.MemberVO; 
+import com.bsps2.member.vo.MemberVO;
+import com.bsps2.util.page.PageObject;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -34,18 +35,32 @@ public class MemberController implements Controller {
 				if (loginVO == null || loginVO.getGradeNo() != 9) {
 					throw new Exception("관리자 권한이 필요한 페이지입니다.");
 				}
-					Object listData = Execute.execute(Init.getService("/member/list.do"), null);
-				    request.setAttribute("list", listData);
 				
-				return "loginAdmin/main"; // views/loginAdmin/main.jsp 로 이동
+				// 관리자 메인에서도 페이징 객체를 생성해서 넘겨줘야 리스트가 정상 출력됩니다.
+			    PageObject adminPageObject = PageObject.getInstance(request);
+			    Object listData = Execute.execute(Init.getService("/member/list.do"), adminPageObject);
+			    request.setAttribute("list", listData);
+			    request.setAttribute("pageObject", adminPageObject); // 페이징 객체 추가
+			    return "loginAdmin/main"; // views/loginAdmin/main.jsp 로 이동
             
-                // 1. 회원 리스트 (관리자 전용) - 추가된 부분!
-                case "/member/list.do":
-                	// System.out.println("회원 리스트 진입 성공!");
-                    // MemberListService를 실행하여 DB에서 회원 목록을 가져옴
-                    request.setAttribute("list", Execute.execute(Init.getService(uri), null));
-                    // /WEB-INF/views/member/list.jsp 로 이동
-                    return "loginAdmin/main";
+				// 1. 회원 리스트 (관리자 전용)
+			  case "/member/list.do":
+			      // [추가] 페이징 및 검색을 위한 객체 생성
+			      // 웹에서 넘어오는 page, perPageNum, key, word 데이터를 자동으로 세팅합니다.
+			      PageObject pageObject = PageObject.getInstance(request);
+			      
+			      // [요구사항 반영] 로그인한 관리자 아이디는 제외하기 위해 추가 (필요 시 서비스/DAO에서 처리)
+			      // pageObject에 현재 로그인한 id를 담아 보내면 쿼리에서 제외하기 편합니다.
+			      pageObject.setAccepter("loginId"); 
+
+			      // [수정] Execute 실행 시 null 대신 pageObject를 인자로 넘깁니다.
+			      result = Execute.execute(Init.getService(uri), pageObject);
+			      
+			      // JSP에서 사용할 데이터 세팅
+			      request.setAttribute("list", result);
+			      request.setAttribute("pageObject", pageObject); // 페이지 번호를 그리기 위해 필요
+			      
+			      return "loginAdmin/main";
 
                 // 2. 로그인 폼
                 case "/member/loginForm.do":

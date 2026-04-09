@@ -14,7 +14,8 @@
     
     :root { --main-navy: #1a2a4e; --accent-blue: #3498db; }
 
-    .container { max-width: 1100px; margin: 60px auto; }
+    /* [수정] 1100px은 너무 좁아서 1400px로 폭만 넓혔습니다. (디자인은 그대로) */
+    .container { max-width: 1400px; margin: 60px auto; }
 
     .admin-card { 
         background: white; 
@@ -49,6 +50,7 @@
         border-top: none; 
         border-bottom: 2px solid #edf2f7; 
         padding: 15px;
+        white-space: nowrap; /* [추가] 제목 안 겹치게 */
     }
     
     .table tbody td { 
@@ -57,7 +59,11 @@
         font-size: 15px; 
         color: #1e293b;
         border-bottom: 1px solid #f1f5f9;
+        white-space: nowrap; /* [추가] 내용 안 겹치게 */
     }
+
+    /* [추가] 메뉴 잘리는 거 방지용 */
+    .table-responsive { overflow: visible !important; }
 
     .table-hover tbody tr:hover { background-color: #f8fafc; transition: 0.2s; }
 
@@ -100,11 +106,13 @@
         color: #1e293b;
     }
 
+    /* [수정] 드롭다운 메뉴가 버튼 바로 밑에 오게 살짝 조정 */
     .dropdown-menu {
         border: none;
         box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         border-radius: 12px;
         padding: 8px;
+        z-index: 1000;
     }
 
     .dropdown-item {
@@ -148,46 +156,53 @@
 
         <div class="table-responsive">
             <table class="table table-hover text-center">
-                <thead>
-                    <tr>
-                        <th>아이디</th>
-                        <th>이름</th>
-                        <th>연락처</th>
-                        <th>등급</th>
-                        <th>회원 상태</th>
-                        <th>관리</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:forEach items="${list}" var="vo">
-                        <c:if test="${vo.id != 'admin'}">
-                            <tr>
-                                <td class="id-text">${vo.id}</td>
-                                <td>${vo.name}</td>
-                                <td>${vo.tel}</td>
-                                <td><span class="grade-badge">${vo.gradeName}</span></td>
-                                <td><span class="status-badge status-${vo.status}">${vo.status}</span></td>
-                                <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-status-change dropdown-toggle" type="button" data-toggle="dropdown">
-                                            상태 변경
-                                        </button>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item text-success ${vo.status == '정상' ? 'active disabled' : ''}"
-                                               href="/member/changeStatus.do?id=${vo.id}&status=정상">정상 처리</a>
-                                            <a class="dropdown-item text-warning ${vo.status == '휴면' ? 'active disabled' : ''}"
-                                               href="/member/changeStatus.do?id=${vo.id}&status=휴면">휴면 전환</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item text-danger ${vo.status == '강퇴' ? 'active disabled' : ''}"
-                                               href="/member/changeStatus.do?id=${vo.id}&status=강퇴">강제 탈퇴</a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </c:if>
-                    </c:forEach>
-                </tbody>
-            </table>
+					<thead>
+						<tr>
+							<th>아이디</th>
+							<th>이름</th>
+							<th>성별</th>
+							<th>생년월일</th>
+							<th>연락처</th>
+							<th>등급명</th>
+							<th>등급번호</th>
+							<th>회원 상태</th>
+							<th>최근 접속일</th>
+							<th>관리</th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach items="${list}" var="vo">
+							<c:if test="${vo.id != 'admin'}">
+								<tr class="dataRow" data-id="${vo.id}">
+									<td class="id-text">${vo.id}</td>
+									<td>${vo.name}</td>
+									<td>${vo.gender}</td>
+									<td>${vo.birth.substring(0, 10)}</td>
+									<td>${vo.tel}</td>
+									<td><span class="grade-badge">${vo.gradeName}</span></td>
+									<td>${vo.gradeNo}</td>
+									<td><span class="status-badge status-${vo.status}">${vo.status}</span></td>
+									<td>${vo.conDate}</td>
+									<td>
+										<div class="dropdown">
+											<button class="btn btn-status-change dropdown-toggle"
+												type="button" data-toggle="dropdown">상태 변경</button>
+											<div class="dropdown-menu dropdown-menu-right">
+												<a class="dropdown-item text-success ${vo.status == '정상' ? 'active disabled' : ''}"
+													href="/member/changeStatus.do?id=${vo.id}&status=정상">정상 처리</a> 
+                                                <a class="dropdown-item text-warning ${vo.status == '휴면' ? 'active disabled' : ''}"
+													href="/member/changeStatus.do?id=${vo.id}&status=휴면">휴면 전환</a>
+												<div class="dropdown-divider"></div>
+												<a class="dropdown-item text-danger ${vo.status == '강퇴' ? 'active disabled' : ''}"
+													href="/member/changeStatus.do?id=${vo.id}&status=강퇴">강제 탈퇴</a>
+											</div>
+										</div>
+									</td>
+								</tr>
+							</c:if>
+						</c:forEach>
+					</tbody>
+				</table>
         </div>
 
         <div class="mt-5 text-center">
