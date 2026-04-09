@@ -134,7 +134,7 @@ public class Init extends HttpServlet {
 		// TODO Auto-generated method stub
 		System.out.println("Init.init()-----------------------------------------------------");
 		// 1. 생성하고, 2 저장 - map, 3. 조립
-		// 생성해서 저장해 놓는다.
+		// 생성해서 저장해 놓는다...
 		
 		// *** 메인 등록
 		// == controller는 모듈명으로 저장
