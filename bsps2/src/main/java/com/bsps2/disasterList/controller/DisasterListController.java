@@ -78,6 +78,7 @@ public class DisasterListController implements Controller{
 			    long inc = Long.parseLong(request.getParameter("inc"));
 
 			    // 2. DB에서 재난안전문자 상세 정보 가져오기
+			    // 💡 DAO의 view 쿼리에서 map_location과 연락처가 제거되었으므로, 깨끗한 vo가 반환됩니다.
 			    DisasterVO vo = (DisasterVO) Execute.execute(Init.getService(uri), new Object[]{no, inc}); 
 			    
 			    // 3. 실시간 API 데이터 결합
@@ -86,13 +87,13 @@ public class DisasterListController implements Controller{
 			    // 💡 DB에서 데이터를 잘 가져왔을 때만 API 호출 (방어 로직)
 			    Map<String, String> extraData = null;
 			    if (vo != null) {
-			        // vo의 필드명(getCatID, getLocationName 등)이 정확한지 확인하세요.
-			    		extraData = apiService.getExtraData(vo.getCatID(), vo.getLocationName(), vo.getCreateDate());
+			        // 제거된 map_location이나 연락처 대신, 필수 정보(카테고리ID, 지역명, 날짜)만 사용하여 API 호출
+			        extraData = apiService.getExtraData(vo.getCatID(), vo.getLocationName(), vo.getCreateDate());
 			    }
 			    
-			    // 4. JSP로 두 데이터 바구니를 모두 전달
-			    request.setAttribute("vo", vo);           // DB 데이터 (문자 내용 등)
-			    request.setAttribute("extra", extraData); // 실시간 API 데이터 (산불 현황 등)
+			    // 4. JSP로 전달 (더 이상 쓰지 않는 map_location 등은 vo 내부에서 null 상태로 전달됨)
+			    request.setAttribute("vo", vo);           // DB 데이터 (기본 상세 정보)
+			    request.setAttribute("extra", extraData); // 실시간 API 데이터
 			    
 			    return "disasterList/view";
 

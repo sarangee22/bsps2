@@ -121,7 +121,7 @@ $(function(){
             <div class="text-right text-muted mb-3">
                 작성자: <strong>${vo.vo.writer}</strong> | 
                 조회수: ${vo.vo.hit} | 
-                작성일: ${vo.vo.writeDate}
+                등록일: ${vo.vo.writeDate}
             </div>
             <hr>
             

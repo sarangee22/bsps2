@@ -21,8 +21,8 @@ public class ScrapDAO extends DAO {
         int result = 0;
         try {
             con = DB.getConnection();
-            String sql = "INSERT INTO DISASTER_SCRAP (SCRAP_NO, ID, NO) "
-                       + " VALUES (DISASTER_SCRAP_SEQ.NEXTVAL, ?, ?)";
+            String sql = "INSERT INTO DISASTER_SCRAP (SCRAP_NO, ID, NO, scrap_date) "
+                       + " VALUES (DISASTER_SCRAP_SEQ.NEXTVAL, ?, ?, sysdate)";
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, vo.getId());
             pstmt.setLong(2, vo.getNo());
@@ -39,10 +39,10 @@ public class ScrapDAO extends DAO {
         try {
             con = DB.getConnection();
             // DISASTER_SCRAP(s)와 DISASTER_LIST(d)를 조인하여 상세 내용을 가져옵니다.
-            String sql = "SELECT s.scrap_no, s.no, d.summary, d.region, s.scrap_date "
-                       + " FROM DISASTER_SCRAP s, DISASTER_LIST d "
-                       + " WHERE s.id = ? AND s.no = d.no "
-                       + " ORDER BY s.scrap_no DESC";
+            String sql = "SELECT s.scrap_no, s.no, d.summary, d.region, s.scrap_date, d.risk_grade "
+                    + " FROM DISASTER_SCRAP s, DISASTER_LIST d "
+                    + " WHERE s.id = ? AND s.no = d.no "
+                    + " ORDER BY s.scrap_no DESC";
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, id);
             rs = pstmt.executeQuery();
@@ -56,6 +56,7 @@ public class ScrapDAO extends DAO {
                     vo.setSummary(rs.getString("summary"));
                     vo.setRegion(rs.getString("region"));
                     vo.setScrapDate(rs.getString("scrap_date"));
+                    vo.setRiskGrade(rs.getInt("risk_grade"));
                     list.add(vo);
                 } while (rs.next());
             }

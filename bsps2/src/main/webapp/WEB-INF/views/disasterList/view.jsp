@@ -138,24 +138,6 @@
                     </div>
                 </c:when>
 
-                <%-- 🚧 6. 교통/산업사고 (CCTV 연동 구역) --%>
-                <c:when test="${vo.catID == 6}">
-                    <div class="col-md-12 text-center py-3">
-                        <p class="mb-2"><i class="bi bi-camera-video"></i> <strong>사고 인근 실시간 CCTV 분석</strong></p>
-                        <div class="bg-dark rounded text-white d-flex align-items-center justify-content-center" style="height: 150px;">
-                            CCTV 영상을 불러오는 중입니다...
-                        </div>
-                    </div>
-                </c:when>
-
-                <%-- 💡 5, 7, 8, 9. 기타 카테고리 (공통 분석 양식) --%>
-                <c:otherwise>
-                    <div class="col-md-12">
-                        <p class="mb-0 text-center text-muted py-3">
-                            <i class="bi bi-gear-wide-connected spin"></i> 해당 재난 유형에 대한 실시간 외부 데이터를 매칭 중입니다.
-                        </p>
-                    </div>
-                </c:otherwise>
             </c:choose>
         </div>
         <div class="mt-3 text-right">

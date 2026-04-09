@@ -171,26 +171,29 @@ $(function(){
                 </div>
 
                 <div class="form-group">
+                    <label class="form-label">현재 제보 사진</label>
+                    <div class="d-flex align-items-center flex-wrap">
+				        <img src="${vo.fileName}" class="img-thumbnail" style="max-width: 250px; height: auto;">
+				        <button type="button" class="btn btn-success btn-sm ml-3"
+				            data-toggle="modal" data-target="#changeImageModal">
+				            이미지 변경하기
+				        </button>
+				    </div>
+				</div>
+                
+                <div class="form-group">
                     <label for="content" class="form-label">내용</label>
                     <textarea class="form-control" rows="7" id="content" name="content" 
                         required placeholder="내용을 입력하세요.">${vo.content}</textarea>
                 </div>
 
-                <div class="form-group">
-                    <label for="writer" class="form-label">작성자</label>
-                    <input type="text" class="form-control" id="writer" name="writer" required value="${vo.writer}">
-                </div>
+               <div class="form-group">
+				    <label for="writer" class="form-label">작성자</label>
+				    <%-- ✨ readonly를 추가하여 사용자가 이름을 수정할 수 없게 만듭니다. --%>
+				    <input type="text" class="form-control" id="writer" name="writer" 
+				        value="${vo.writer}" readonly>
+				</div>
 
-                <div class="form-group">
-                    <label class="form-label">현재 제보 사진</label>
-                    <div class="d-flex align-items-end flex-wrap">
-                        <img src="${vo.fileName}" class="img-thumbnail" style="max-width: 250px; height: auto;">
-                        <button type="button" class="btn btn-success btn-sm ml-3 mt-2"
-                            data-toggle="modal" data-target="#changeImageModal">
-                            이미지 변경하기
-                        </button>
-                    </div>
-                </div>
 
                 <div class="form-group">
                     <label for="pw" class="form-label text-danger">비밀번호 확인</label>
