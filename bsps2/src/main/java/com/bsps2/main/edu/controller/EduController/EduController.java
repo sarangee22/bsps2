@@ -7,6 +7,8 @@ import com.bsps2.main.edu.vo.EduVO.EduVO;
 import com.bsps2.main.service.Execute;
 import com.bsps2.util.page.PageObject;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import com.bsps2.member.vo.LoginVO; 
 
 public class EduController implements Controller {
 
@@ -15,9 +17,19 @@ public class EduController implements Controller {
         try {
             String uri = request.getServletPath();
             EduDAO dao = new EduDAO(); 
+            HttpSession session = request.getSession();
+            LoginVO login = (LoginVO) session.getAttribute("login");
             
+            // 리스트(.list)와 상세보기(.view)를 제외한 모든 요청은 관리자 권한 체크
+            if (!(uri.contains("list.do") || uri.contains("view.do"))) {
+                if (login == null || !login.getGradeName().equals("관리자")) {
+                    session.setAttribute("msg", "관리자 권한이 필요합니다.");
+                    // 권한 없으면 리스트로 튕겨버림
+                    return "redirect:list.do";
+                }
+            }
+
             switch (uri) {
-                // 1. 가이드 목록 (사용자/관리자 공용)
                 case "/edu/list.do":
                 case "/admin/edu/list.do":
                     PageObject pageObject = PageObject.getInstance(request);
@@ -31,18 +43,14 @@ public class EduController implements Controller {
                     request.setAttribute("pageObject", pageObject);
                     request.setAttribute("meta", dao.getMetaData()); 
                     
-                    // URI에 admin이 포함되어 있으면 관리자 테이블형 리스트로 이동
                     return (uri.indexOf("admin") != -1) ? "admin/edu/list" : "edu/list";
 
-                // 2. 가이드 상세보기 (통합)
                 case "/edu/view.do":
                     long no = Long.parseLong(request.getParameter("no"));
-                    // 조회수 증가 및 데이터 가져오기
                     request.setAttribute("vo", Execute.execute(Init.getService(uri), no));
                     return "edu/view";
 
-                // 3. 가이드 등록 폼 및 처리
-                case "/edu/writeForm.do": // 경로를 /edu로 통일
+                case "/edu/writeForm.do":
                     return "edu/writeForm";
 
                 case "/edu/write.do":
@@ -56,13 +64,11 @@ public class EduController implements Controller {
                     writeVO.setStatus(request.getParameter("status"));
                     
                     Execute.execute(Init.getService(uri), writeVO);
-                    // 등록 후 리스트로 리다이렉트
+                    session.setAttribute("msg", "성공적으로 등록되었습니다.");
                     return "redirect:list.do";
 
-                // 4. 가이드 수정 폼 및 처리
                 case "/edu/updateForm.do":
                     long updateNo = Long.parseLong(request.getParameter("no"));
-                    // 수정 폼에 기존 데이터를 채우기 위해 view 서비스 재사용
                     request.setAttribute("vo", Execute.execute(Init.getService("/edu/view.do"), updateNo));
                     return "edu/updateForm";
 
@@ -78,16 +84,15 @@ public class EduController implements Controller {
                     updateVO.setStatus(request.getParameter("status"));
                     
                     Execute.execute(Init.getService(uri), updateVO);
-                    // 수정 완료 후 해당 글의 상세보기로 이동
+                    session.setAttribute("msg", "성공적으로 수정되었습니다.");
                     return "redirect:view.do?no=" + updateVO.getNo() + 
                            "&page=" + request.getParameter("page") + 
                            "&perPageNum=" + request.getParameter("perPageNum");
 
-                // 5. 가이드 삭제
                 case "/edu/delete.do":
                     long deleteNo = Long.parseLong(request.getParameter("no"));
                     Execute.execute(Init.getService(uri), deleteNo);
-                    // 삭제 후 리스트로 이동
+                    session.setAttribute("msg", "삭제되었습니다.");
                     return "redirect:list.do";
 
                 default: 
