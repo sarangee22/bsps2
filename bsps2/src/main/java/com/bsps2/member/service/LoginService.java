@@ -18,7 +18,7 @@ public class LoginService implements Service {
         // 1. 로그인 시도
         LoginVO vo = dao.login((LoginVO) obj);
         
-        // 2. 로그인 성공 시 최근 접속일 업데이트 (에러 방지를 위해 if문 사용)
+        // 2. 로그인 성공 시 최근 접속일 업데이트 (에러 방지를 위해 if문 사용),.
         if(vo != null) {
             dao.updateConDate(vo.getId());
         }

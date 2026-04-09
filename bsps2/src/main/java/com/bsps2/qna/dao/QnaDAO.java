@@ -9,7 +9,7 @@ import com.bsps2.util.db.DB;
 
 public class QnaDAO extends DAO{
 	
-	// 1. 질문답변 리스트 (검색어 word 추가)
+	// 1. 질문답변 리스트 (검색어 word 추가)..
 	// 1. 질문답변 리스트 (누구나 다 보이도록 조인 방식 변경)
 		public List<QnaVO> list(String word) throws Exception{
 			

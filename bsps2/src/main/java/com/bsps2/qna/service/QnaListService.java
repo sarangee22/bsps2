@@ -7,7 +7,7 @@ import com.bsps2.qna.vo.QnaVO;
 import com.bsps2.main.dao.DAO;
 import com.bsps2.main.service.Service;
 
-//Main - QnaController - (QnaListService) - QnaDAO // QnaVO
+//Main - QnaController - (QnaListService) - QnaDAO // QnaVO,,
 public class QnaListService implements Service{
 
 	private QnaDAO dao = null;

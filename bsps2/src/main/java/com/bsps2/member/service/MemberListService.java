@@ -15,7 +15,7 @@ public class MemberListService implements Service {
 
     // 실제 비즈니스 로직 실행 (회원 목록 가져오기)
     public Object service(Object obj) throws Exception {
-        // 회원 목록은 입력 파라미터(obj)가 필요 없으므로 null이 전달되어도 무방합니다.
+        // 회원 목록은 입력 파라미터(obj)가 필요 없으므로 null이 전달되어도 무방합니다..
     	return dao.list((PageObject) obj);
     }
 }

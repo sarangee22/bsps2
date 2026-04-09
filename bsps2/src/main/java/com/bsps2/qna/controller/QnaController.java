@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 // Controller
 //  - 예외 처리 - 위의 정상 처리를 try로 묶는다. catch로 예외 처리를 한다.
-//  - 모듈(질문답변)을 처리한다.
+//  - 모듈(질문답변)을 처리한다...
 //  - 데이터 수집 : DB에서 가져온다. 사용자에게 입력 받는다.
 // Main - (QnaController) - QnaListService - QnaDAO // QnaVO
 public class QnaController implements Controller{

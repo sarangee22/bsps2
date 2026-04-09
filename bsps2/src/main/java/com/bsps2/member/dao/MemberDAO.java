@@ -48,7 +48,7 @@ public class MemberDAO extends DAO {
     // --- 로그인 메서드 바로 아래(약 43행쯤)에 추가하세요 ---
 
     // 1-2. 최근 접속일 업데이트 (로그인 성공 시 호출)
-    // MemberDAO.java 안에 추가할 메서드
+    // MemberDAO.java 안에 추가할 메서드..
     public void updateConDate(String id) throws Exception {
         try {
             con = DB.getConnection();

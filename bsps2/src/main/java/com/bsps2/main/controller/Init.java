@@ -129,7 +129,7 @@ public class Init extends HttpServlet {
 	/**
 	 * @see Servlet#init(ServletConfig)
 	 */
-    // 서버가 돌아갈 때 실행되도록 하고 싶다.
+    // 서버가 돌아갈 때 실행되도록 하고 싶다...
 	public void init(ServletConfig config) throws ServletException {
 		// TODO Auto-generated method stub
 		System.out.println("Init.init()-----------------------------------------------------");
