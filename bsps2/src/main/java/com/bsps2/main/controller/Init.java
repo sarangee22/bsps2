@@ -84,6 +84,8 @@ import com.bsps2.quiz.service.QuizViewService;
 import com.bsps2.quiz.service.QuizWriteService;
 import com.bsps2.scrap.controller.ScrapController;
 import com.bsps2.scrap.dao.ScrapDAO;
+import com.bsps2.scrap.service.ScrapDeleteService;
+import com.bsps2.scrap.service.ScrapListService;
 import com.bsps2.scrap.service.ScrapService;
 
 import jakarta.servlet.ServletConfig;
@@ -425,14 +427,19 @@ public class Init extends HttpServlet {
 		// 2. Service 생성 및 저장
 		// 패키지: com.bsps2.scrap.service.ScrapService
 		ScrapService scrapService = new ScrapService();
-		// 리스트, 저장, 삭제 모두 하나의 서비스에서 처리하도록 매핑합니다.
-		serviceMap.put("/scrap/list.do", scrapService);
+		ScrapListService scrapListService = new ScrapListService();
+		ScrapDeleteService scrapDeleteService = new ScrapDeleteService();
+		
+		serviceMap.put("/scrap/list.do", scrapListService);
 		serviceMap.put("/scrap/scrap.do", scrapService);
-		serviceMap.put("/scrap/delete.do", scrapService);
+		serviceMap.put("/scrap/write.do", scrapService);
+		serviceMap.put("/scrap/delete.do", scrapDeleteService);
 
 		// 3. 조립: Service에 DAO 넣기
 		// ScrapService의 setDAO(DAO dao) 메서드를 호출합니다.
+		scrapListService.setDAO(scrapDAO);
 		scrapService.setDAO(scrapDAO);
+		scrapDeleteService.setDAO(scrapDAO);
 
 		// 4. Controller 저장
 		// 패키지: com.bsps2.scrap.controller.ScrapController

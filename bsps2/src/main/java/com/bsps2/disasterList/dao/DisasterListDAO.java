@@ -118,7 +118,7 @@ public class DisasterListDAO extends DAO {
             con = DB.getConnection();
             // 💡 ACTION_GUIDE를 빼고 테이블에 실제 존재하는 컬럼들만 적어주세요.
             String sql = "SELECT l.no, l.summary, l.occur_date, l.region, l.risk_grade, "
-                       + " d.detail_info, d.situation_desc, d.map_location, a.catID " 
+                       + " d.detail_info, d.situation_desc, a.catID " 
                        + " FROM disaster_list l, disaster_detail d, disaster_cat_assign a "
                        + " WHERE l.no = ? AND l.no = d.no AND l.no = a.no";
             
@@ -136,7 +136,6 @@ public class DisasterListDAO extends DAO {
                 // 💡 RS에서 꺼낼 때도 ACTION_GUIDE 대신 상세 정보를 꺼내옵니다.
                 vo.setDetailContent(rs.getString("detail_info")); 
                 vo.setSituationDesc(rs.getString("situation_desc"));
-                vo.setMapLocation(rs.getString("map_location"));
                 vo.setCatID(rs.getInt("catID"));
             }
         } finally {
