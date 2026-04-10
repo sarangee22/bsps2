@@ -44,7 +44,7 @@ public class MemberController implements Controller {
 			    request.setAttribute("pageObject", adminPageObject); // 페이징 객체 추가
 			    return "loginAdmin/main"; // views/loginAdmin/main.jsp 로 이동
             
-				// 1. 회원 리스트 (관리자 전용)..
+				// 1. 회원 리스트 (관리자 전용)
 			  case "/member/list.do":
 			      // [추가] 페이징 및 검색을 위한 객체 생성
 			      // 웹에서 넘어오는 page, perPageNum, key, word 데이터를 자동으로 세팅합니다.
@@ -68,7 +68,7 @@ public class MemberController implements Controller {
                 	return "member/loginForm";
 
                 	
-                	// 3. 로그인 처리..
+                	// 3. 로그인 처리
                 case "/member/login.do":
                     LoginVO userVO = new LoginVO();
                     userVO.setId(request.getParameter("id"));

@@ -86,6 +86,7 @@ public class QnaController implements Controller{
                 }
 
                 Execute.execute(Init.getService(uri), vo);
+                request.getSession().setAttribute("msg", "새로운 글이 등록되었습니다.");
                 return "redirect:list.do";
                 
             case "/qna/answerForm.do":
@@ -120,14 +121,24 @@ public class QnaController implements Controller{
                 return "qna/updateForm";
                 
             case "/qna/update.do":
-                // 수정된 데이터를 받아서 DB에 업데이트
                 vo = new QnaVO();
                 vo.setNo(Long.parseLong(request.getParameter("no")));
                 vo.setTitle(request.getParameter("title"));
                 vo.setContent(request.getParameter("content"));
-                Execute.execute(Init.getService(uri), vo);
-                return "redirect:view.do?no=" + vo.getNo() + "&inc=0";
                 
+                // 비밀번호 검증 추가
+                String inputPw = request.getParameter("pw");
+                LoginVO loginUser2 = (LoginVO) request.getSession().getAttribute("login");
+                com.bsps2.member.vo.MemberVO memberInfo = new com.bsps2.member.dao.MemberDAO().view(loginUser2.getId());
+                
+                if(!memberInfo.getPw().equals(inputPw)) {
+                    request.getSession().setAttribute("msg", "수정에 실패하였습니다. 비밀번호를 확인해주세요.");
+                    return "redirect:updateForm.do?no=" + vo.getNo();
+                }
+                
+                Execute.execute(Init.getService(uri), vo);
+                request.getSession().setAttribute("msg", "글 수정이 되었습니다.");
+                return "redirect:view.do?no=" + vo.getNo() + "&inc=0";
             case "/qna/delete.do":
                 no1 = Long.parseLong(request.getParameter("no"));
                 result = (Integer) Execute.execute(Init.getService(uri), no1);

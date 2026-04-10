@@ -92,16 +92,14 @@ public class MemberDAO extends DAO {
         try {
             con = DB.getConnection();
             // TO_CHAR 함수 사용 시 콤마 위치 및 공백 정리
-            String sql = "select id, name, gender, "
-                       + " to_char(birth, 'yyyy-mm-dd') birth, "
-                       + " tel, email, to_char(regDate, 'yyyy-mm-dd') regDate, "
-                       + " status, gradeNo "
-                       + " from member where id = ?";
-            
-            pstmt = con.prepareStatement(sql);
-            pstmt.setString(1, id);
-            rs = pstmt.executeQuery();
-            
+			String sql = "select id, pw, name, gender, " + " to_char(birth, 'yyyy-mm-dd') birth, "
+					+ " tel, email, to_char(regDate, 'yyyy-mm-dd') regDate, " + " status, gradeNo "
+					+ " from member where id = ?";
+			
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+
             if(rs != null && rs.next()) {
                 vo = new MemberVO();
                 vo.setId(rs.getString("id"));
@@ -113,6 +111,7 @@ public class MemberDAO extends DAO {
                 vo.setRegDate(rs.getString("regDate"));
                 vo.setStatus(rs.getString("status"));
                 vo.setGradeNo(rs.getInt("gradeNo"));
+                vo.setPw(rs.getString("pw"));
             }
         } finally {
             DB.close(con, pstmt, rs);

@@ -43,7 +43,7 @@ public class QnaDAO extends DAO{
 				    }
 				}
 
-				// 정렬,,
+				// 정렬
 				sql += " order by refNo desc, ordNo asc";
 
 				pstmt = con.prepareStatement(sql);
