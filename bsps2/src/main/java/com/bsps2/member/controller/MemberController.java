@@ -195,8 +195,8 @@ public class MemberController implements Controller {
                         session.setAttribute("msg", "회원 탈퇴가 완료되었습니다.");
                         return "redirect:/main/main.do";
                     } else {
-                        session.setAttribute("msg", "비밀번호 변경에 실패하였습니다. 기존 비밀번호를 확인해주세요.");
-                        return "redirect:/member/changePwForm.do";
+                        session.setAttribute("msg", "회원 탈퇴에 실패하였습니다. 비밀번호를 확인해주세요.");
+                        return "redirect:/member/deleteForm.do";
                     }
                     
                 // 12. 아이디 중복체크
