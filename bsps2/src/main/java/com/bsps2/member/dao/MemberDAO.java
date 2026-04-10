@@ -12,7 +12,7 @@ import com.bsps2.member.vo.MemberVO;
 
 public class MemberDAO extends DAO {
     
-    // 1-1. 로그인 처리
+    // 1-1. 로그인 처리..
     public LoginVO login(LoginVO userVO) throws Exception {
         LoginVO vo = null;
         

@@ -42,7 +42,7 @@ public class QnaController implements Controller{
 			    String word = request.getParameter("searchKeyword");
 			    String pageStr = request.getParameter("page");
 			    int page = (pageStr == null || pageStr.equals("")) ? 1 : Integer.parseInt(pageStr);
-			    int perPage = 8; // 페이지당 10개
+			    int perPage = 7; // 페이지당 10개
 			    
 			    List<com.bsps2.qna.vo.QnaVO> allList = 
 			        (List<com.bsps2.qna.vo.QnaVO>) Execute.execute(Init.getService(uri), word);

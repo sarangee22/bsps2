@@ -29,7 +29,7 @@ public class MemberController implements Controller {
             
             switch (uri) {
 
-			  // 0. 관리자 메인 (대시보드)....
+			  // 0. ..관리자 메인 (대시보드)....
 			  case "/admin/main.do":
 				// 관리자가 아니면 못 들어오게 막는 로직 (보안!)
 				if (loginVO == null || loginVO.getGradeNo() != 9) {
