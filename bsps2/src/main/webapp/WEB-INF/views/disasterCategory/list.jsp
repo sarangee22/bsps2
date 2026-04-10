@@ -104,7 +104,7 @@
                         </i>
                     </div>
                     <h3>${vo.categoryName}</h3> 
-                    <span class="card-tag">#실시간_매시업</span>
+                    <span class="card-tag">#재난 리스트</span>
                 </a>
             </c:forEach>
             
