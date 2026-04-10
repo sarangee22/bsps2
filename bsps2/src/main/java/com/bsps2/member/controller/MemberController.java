@@ -175,9 +175,10 @@ public class MemberController implements Controller {
                         session.setAttribute("msg", "비밀번호가 변경되었습니다. 다시 로그인해주세요.");
                         return "redirect:/member/loginForm.do";
                     } else {
-                        throw new Exception("비밀번호 변경에 실패하였습니다. 기존 비밀번호를 확인해주세요.");
+                        session.setAttribute("msg", "비밀번호 변경에 실패하였습니다. 기존 비밀번호를 확인해주세요.");
+                        return "redirect:/member/changePwForm.do";
                     }
-
+                    
                 // 11. 회원 탈퇴 폼
                 case "/member/deleteForm.do":
                        return "member/delete";
@@ -194,9 +195,10 @@ public class MemberController implements Controller {
                         session.setAttribute("msg", "회원 탈퇴가 완료되었습니다.");
                         return "redirect:/main/main.do";
                     } else {
-                        throw new Exception("회원 탈퇴에 실패하였습니다. 비밀번호를 확인해주세요.");
+                        session.setAttribute("msg", "비밀번호 변경에 실패하였습니다. 기존 비밀번호를 확인해주세요.");
+                        return "redirect:/member/changePwForm.do";
                     }
-
+                    
                 // 12. 아이디 중복체크
                 case "/member/checkId.do":
                     String id = request.getParameter("id");
