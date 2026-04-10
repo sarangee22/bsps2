@@ -38,12 +38,13 @@ public class MemberController implements Controller {
 				
 				// 관리자 메인에서도 페이징 객체를 생성해서 넘겨줘야 리스트가 정상 출력됩니다.
 			    PageObject adminPageObject = PageObject.getInstance(request);
+			    adminPageObject.setAccepter(loginId);
 			    Object listData = Execute.execute(Init.getService("/member/list.do"), adminPageObject);
 			    request.setAttribute("list", listData);
 			    request.setAttribute("pageObject", adminPageObject); // 페이징 객체 추가
 			    return "loginAdmin/main"; // views/loginAdmin/main.jsp 로 이동
             
-				// 1. 회원 리스트 (관리자 전용)
+				// 1. 회원 리스트 (관리자 전용)..
 			  case "/member/list.do":
 			      // [추가] 페이징 및 검색을 위한 객체 생성
 			      // 웹에서 넘어오는 page, perPageNum, key, word 데이터를 자동으로 세팅합니다.

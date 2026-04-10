@@ -157,16 +157,14 @@ public class MemberDAO extends DAO {
             // sql += searchSQL(pageObject); 
             
             sql += " AND m.id != ? ";
-            sql += " ORDER BY m.id ASC )) WHERE rnum BETWEEN ? AND ?";
+            sql += " ORDER BY m.id ASC )) WHERE rnum BETWEEN 1 AND 100";
             
             pstmt = con.prepareStatement(sql);
             
             // 3. ? 세팅 (물음표 순서대로 채우기)
             int idx = 0;
             pstmt.setString(++idx, pageObject.getAccepter()); // 첫 번째 ? (관리자 제외)
-            pstmt.setLong(++idx, pageObject.getStartRow());   // 두 번째 ? (시작 행)
-            pstmt.setLong(++idx, pageObject.getEndRow());     // 세 번째 ? (끝 행)
-
+      
             // 4. 실행 및 결과 담기
             rs = pstmt.executeQuery();
             

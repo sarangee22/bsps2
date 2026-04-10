@@ -106,13 +106,15 @@
 
         <div class="list-footer">
             <div class="pagination">
-                <c:forEach var="i" begin="1" end="5">
-                    <a href="${pageContext.request.contextPath}/qna/list.do?page=${i}&searchKeyword=${param.searchKeyword}"
-                        class="${(param.page == i || (empty param.page && i == 1)) ? 'active' : ''}">${i}</a>
-                </c:forEach>
-                <c:set var="curPage" value="${empty param.page ? 1 : param.page}" />
-                <a href="${pageContext.request.contextPath}/qna/list.do?page=${curPage + 1}&searchKeyword=${param.searchKeyword}">&gt;</a>
-            </div>
+						<c:set var="curPage" value="${empty curPage ? 1 : curPage}" />
+						<c:forEach var="i" begin="1" end="${totalPage}">
+							<a href="${pageContext.request.contextPath}/qna/list.do?page=${i}&searchKeyword=${param.searchKeyword}"
+								class="${curPage == i ? 'active' : ''}">${i}</a>
+						</c:forEach>
+						<c:if test="${curPage < totalPage}">
+							<a
+								href="${pageContext.request.contextPath}/qna/list.do?page=${curPage + 1}&searchKeyword=${param.searchKeyword}">&gt;</a>
+						</c:if></div>
             <c:if test="${!empty login}">
                 <a href="${pageContext.request.contextPath}/qna/questionForm.do" class="btn-write">
                     <c:choose>

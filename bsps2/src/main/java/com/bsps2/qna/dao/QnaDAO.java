@@ -35,7 +35,7 @@ public class QnaDAO extends DAO{
 				    }
 
 				    if(isNumber) {
-				        // 숫자면 no만 정확히 검색
+				        // 숫자면 no만 정확히 검색..
 				        sql += " and no = ? ";
 				    } else {
 				        // 문자면 제목/내용/아이디 검색

@@ -2,6 +2,9 @@ package com.bsps2.qna.controller;
 
 import com.bsps2.qna.vo.QnaVO;
 import com.bsps2.util.page.PageObject;
+
+import java.util.List;
+
 import com.bsps2.main.controller.Controller;
 import com.bsps2.main.controller.Init;
 import com.bsps2.main.controller.Main;
@@ -36,12 +39,25 @@ public class QnaController implements Controller{
 			switch (uri) {
 			// QnaController.java의 case "/qna/list.do": 부분
 			case "/qna/list.do":
-			    // 1. 브라우저에서 보낸 검색어(searchKeyword)를 가져온다.
 			    String word = request.getParameter("searchKeyword");
+			    String pageStr = request.getParameter("page");
+			    int page = (pageStr == null || pageStr.equals("")) ? 1 : Integer.parseInt(pageStr);
+			    int perPage = 8; // 페이지당 10개
 			    
-			    // 2. 서비스 실행할 때 검색어(word)를 같이 넘겨줌.
-			    request.setAttribute("list", Execute.execute(Init.getService(uri), word));
+			    List<com.bsps2.qna.vo.QnaVO> allList = 
+			        (List<com.bsps2.qna.vo.QnaVO>) Execute.execute(Init.getService(uri), word);
 			    
+			    // 페이징 처리
+			    int totalCount = allList.size();
+			    int startIdx = (page - 1) * perPage;
+			    int endIdx = Math.min(startIdx + perPage, totalCount);
+			    List<com.bsps2.qna.vo.QnaVO> pageList = allList.subList(startIdx, endIdx);
+			    
+			    int totalPage = (int) Math.ceil((double) totalCount / perPage);
+			    
+			    request.setAttribute("list", pageList);
+			    request.setAttribute("totalPage", totalPage);
+			    request.setAttribute("curPage", page);
 			    return "qna/list";
 
             case "/qna/view.do":
