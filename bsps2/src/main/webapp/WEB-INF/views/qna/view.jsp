@@ -80,7 +80,7 @@
                     <div class="btn-group">
                         <c:if test="${login.id == vo.id}">
                             <a href="updateForm.do?no=${vo.no}" class="btn btn-outline">수정하기</a>
-                            <a href="delete.do?no=${vo.no}" class="btn btn-outline btn-danger" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+                            <a href="#" class="btn btn-outline btn-danger" onclick="deleteConfirm(${vo.no})">삭제</a>
                         </c:if>
                         <c:if test="${login.id == 'admin'}">
                             <a href="answerForm.do?no=${vo.no}" class="btn btn-navy">답변하기</a>
@@ -93,6 +93,18 @@
         </div>
     </main>
 </div>
+	<script>
+function deleteConfirm(no) {
+    var pw = prompt("비밀번호를 입력하세요:");
+    if(pw == null) return;
+    if(pw == "") {
+        alert("삭제에 실패하였습니다. 비밀번호를 입력해주세요.");
+        return;
+    }
+    location.href = "delete.do?no=" + no + "&pw=" + pw;
+}
+</script>
+
 
 </body>
 </html>

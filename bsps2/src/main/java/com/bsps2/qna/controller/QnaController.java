@@ -109,7 +109,6 @@ public class QnaController implements Controller{
                 vo.setOrdNo(Long.parseLong(request.getParameter("ordNo")) + 1);
                 vo.setLevNo(Long.parseLong(request.getParameter("levNo")) + 1);
                 vo.setParentNo(Long.parseLong(request.getParameter("no")));
-
                 Execute.execute(Init.getService(uri), vo);
                 return "redirect:list.do";
                 
@@ -139,22 +138,34 @@ public class QnaController implements Controller{
                 Execute.execute(Init.getService(uri), vo);
                 request.getSession().setAttribute("msg", "글 수정이 되었습니다.");
                 return "redirect:view.do?no=" + vo.getNo() + "&inc=0";
-            case "/qna/delete.do":
-                no1 = Long.parseLong(request.getParameter("no"));
-                result = (Integer) Execute.execute(Init.getService(uri), no1);
-                if(result == 1) {
-                    request.getSession().setAttribute("msg", "삭제가 되었습니다.");
-                    return "redirect:list.do";
-                } else {
-                    request.getSession().setAttribute("msg", "삭제에 실패하였습니다.");
-                    return "redirect:view.do?no=" + no1 + "&inc=0";
-                }
-            default:
-                request.setAttribute("url", request.getRequestURL());
-                return "error/noPage";
-			}
-	 
-		} catch (Exception e) { // 예외 처리
+          
+			
+		 case "/qna/delete.do":
+		    no1 = Long.parseLong(request.getParameter("no"));
+		    String delPw = request.getParameter("pw");
+		    LoginVO loginDel = (LoginVO) request.getSession().getAttribute("login");
+		    com.bsps2.member.vo.MemberVO delMember = new com.bsps2.member.dao.MemberDAO().view(loginDel.getId());
+		    
+		    if(delPw == null || !delMember.getPw().equals(delPw)) {
+		        request.getSession().setAttribute("msg", "삭제에 실패하였습니다. 비밀번호를 확인해주세요.");
+		        return "redirect:view.do?no=" + no1 + "&inc=0";
+		    }
+		    
+		    result = (Integer) Execute.execute(Init.getService(uri), no1);
+		    if(result == 1) {
+		        request.getSession().setAttribute("msg", "삭제가 되었습니다.");
+		        return "redirect:list.do";
+		    } else {
+		        request.getSession().setAttribute("msg", "삭제에 실패하였습니다.");
+		        return "redirect:view.do?no=" + no1 + "&inc=0";
+		    }
+		    
+		 default:
+		        request.setAttribute("url", request.getRequestURL());
+		        return "error/noPage";
+		 }
+			
+			} catch (Exception e) { // 예외 처리
 			e.printStackTrace(); // 개발자를 위한 예외 상세 출력
 			// 잘못된 예외 처리 - 사용자에게 보여주기
 			request.setAttribute("url", request.getRequestURL());
