@@ -14,83 +14,53 @@ public class DisasterCategoryDAO extends DAO {
     // [1] 중복 체크 (Connection 인자 추가)
     public int checkDuplicate(Connection con, String apiId) throws Exception {
         int count = 0;
-        String sql = "SELECT COUNT(*) FROM DISASTER_LIST WHERE API_ID = ?";
+        String sql = "SELECT COUNT(*) FROM DISASTERINFO WHERE APIID = ?";
         try {
-            // 외부 con 사용하므로 DB.getConnection() 지움
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, apiId);
             rs = pstmt.executeQuery();
             if (rs.next()) count = rs.getInt(1);
         } finally {
-            // con은 닫지 않고 pstmt와 rs만 닫음
             if (rs != null) rs.close();
             if (pstmt != null) pstmt.close();
         }
         return count;
     }
 
-    // [2] 동시 삽입 (Connection 인자 추가)
-    public void insertAll(Connection con, DisasterVO vo, List<Integer> catIDs) throws Exception {
-    		PreparedStatement pstmtList = null;
-        PreparedStatement pstmtDetail = null;
-        PreparedStatement pstmtAssign = null;
-        ResultSet rsKeys = null;
+ public void insertDisaster(Connection con, DisasterVO vo, List<Integer> catIDs) throws Exception {
+        
+        // 통합 테이블 disasterInfo에 맞춘 SQL
+        String sql = "INSERT INTO disasterInfo (no, apiId, catID, title, locationName, dangerLevel, createDate, content) "
+                   + " VALUES (disasterInfo_seq.NEXTVAL, ?, ?, ?, ?, ?, ?, ?)";
         
         try {
-        	con.setAutoCommit(false); // 트랜잭션 시작
+            // 트랜잭션 설정 (Service에서 이미 설정했을 수 있으나 안전을 위해 유지)
+            con.setAutoCommit(false); 
 
-            // 1. DISASTER_LIST 삽입 (CATID 컬럼은 삭제했으므로 뺍니다)
-            String sqlList = "INSERT INTO DISASTER_LIST (NO, SUMMARY, OCCUR_DATE, REGION, RISK_GRADE, API_ID) " 
-                           + " VALUES (DISASTER_LIST_SEQ.NEXTVAL, ?, TO_DATE(?, 'YYYY-MM-DD HH24:MI:SS'), ?, ?, ?) ";
+            pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, vo.getApiId());
             
-            pstmtList = con.prepareStatement(sqlList, new String[]{"NO"}); 
-            pstmtList.setString(1, vo.getContent());
-            pstmtList.setString(2, vo.getCreateDate());
-            pstmtList.setString(3, vo.getLocationName());
-            pstmtList.setInt(4, vo.getDangerLevel());
-            pstmtList.setString(5, vo.getApiId());
-            pstmtList.executeUpdate();
-
-            // 생성된 시퀀스 번호(NO) 가져오기
-            rsKeys = pstmtList.getGeneratedKeys();
-            long newNo = 0;
-            if(rsKeys.next()) newNo = rsKeys.getLong(1);
-
-            // 2. DISASTER_DETAIL 삽입 (기존과 동일)
-            String sqlDetail = "INSERT INTO DISASTER_DETAIL(DETAILID, NO, DETAIL_INFO, SITUATION_DESC, MAP_LOCATION) "
-                             + " VALUES(DISASTER_DETAIL_SEQ.NEXTVAL, ?, ?, ?, ?)";
-            pstmtDetail = con.prepareStatement(sqlDetail);
-            pstmtDetail.setLong(1, newNo);
-            pstmtDetail.setString(2, vo.getContent());
-            pstmtDetail.setString(3, "현재 상황 확인 중");
-            pstmtDetail.setString(4, vo.getLocationName());
-            pstmtDetail.executeUpdate();
-
-            // 3. 💡 [핵심] DISASTER_CAT_ASSIGN 매핑 테이블 삽입
-            // 넘겨받은 카테고리 리스트(catIDs)만큼 반복해서 저장합니다.
-            String sqlAssign = "INSERT INTO DISASTER_CAT_ASSIGN (NO, CATID) VALUES (?, ?)";
-            pstmtAssign = con.prepareStatement(sqlAssign);
+            // 💡 리스트 중 첫 번째 카테고리를 대표 카테고리로 저장 (전처리 결과 반영)
+            int catID = (catIDs != null && !catIDs.isEmpty()) ? catIDs.get(0) : 9;
+            pstmt.setInt(2, catID);
             
-            for (int catID : catIDs) {
-                pstmtAssign.setLong(1, newNo);
-                pstmtAssign.setInt(2, catID);
-                pstmtAssign.executeUpdate();
-                // 팁: Batch 처리를 쓰면 더 빠르지만, 일단 이해하기 쉽게 기본 루프로 짭니다.
-            }
-
-            con.commit(); // 모든 삽입 성공 시 커밋
-            System.out.println(">>> [전처리 저장] NO: " + newNo + " / 카테고리 개수: " + catIDs.size());
+            pstmt.setString(3, vo.getTitle());        // 제목
+            pstmt.setString(4, vo.getLocationName());  // 지역
+            pstmt.setInt(5, vo.getDangerLevel());     // 위험 등급
+            pstmt.setString(6, vo.getCreateDate());    // 발생 일시
+            pstmt.setString(7, vo.getContent());       // 요약 내용
+            
+            pstmt.executeUpdate();
+            con.commit(); // 성공 시 커밋
+            
+            System.out.println(">>> [저장 완료] APIID: " + vo.getApiId() + " / 분류: " + catID);
             
         } catch (Exception e) {
-            if (con != null) con.rollback();
+            if (con != null) con.rollback(); // 에러 시 롤백
             e.printStackTrace();
             throw e;
         } finally {
-            // 리소스 해제 (생성 역순)
-            if (rsKeys != null) rsKeys.close();
-            if (pstmtAssign != null) pstmtAssign.close();
-            if (pstmtDetail != null) pstmtDetail.close();
-            if (pstmtList != null) pstmtList.close();
+            if (pstmt != null) pstmt.close();
         }
     }
 
@@ -99,6 +69,7 @@ public class DisasterCategoryDAO extends DAO {
         List<DisasterVO> list = new ArrayList<>();
         try {
             con = DB.getConnection();
+            // 컬럼명 CAT_ID로 수정 확인 필요 (테이블 설계에 따라)
             String sql = "SELECT CATID, CAT_NAME FROM DISASTER_CATEGORY ORDER BY CATID ASC";
             pstmt = con.prepareStatement(sql);
             rs = pstmt.executeQuery();
@@ -113,28 +84,5 @@ public class DisasterCategoryDAO extends DAO {
         }
         return list;
     }
-    
-    // [4] 원본 데이터 가져오기 (Connection 인자 추가)
-    public List<DisasterVO> getRawDisasterData(Connection con) throws Exception {
-        List<DisasterVO> list = new ArrayList<>();
-        // 💡 팁: BSPS.DISASTER 처럼 스키마명을 붙여주면 더 안전합니다.
-        String sql = "SELECT DISASTER_ID, DESCRIPTION, DISASTER_NAME, DISASTER_DATE "
-                   + " FROM DISASTER ORDER BY DISASTER_ID DESC";
-        try {
-            pstmt = con.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-            while(rs.next()) {
-                DisasterVO vo = new DisasterVO();
-                vo.setApiId(String.valueOf(rs.getLong("DISASTER_ID"))); 
-                vo.setContent(rs.getString("DESCRIPTION"));            
-                vo.setLocationName(rs.getString("DISASTER_NAME"));     
-                vo.setCreateDate(rs.getString("DISASTER_DATE")); 
-                list.add(vo);
-            }
-        } finally {
-            if (rs != null) rs.close();
-            if (pstmt != null) pstmt.close();
-        }
-        return list;
-    }
+
 }

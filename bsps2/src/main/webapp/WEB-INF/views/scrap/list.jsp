@@ -26,6 +26,26 @@
     
     .search-bar { border-radius: 30px; border: 1px solid #e0e0e0; transition: 0.3s; }
     .search-bar:focus-within { border-color: #007bff; box-shadow: 0 0 0 0.2rem rgba(0,123,255,.1) !important; }
+    
+        /* 검색창 카드 디자인 */
+    .search-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        background: white;
+    }
+    .form-select, .form-control {
+        border-radius: 10px;
+        border: 1px solid #eee;
+        padding: 12px;
+    }
+    .btn-search {
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 12px;
+        background-color: #1a237e;
+        border: none;
+    }
 </style>
 </head>
 <body class="bg-light">
@@ -36,10 +56,29 @@
         <span class="text-muted">전체 <strong>${list.size()}</strong>건</span>
     </div>
 
-    <div class="input-group mb-5 shadow-sm bg-white p-2 search-bar">
-        <input type="text" class="form-control border-0 bg-transparent ml-3" placeholder="스크랩 내 키워드 검색 (기능 구현 예정)">
-        <div class="input-group-append">
-            <button class="btn btn-primary px-4 shadow-sm" style="border-radius: 25px;">검색하기</button>
+     <div class="card search-card mb-5">
+        <div class="card-body p-4">
+            <form action="list.do" method="get" id="searchForm">
+                <input type="hidden" name="catID" value="${param.catID}">
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <select name="key" class="form-select">
+                            <option value="t" ${ (pageObject.key == 't') ? "selected" : "" }>재난 내용</option>
+                            <option value="l" ${ (pageObject.key == 'l') ? "selected" : "" }>발생 지역</option>
+                            <option value="tl" ${ (pageObject.key == 'tl') ? "selected" : "" }>내용+지역</option>
+                        </select>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                            <input type="text" name="word" class="form-control border-start-0" placeholder="찾으시는 지역이나 키워드를 입력하세요" value="${pageObject.word}">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-search btn-primary w-100 shadow-sm">검색하기</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -57,9 +96,9 @@
             
             <div class="flex-grow-1">
                 <div class="mb-2">
-                    <span class="badge badge-pill badge-light text-primary px-3 py-2 mb-2">${vo.region}</span>
+                    <span class="badge badge-pill badge-light text-primary px-3 py-2 mb-2">${vo.locationName}</span>
                 </div>
-                <h5 class="font-weight-bold mb-3 text-dark">${vo.summary}</h5>
+                <h5 class="font-weight-bold mb-3 text-dark">${vo.content}</h5>
                 
                 <div class="d-flex align-items-center flex-wrap">
                     <span class="info-label" title="스크랩 일시">
@@ -69,8 +108,8 @@
                     <span class="info-label">
                         <i class="fas fa-exclamation-circle"></i>
                         <c:choose>
-                            <c:when test="${vo.riskGrade == 1}"><span class="risk-1">낮음</span></c:when>
-                            <c:when test="${vo.riskGrade == 3}"><span class="risk-3">매우 높음</span></c:when>
+                            <c:when test="${vo.dangerLevel == 1}"><span class="risk-1">낮음</span></c:when>
+                            <c:when test="${vo.dangerLevel == 3}"><span class="risk-3">매우 높음</span></c:when>
                             <c:otherwise><span class="risk-2">보통</span></c:otherwise>
                         </c:choose>
                     </span>

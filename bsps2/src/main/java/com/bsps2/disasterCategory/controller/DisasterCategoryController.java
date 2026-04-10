@@ -10,40 +10,34 @@ public class DisasterCategoryController implements Controller {
 
     @Override
     public String execute(HttpServletRequest request) {
-		// 잘못된 URI 처리 / 오류를 위한 URL 저장
-		request.setAttribute("url", request.getRequestURL());
+        request.setAttribute("url", request.getRequestURL());
         try {
             String uri = request.getServletPath();
 
             switch (uri) {
-			case "/disasterCategory/list.do":
-				// 페이지 처리를 위한 객체
-				// getInstance() - 객체를 생성해서 넘겨주세요.
-				// - 1. PageObject를 생성한다. 2. request에서 page / 검색 정보를 받아서 세팅한다.
-				PageObject pageObject = PageObject.getInstance(request);
-				
-				// 생성된 Service를 가져와서 실행 -> Execute가 실행하면 로그를 남긴다.
-				// DB에서 데이터 수집을 해온다.
-				// 사용자에게 제공한다.
-				request.setAttribute("list", Execute.execute(Init.getService(uri), pageObject));
-				// 처리된 후의 pageObject 데이터 확인
-				System.out.println("BoardController.execuete().pageObject - " + pageObject);
-				request.setAttribute("pageObject", pageObject);
-				// jsp의 위치 정보 "/WEB-INF/views/" + "board/list" + ".jsp"
-				return "/disasterCategory/list";
+                case "/disasterCategory/list.do":
+                    PageObject pageObject = PageObject.getInstance(request);
+                    
+                    // 1. 먼저 API 데이터를 수집하도록 서비스에 Integer(catID)를 던집니다.
+                    // 10번(재난문자)을 호출하면 자동으로 분류해서 DB에 저장됩니다.
+                    Execute.execute(Init.getService(uri), 10); 
+                    
+                    // 2. 그 후 DB에 저장된 카테고리 목록을 가져와서 request에 담습니다.
+                    request.setAttribute("list", Execute.execute(Init.getService(uri), pageObject));
+                    
+                    System.out.println("DisasterCategoryController.execute().pageObject - " + pageObject);
+                    request.setAttribute("pageObject", pageObject);
+                    
+                    return "/disasterCategory/list";
 
                 default:
                     return "error/noPage";
-            }// switch ~ case 의 끝
-        } // try 정상처리 의 끝
-        catch (Exception e) {
-			// 개발자를 위한 코드
-			e.printStackTrace();
-			// 잘못된 예외 처리 - 사용자에게 보여주기
-			request.setAttribute("moduleName", "일반 게시판");
-			request.setAttribute("e", e);
-			// /WEB-INF/views/ + error/err_500 + .jsp
-			return "error/err_500";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("moduleName", "재난 카테고리");
+            request.setAttribute("e", e);
+            return "error/err_500";
         }
     }
 }
