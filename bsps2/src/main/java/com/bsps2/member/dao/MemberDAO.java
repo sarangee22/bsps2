@@ -68,8 +68,8 @@ public class MemberDAO extends DAO {
         Integer result = 0;
         try {
             con = DB.getConnection();
-            String sql = "insert into member(id, pw, name, gender, birth, tel, email) "
-                       + " values(?,?,?,? , TO_DATE(?, 'YYYY-MM-DD') ,?,?)";
+            String sql = "insert into member(id, pw, name, gender, birth, tel, email, conDate) "
+                    + " values(?,?,?,?, TO_DATE(?, 'YYYY-MM-DD') ,?,?, sysdate)";
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, vo.getId());
             pstmt.setString(2, vo.getPw());

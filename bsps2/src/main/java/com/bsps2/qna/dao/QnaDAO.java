@@ -27,33 +27,37 @@ public class QnaDAO extends DAO{
 
 				// 검색어가 들어왔을 때만 처리
 				if(word != null && !word.equals("")) {
-					try {
-						searchNo = Long.parseLong(word);
-						isNumber = true;
-					} catch (Exception e) {
-						isNumber = false;
-					}
+				    try {
+				        searchNo = Long.parseLong(word);
+				        isNumber = true;
+				    } catch (Exception e) {
+				        isNumber = false;
+				    }
 
-					sql += " and (title like ? or content like ? or id like ? ";
-					if(isNumber) sql += " or no = ? ";
-					sql += ") ";
+				    if(isNumber) {
+				        // 숫자면 no만 정확히 검색
+				        sql += " and no = ? ";
+				    } else {
+				        // 문자면 제목/내용/아이디 검색
+				        sql += " and (title like ? or content like ? or id like ?) ";
+				    }
 				}
-				
-				// 정렬: 질문과 답변이 순서대로 나오게 refNo와 ordNo 기준
+
+				// 정렬
 				sql += " order by refNo desc, ordNo asc";
-						
+
 				pstmt = con.prepareStatement(sql);
-				
+
 				// 검색어가 있을 때 데이터 세팅
 				if(word != null && !word.equals("")) {
-					pstmt.setString(1, "%" + word + "%");
-					pstmt.setString(2, "%" + word + "%");
-					pstmt.setString(3, "%" + word + "%");
-					if(isNumber) {
-						pstmt.setLong(4, searchNo);
-					}
+				    if(isNumber) {
+				        pstmt.setLong(1, searchNo);
+				    } else {
+				        pstmt.setString(1, "%" + word + "%");
+				        pstmt.setString(2, "%" + word + "%");
+				        pstmt.setString(3, "%" + word + "%");
+				    }
 				}
-						
 				rs = pstmt.executeQuery();
 						
 				if(rs != null) {

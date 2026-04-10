@@ -51,7 +51,7 @@ public class MemberController implements Controller {
 			      
 			      // [요구사항 반영] 로그인한 관리자 아이디는 제외하기 위해 추가 (필요 시 서비스/DAO에서 처리)
 			      // pageObject에 현재 로그인한 id를 담아 보내면 쿼리에서 제외하기 편합니다.
-			      pageObject.setAccepter("loginId"); 
+			      pageObject.setAccepter(loginId); 
 
 			      // [수정] Execute 실행 시 null 대신 pageObject를 인자로 넘깁니다.
 			      result = Execute.execute(Init.getService(uri), pageObject);
@@ -82,6 +82,8 @@ public class MemberController implements Controller {
                         return "redirect:/member/loginForm.do"; 
                     }
                     
+                    new com.bsps2.member.dao.MemberDAO().updateConDate(userVO.getId());
+
                     // 로그인 성공 시 (loginVO가 null이 아닐 때만 아래가 실행됨)
                     session.setAttribute("login", loginVO);
                     session.setAttribute("msg", "로그인이 되었습니다.");
