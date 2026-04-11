@@ -113,7 +113,7 @@ public class ScrapDAO extends DAO {
         String key = pageObject.getKey();
         
         if (word != null && !word.equals("")) {
-            // [수정 포인트] 공백을 기준으로 단어를 쪼개서 배열로 만듦
+            // 공백을 기준으로 단어를 쪼개서 배열로 만듦
             String[] words = word.split("\\s+");
             sql += " AND ( ";
             

@@ -33,19 +33,78 @@ public class DisasterCategoryService implements Service {
 
     public void updateDisasterData(int catID) throws Exception {
         Connection con = null;
+        String serviceKey = "fa67fab4500ff954472e8a22de42afe98bf413eba38a0fdc515c299cd184a2d8";
+        String safetyKey = "H81M3194303G9W7H";
         try {
             con = DB.getConnection();
+            
+            // api 불러오기
+//            System.out.println(">>> [API 대량 수집 시작] catID: " + catID);
+//            
+//			String urlStr = "";
+//            
+//            // 1. 산림청 산불 (최대 100건으로 상향)
+//            if (catID == 1) { 
+//                urlStr = "https://apis.data.go.kr/1400000/forestStusService/getffirestatsservice?ServiceKey=" + serviceKey + "&numOfRows=100&pageNo=1&_type=xml";
+//            
+//            // 2. 기상청 지진정보 (최대 100건으로 상향)
+//            } else if (catID == 2) { 
+//                urlStr = "https://apis.data.go.kr/1360000/EqkInfoService/getEqkMsg?ServiceKey=" + serviceKey + "&numOfRows=100&pageNo=1&_type=xml";
+//            
+//            // 3. 기상청 단기예보 (날짜/시간 자동화 및 대량 수집)
+//            } else if (catID == 3) { 
+//                // [수정] 현재 날짜와 발표 시간을 자동으로 계산
+//                SimpleDateFormat sdfDate = new SimpleDateFormat("yyyyMMdd");
+//                String baseDate = sdfDate.format(new Date());
+//                // 단기예보는 02, 05, 08, 11, 14, 17, 20, 23시에 발표됨 (안전하게 0500으로 일단 설정)
+//                String baseTime = "0500"; 
+//                
+//                urlStr = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"
+//                       + "?ServiceKey=" + serviceKey 
+//                       + "&pageNo=1&numOfRows=1000&dataType=XML" // 기상 데이터는 양이 많으므로 1000건
+//                       + "&base_date=" + baseDate 
+//                       + "&base_time=" + baseTime 
+//                       + "&nx=60&ny=127";
+//
+//            // 10. 행안부 재난문자 (최대 100건으로 상향)
+//            } else if (catID == 10) { 
+//                urlStr = "https://www.safetydata.go.kr/V2/api/DSSP-IF-00247?serviceKey=" + safetyKey + "&returnType=xml&numOfRows=100&pageNo=1";
+//            }
+//
+//            if (urlStr.equals("")) return;
+//
+//            XmlMapper xmlMapper = new XmlMapper();
+//            JsonNode root = xmlMapper.readTree(new java.net.URL(urlStr));
+//            JsonNode itemsNode = root.findValue("item");
+//
+//            if (itemsNode != null) {
+//                int index = 0;
+//                Iterable<JsonNode> items = itemsNode.isArray() ? itemsNode : java.util.Collections.singletonList(itemsNode);
+//                
+//                int count = 0;
+//                for (JsonNode item : items) {
+//                    DisasterVO vo = new DisasterVO();
+//                    String content = "", location = "", date = "", apiId = "";
+//                    
+//                    if (catID == 1) { 
+//                        content = item.path("firecontent").asText();
+//                        location = item.path("fireloc").asText();
+//                        date = item.path("tm").asText();
+//                        apiId = "FOR_" + date + "_" + (index++);
+//                    } else if (catID == 2) { 
+//                        content = item.path("cnt").asText();
+//                        location = item.path("loc").asText();
+//                        date = item.path("tmSeq").asText();
+//                        apiId = "EQK_" + date;
+//                    } else if (catID == 10) { 
+//                        content = item.path("MSG_CN").asText();        
+//                        location = item.path("DSSTR_RGN_NM").asText(); 
+//                        date = item.path("CREAT_DT").asText();        
+//                        apiId = "MSG_" + item.path("SN").asText();    
+//                    }
+
+            // [임시] 더미데이터
             System.out.println(">>> [더미 테스트 모드] 데이터를 생성합니다 (catID: " + catID + ")");
-
-            // [API 주석 처리] -------------------------------------------------
-            /*
-            String urlStr = ... (기존 API 호출 코드)
-            XmlMapper xmlMapper = new XmlMapper();
-            JsonNode root = xmlMapper.readTree(conn.getInputStream());
-            JsonNode itemsNode = root.findValue("item");
-            */
-            // ---------------------------------------------------------------
-
             // [가상 더미 데이터 생성] Jackson 라이브러리를 이용해 가짜 JSON 생성
             com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
             com.fasterxml.jackson.databind.node.ArrayNode dummyItems = mapper.createArrayNode();
@@ -88,7 +147,7 @@ public class DisasterCategoryService implements Service {
                     vo.setCreateDate(date);
                     vo.setApiId(apiId);
 
-                    // --- 여기서부터는 기존 전처리 로직 그대로 유지 ---
+                    // --- 전처리 로직 ---
                     List<Integer> catIDs = getCategoryList(vo.getLocationName(), vo.getContent());
                     
                     String fullText = vo.getLocationName() + " " + vo.getContent();

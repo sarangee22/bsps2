@@ -58,7 +58,7 @@ public class DisasterListController implements Controller {
                     // DB 데이터 가져오기
                     DisasterVO vo = (DisasterVO) Execute.execute(Init.getService(uri), new Object[]{no, inc}); 
                     
-                    // 실시간 API 결합
+                    // API 결합
                     if (vo != null) {
                         RealTimeApiService apiService = new RealTimeApiService();
                         Map<String, String> extraData = apiService.getExtraData(vo.getCatID(), vo.getLocationName(), vo.getCreateDate());
