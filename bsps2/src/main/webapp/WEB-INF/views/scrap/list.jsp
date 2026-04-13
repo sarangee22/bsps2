@@ -53,7 +53,7 @@
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="font-weight-bold text-dark"><i class="fas fa-bookmark text-primary mr-2"></i>스크랩한 재난 정보</h3>
-        <span class="text-muted">전체 <strong>${list.size()}</strong>건</span>
+        <span class="text-muted">전체 <strong>${pageObject.totalRow}</strong>건</span>
     </div>
 
      <div class="card search-card mb-5">
@@ -125,17 +125,34 @@
         </div>
     </c:forEach>
 
-    <c:if test="${not empty list}">
-        <nav class="mt-5">
-            <ul class="pagination justify-content-center">
-                <li class="page-item disabled"><a class="page-link border-0 mx-1 rounded" href="#">&laquo;</a></li>
-                <li class="page-item active"><a class="page-link border-0 mx-1 rounded" href="#">1</a></li>
-                <li class="page-item"><a class="page-link border-0 mx-1 rounded" href="#">2</a></li>
-                <li class="page-item"><a class="page-link border-0 mx-1 rounded" href="#">3</a></li>
-                <li class="page-item"><a class="page-link border-0 mx-1 rounded" href="#">&raquo;</a></li>
-            </ul>
-        </nav>
-    </c:if>
+	<c:if test="${not empty list}">
+	    <nav class="mt-5">
+	        <ul class="pagination justify-content-center">
+	            <li class="page-item ${ (pageObject.startPage == 1) ? 'disabled' : '' }">
+	                <a class="page-link border-0 mx-1 rounded" 
+	                   href="list.do?page=${pageObject.startPage - 1}&perPageNum=${pageObject.perPageNum}&key=${pageObject.key}&word=${pageObject.word}">
+	                   &laquo;
+	                </a>
+	            </li>
+	
+	            <c:forEach begin="${pageObject.startPage}" end="${pageObject.endPage}" var="cnt">
+	                <li class="page-item ${ (pageObject.page == cnt) ? 'active' : '' }">
+	                    <a class="page-link border-0 mx-1 rounded" 
+	                       href="list.do?page=${cnt}&perPageNum=${pageObject.perPageNum}&key=${pageObject.key}&word=${pageObject.word}">
+	                       ${cnt}
+	                    </a>
+	                </li>
+	            </c:forEach>
+	
+	            <li class="page-item ${ (pageObject.endPage == pageObject.totalPage) ? 'disabled' : '' }">
+	                <a class="page-link border-0 mx-1 rounded" 
+	                   href="list.do?page=${pageObject.endPage + 1}&perPageNum=${pageObject.perPageNum}&key=${pageObject.key}&word=${pageObject.word}">
+	                   &raquo;
+	                </a>
+	            </li>
+	        </ul>
+	    </nav>
+	</c:if>
 </div>
 
 </body>

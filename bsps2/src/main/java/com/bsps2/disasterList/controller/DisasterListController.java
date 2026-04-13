@@ -5,7 +5,6 @@ import com.bsps2.disaster.vo.DisasterVO;
 import com.bsps2.main.controller.Controller;
 import com.bsps2.main.controller.Init;
 import com.bsps2.main.service.Execute;
-import com.bsps2.util.api.RealTimeApiService;
 import com.bsps2.util.page.PageObject;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -58,13 +57,7 @@ public class DisasterListController implements Controller {
                     // DB 데이터 가져오기
                     DisasterVO vo = (DisasterVO) Execute.execute(Init.getService(uri), new Object[]{no, inc}); 
                     
-                    // API 결합
-                    if (vo != null) {
-                        RealTimeApiService apiService = new RealTimeApiService();
-                        Map<String, String> extraData = apiService.getExtraData(vo.getCatID(), vo.getLocationName(), vo.getCreateDate());
-                        request.setAttribute("vo", vo);
-                        request.setAttribute("extra", extraData);
-                    }
+                    request.setAttribute("vo", vo);
                     
                     return "disasterList/view";
 
