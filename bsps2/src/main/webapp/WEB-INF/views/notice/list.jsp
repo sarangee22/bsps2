@@ -15,6 +15,26 @@
     .header-section { padding: 40px 0 20px; }
     .header-section h2 { font-weight: 800; color: #1a237e; letter-spacing: -1px; }
 
+    /* 검색창 카드 디자인 (요청하신 형식 반영) */
+    .search-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        background: white;
+    }
+    .form-select, .form-control {
+        border-radius: 10px;
+        border: 1px solid #eee;
+        padding: 12px;
+    }
+    .btn-search {
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 12px;
+        background-color: #1a237e;
+        border: none;
+    }
+
     /* 리스트 컨테이너 (카드 스타일) */
     .notice-wrapper {
         background: white;
@@ -29,7 +49,12 @@
     .btn-group .btn { border-radius: 10px; font-weight: 600; padding: 10px 20px; margin-right: 5px; }
 
     /* 테이블 스타일 커스텀 */
-    .custom-table { border-collapse: separate; border-spacing: 0 10px; }
+    .custom-table { 
+        border-collapse: separate; 
+        border-spacing: 0 10px; 
+        table-layout: fixed; 
+        width: 100%;
+    }
     .custom-table thead th {
         border: none;
         color: #888;
@@ -47,9 +72,9 @@
         vertical-align: middle; 
         border-top: 1px solid #f1f1f1;
         border-bottom: 1px solid #f1f1f1;
+        overflow: hidden;
     }
-    /* 행 양 끝 둥글게 */
-    .dataRow td:first-child { border-left: 1px solid #f1f1f1; border-top-left-radius: 15px; border-bottom-left-radius: 15px; }
+    .dataRow td:first-child { border-left: 1px solid #f1f1f1; border-top-left-radius: 15px; border-bottom-left-radius: 15px; text-align: center; }
     .dataRow td:last-child { border-right: 1px solid #f1f1f1; border-top-right-radius: 15px; border-bottom-right-radius: 15px; }
 
     .dataRow:hover {
@@ -58,10 +83,16 @@
         background-color: #f8faff;
     }
 
-    /* 제목 강조 */
-    .notice-title { font-weight: 700; color: #333; font-size: 1.1rem; }
+    .notice-title { 
+        font-weight: 700; 
+        color: #333; 
+        font-size: 1.1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+    }
     
-    /* 기간 배지 스타일 */
     .period-badge {
         background-color: #f0f2ff;
         color: #5c67f2;
@@ -91,6 +122,32 @@
         <p class="text-muted">서비스의 주요 안내 및 긴급 공지를 확인하실 수 있습니다.</p>
     </div>
 
+    <div class="card search-card mb-4">
+        <div class="card-body p-4">
+            <form action="list.do" method="get" id="searchForm">
+                <input type="hidden" name="period" value="${pageObject.period}">
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <select name="key" class="form-select border-0 bg-light">
+                            <option value="t" ${ (pageObject.key == 't') ? "selected" : "" }>제목</option>
+                            <option value="c" ${ (pageObject.key == 'c') ? "selected" : "" }>내용</option>
+                            <option value="tc" ${ (pageObject.key == 'tc') ? "selected" : "" }>제목+내용</option>
+                        </select>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
+                            <input type="text" name="word" class="form-control bg-light border-0" placeholder="공지사항 키워드를 입력하세요" value="${pageObject.word}">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-search btn-primary w-100 shadow-sm">검색하기</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <c:if test="${!empty login && login.gradeNo == 9 }">
         <div class="admin-menu">
           <div class="btn-group shadow-sm">
@@ -106,20 +163,22 @@
         <table class="table custom-table">
             <thead>
                 <tr>
-                    <th style="width: 50%;">제목</th>
-                    <th style="width: 30%;">공지 기간</th>
+                    <th style="width: 10%;">번호</th> <th style="width: 45%;">제목</th> <th style="width: 25%;">공지 기간</th>
                     <th style="width: 20%;">최종 수정일</th>
                 </tr>
             </thead>
             <tbody>
             <c:if test="${empty list }">
                 <tr>
-                    <td colspan="3" class="text-center py-5 text-muted">데이터가 존재하지 않습니다.</td>
+                    <td colspan="4" class="text-center py-5 text-muted">데이터가 존재하지 않습니다.</td>
                 </tr>
             </c:if>
             <c:if test="${!empty list }">
-                <c:forEach items="${list }" var="vo" >
+                <c:forEach items="${list }" var="vo" varStatus="vs">
                     <tr class="dataRow" data-no="${vo.no }">
+                        <td>
+                            ${pageObject.totalRow - ((pageObject.page - 1) * pageObject.perPageNum) - vs.index}
+                        </td>
                         <td>
                             <div class="notice-title">
                                 <i class="bi bi-dot text-primary"></i> ${vo.title }
@@ -137,7 +196,7 @@
 
         <div class="d-flex justify-content-center mt-4">
             <pageNav:pageNav listURI="list.do" pageObject="${pageObject }"
-             query="&period=${pageObject.period }" />
+             query="&period=${pageObject.period}&key=${pageObject.key}&word=${pageObject.word}" />
         </div>
     </div>
 

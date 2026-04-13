@@ -27,10 +27,15 @@ public class NoticeDAO extends DAO {
 				+ " to_char(startDate, 'yyyy-mm-dd') startDate, "
 				+ " to_char(endDate, 'yyyy-mm-dd') endDate, "
 				+ " to_char(updateDate, 'yyyy-mm-dd') updateDate "
-				+ " from notice ";
+				+ " from notice "
+				+ " where 1=1 ";
+		
 		// period 처리
 		// pre : 현재공지, old : 지난공지 , res : 예약공지, all : 전체공지 
 		sql += period(pageObject.getPeriod());
+		
+		// 검색 조건 처리
+		sql += search(pageObject);
 		
 		sql += " order by updateDate desc"; // 최근 수정 날짜로 정렬하자.
 		// 3-2. 순서 번호를 붙인다.
@@ -84,11 +89,12 @@ public class NoticeDAO extends DAO {
 		con = DB.getConnection();
 		
 		// 3. 실행할 쿼리 작성
-		String sql = "select count(*) from notice ";
+		String sql = "select count(*) from notice where 1=1 ";
 		
 		// period 처리
 		// pre : 현재공지, old : 지난공지 , res : 예약공지, all : 전체공지 
 		sql += period(pageObject.getPeriod());
+		sql += search(pageObject);
 		
 		System.out.println("NoticeDAO.list().sql - " + sql);
 		
@@ -117,7 +123,7 @@ public class NoticeDAO extends DAO {
 		// period 처리
 		// pre : 현재공지, old : 지난공지 , res : 예약공지, all : 전체공지 
 		if(!period.equals("all")) { // all : 조건 없음.
-			sql = " where ";
+			sql = " AND ";
 			if(period.equals("pre")) // 현재 공지 - 현재 날짜가 시작일과 종료일 사이에 있다.
 				sql += " trunc(startDate) <= trunc(sysdate) and trunc(endDate) >= trunc(sysdate) ";
 			if(period.equals("old")) // 지난 공지 - 종료일이 현재 날짜보다 작다.
@@ -253,6 +259,34 @@ public class NoticeDAO extends DAO {
 		return result;
 	} // delete()의 끝
 	
-	
+    // 6. 공지 검색기능 (disasterInfo의 컬럼명 기준)
+	private String search(PageObject pageObject) {
+	    StringBuilder sql = new StringBuilder();
+	    String key = pageObject.getKey();
+	    String word = pageObject.getWord();
+
+	    // 검색어가 존재할 경우에만 처리
+	    if (word != null && !word.trim().equals("")) {
+	        // 공백을 기준으로 검색어 분리 (여러 단어 검색 지원)
+	        String[] words = word.trim().split("\\s+");
+	        
+	        sql.append(" AND ( ");
+	        
+	        for (int i = 0; i < words.length; i++) {
+	            if (i > 0) sql.append(" AND "); // 모든 단어가 포함되어야 함
+	            
+	            sql.append(" ( 0=1 "); // OR 조건 시작점
+	            
+	            // 키워드 분석 (t: 제목, c: 내용)
+	            // Notice 테이블의 컬럼명인 TITLE과 CONTENT를 사용합니다.
+	            if (key.contains("t")) sql.append(" OR TITLE LIKE '%").append(words[i]).append("%' ");
+	            if (key.contains("c")) sql.append(" OR CONTENT LIKE '%").append(words[i]).append("%' ");
+	            
+	            sql.append(" ) ");
+	        }
+	        sql.append(" ) ");
+	    }
+	    return sql.toString();
+	}	
 	
 } // 클래스의 끝

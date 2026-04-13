@@ -145,7 +145,7 @@
                         <th style="width: 12%">위험 등급</th> 
                         <th style="width: 15%">지역</th>
                         <th>상세 내용</th>
-                        <th style="width: 18%">발송 일시</th>
+                        <th style="width: 18%">발생 일시</th>
                     </tr>
                 </thead>
                 <tbody>

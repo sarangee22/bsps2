@@ -63,6 +63,16 @@ public class DisasterVO {
 			this.dangerLevel = dangerLevel;
 		}
 		public String getCreateDate() {
+			if (createDate != null && createDate.length() >= 14) {
+		        String yyyy = createDate.substring(0, 4);
+		        String mm = createDate.substring(4, 6);
+		        String dd = createDate.substring(6, 8);
+		        String hh = createDate.substring(8, 10);
+		        String mi = createDate.substring(10, 12);
+		        String ss = createDate.substring(12, 14);
+		        
+		        return yyyy + "-" + mm + "-" + dd + " " + hh + ":" + mi + ":" + ss;
+		    }
 			return createDate;
 		}
 		public void setCreateDate(String createDate) {
@@ -99,6 +109,7 @@ public class DisasterVO {
 					+ ", createDate=" + createDate + ", content=" + content + ", detailContent=" + detailContent
 					+ ", latitude=" + latitude + ", longitude=" + longitude + "]";
 		}
+		
 	    
 	    
     
